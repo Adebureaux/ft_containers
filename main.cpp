@@ -1,8 +1,10 @@
 #include <string>
+#include <vector>
 #include "vector.hpp"
 
 int main(void)
 {
-	ft::vector<std::string> vector_str;
+	ft::vector<int> vec;
+	std::vector<int> rvec;
 	return (0);	
 }

@@ -1,25 +1,34 @@
-NAME        = program
+NAME		= containers
 
-SRCS        = main.cpp
+SRCS		= main.cpp
 
-OBJS        = ${SRCS:.cpp=.o}
+OBJS_DIR	= objs/
 
-RM          = rm -f
+OBJS		= ${OBJS_DIR}${SRCS:.cpp=.o}
 
-CFLAGS      = -std=c++98 #-Wall -Wextra -Werror 
+DEPS		= ${OBJS:.o=.d}
 
-COMPILER    = c++
+HDIR		= vector.hpp
+
+RM			= rm -rf
+
+CFLAGS		= -std=c++98#-Wall -Wextra -Werror 
+
+COMPILER	= c++
 
 ${NAME}: ${OBJS}
 	${COMPILER} ${CFLAGS} ${OBJS} -o ${NAME}
 
-%.o: %.cpp
-	$(COMPILER) $(CFLAGS) -c $< -o $@
+${OBJS_DIR}%.o: %.cpp
+	@mkdir -p ${OBJS_DIR}
+	${COMPILER} ${CFLAGS} -MMD -MP -c $< -o $@
+
+-include ${DEPS}
 
 all: ${NAME}
 
 clean:
-	${RM} ${OBJS}
+	${RM} ${OBJS_DIR}
 
 fclean: clean
 	${RM} ${NAME}
