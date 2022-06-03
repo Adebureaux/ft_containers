@@ -1,8 +1,8 @@
-#ifndef STACK_HPP
-# define STACK_HPP
+#ifndef TOOLS_HPP
+# define TOOLS_HPP
 
 namespace ft {
-	class stack {
+	class tools {
 		public:
 
 		protected:

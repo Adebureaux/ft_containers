@@ -1,16 +1,11 @@
 #ifndef VECTOR_HPP
 # define VECTOR_HPP
 
-#include <cstdio>
-#include <cstddef>
-#include <memory>
-#include <iostream>
+#include "vector_iterator.hpp"
 
-namespace ft
-{
-	template < class T, class Alloc = std::allocator<T> >
-	class vector
-	{
+namespace ft {
+	template <class T, class Alloc = std::allocator<T> >
+	class vector {
 		public:
 			/* Typedefs */
 			typedef T												value_type;
@@ -19,10 +14,10 @@ namespace ft
 			typedef const T&										const_reference;
 			typedef T*												pointer;
 			typedef const T*										const_pointer;
-			// typedef ft::random_access_iterator<value_type>			iterator;
-			// typedef ft::random_access_iterator<const value_type>	const_iterator;
+			typedef ft::vector_iterator<value_type>					iterator;
+			typedef ft::vector_iterator<value_type const>			const_iterator;
 			// typedef ft::reverse_iterator<iterator>					reverse_iterator;
-			// typedef ft::const_reverse_iterator<const_iterator>		const_reverse_iterator;
+			// typedef ft::reverse_iterator<iterator const>			const_reverse_iterator;
 			typedef std::ptrdiff_t									difference_type;
 			typedef	size_t											size_type;
 			/* End Typedefs */
@@ -43,7 +38,10 @@ namespace ft
 					const allocator_type& alloc = allocator_type())
 			: _alloc(alloc), _size(last - first), _capacity(_size), _vector(_alloc.allocate(_capacity)) {};
 
-			vector(const vector& x) {};
+			vector(const vector& x) {
+				(void)x;
+			};
+	
 			/* End Constructors */
 
 			/* Destructor */
@@ -62,14 +60,31 @@ namespace ft
 			/* ... */
 
 
+			/* Iterators */
+			iterator begin() {
+				return iterator(&_vector[0]);
+			};
+			const_iterator begin() const {
+				return iterator(&_vector[0]);
+			};
+			iterator end() {
+				return iterator(&_vector[_size]);
+			};
+			const_iterator end() const {
+				return iterator(&_vector[_size]); 
+			};
+
+			/* ... */
+
+			/* End Iterators */
+
+
 			/* Element access */
-			reference operator[](size_type n)
-			{
+			reference operator[](size_type n) {
 				return (_vector[n]);
 			};
 
-			const_reference operator[](size_type n) const
-			{
+			const_reference operator[](size_type n) const {
 				return (_vector[n]);
 			};
 
