@@ -29,7 +29,7 @@ namespace ft {
 			explicit vector(size_type n, const value_type& val = value_type(),
 							const allocator_type& alloc = allocator_type())
 			: _alloc(alloc), _size(n), _capacity(_size), _vector(_alloc.allocate(_capacity)) {
-				for (size_t i = 0; i < _capacity; i++)
+				for (size_type i = 0; i < _capacity; i++)
 					_alloc.construct(&_vector[i], val);
 			};
 
@@ -46,7 +46,7 @@ namespace ft {
 
 			/* Destructor */
 			~vector() {
-				for (size_t i = 0; i < _capacity; i++)
+				for (size_type i = 0; i < _capacity; i++)
 					_alloc.destroy(&_vector[i]);
 				_alloc.deallocate(_vector, _capacity);
 			};
@@ -55,7 +55,6 @@ namespace ft {
 			/* Operator= */
 			/* ... */
 			/* End Operator= */
-
 
 			/* ... */
 
@@ -91,6 +90,23 @@ namespace ft {
 			/* ... */
 
 			/* End Element access */
+
+			void reallocate(size_type size)
+			{
+				pointer tmp = _alloc.allocate(size);
+				for (size_type i = 0; i < size; i++)
+					_alloc.construct(&tmp[i], _vector[i]);
+				this->~vector();
+				_capacity = size;
+				_vector = tmp;
+			};
+
+			void push_back(const T& value)
+			{
+				reallocate(_size + 1);
+				_alloc.construct(&_vector[0], value);
+			};
+
 
 		protected:
 

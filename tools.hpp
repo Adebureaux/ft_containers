@@ -2,6 +2,7 @@
 # define TOOLS_HPP
 
 namespace ft {
+	template <class T>
 	class tools {
 		public:
 

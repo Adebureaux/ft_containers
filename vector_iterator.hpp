@@ -18,6 +18,7 @@ namespace ft {
 			/* End Typedefs */
 
 			/* Constructors */
+			vector_iterator() : _itr(NULL) {};
 			vector_iterator(pointer itr) : _itr(itr) {};
 			/* End Constructors */
 

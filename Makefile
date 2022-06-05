@@ -12,7 +12,7 @@ HDIR		= vector.hpp
 
 RM			= rm -rf
 
-CFLAGS		= -std=c++98 -Wall -Wextra -Werror #-g -fsanitize=address 
+CFLAGS		= -std=c++98 -Wall -Wextra -Werror -g -fsanitize=address 
 
 COMPILER	= c++
 
