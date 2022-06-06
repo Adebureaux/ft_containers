@@ -31,8 +31,11 @@ int main(void)
 		std::vector<int> copy(vec.begin(), vec.end());
 		std::cout << "Size = " << copy.size() << " | " << "Capacity = " << copy.capacity() << std::endl;
 	}
+	std::cout << std::endl;
 	{
 		ft::vector<int> vec(250, 3);
+		ft::vector<int> conscpy(100, 3);
+		conscpy = vec;
 		// std::cout << "Size = " << vec.size() << " | " << "Capacity = " << vec.capacity() << std::endl;
 		ft::vector<int> copy(vec.begin(), vec.end());
 		// std::cout << "Size = " << copy.size() << " | " << "Capacity = " << copy.capacity() << std::endl;

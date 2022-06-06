@@ -29,7 +29,7 @@ namespace ft {
 			bool operator!=(const vector_iterator &rhs) const {
 				return (_itr != rhs._itr ? true : false);
 			};
-			vector_iterator& operator++(void) {
+			vector_iterator& operator++() {
 				_itr++;
 				return (*this); 
 			};
@@ -44,10 +44,10 @@ namespace ft {
 			bool operator>(const vector_iterator &rhs) const {
 				return (_itr > rhs._itr ? true : false);
 			};
-			reference operator*(void) {
+			reference operator*() {
 				return (*_itr);
 			}
-			pointer operator->(void) {
+			pointer operator->() {
 				return (_itr);
 			}
 			/* End Operator overload */

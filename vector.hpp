@@ -2,6 +2,7 @@
 # define VECTOR_HPP
 
 #include "vector_iterator.hpp"
+#include "tools.hpp"
 
 namespace ft {
 	template <class T, class Alloc = std::allocator<T> >
@@ -26,23 +27,27 @@ namespace ft {
 			explicit vector(const allocator_type& alloc = allocator_type())
 			: _alloc(alloc), _size(0), _capacity(_size), _vector(_alloc.allocate(_capacity)) {};
 	
-			explicit vector(size_type n, const value_type& val = value_type(),
-							const allocator_type& alloc = allocator_type())
+			explicit vector(size_type n, const value_type& val = value_type(), const allocator_type& alloc = allocator_type())
 			: _alloc(alloc), _size(n), _capacity(_size), _vector(_alloc.allocate(_capacity)) {
 				for (size_type i = 0; i < _size; i++)
 					_alloc.construct(&_vector[i], val);
 			};
 
 			template <class InputIterator>
-					vector(InputIterator first, InputIterator last,
-					const allocator_type& alloc = allocator_type()) {
-				(void)first;
-				(void)last;
-				(void)alloc;
+			vector(InputIterator first, InputIterator last, const allocator_type& alloc = allocator_type(), typename ft::enable_if<!ft::is_integral<InputIterator>::value, InputIterator>::type* = 0)
+			: _alloc(alloc), _size(0) {
+				InputIterator tmp(first);
+				while (tmp++ != last)
+					_size++;
+				_capacity = _size;
+				_vector = _alloc.allocate(_capacity);
+				for (size_type i = 0; i < _size; i++, first++)
+					_alloc.construct(&_vector[i], *first);
 			};
 
-			vector(const vector& x) {
-				(void)x;
+			vector(const vector& x)
+			: _capacity(0), _vector(_alloc.allocate(_capacity)) {
+				*this = x;
 			};
 	
 			/* End Constructors */
@@ -56,7 +61,15 @@ namespace ft {
 			/* End Destructor */
 
 			/* Operator= */
-			/* ... */
+			vector& operator=(const vector& x) {
+				this->~vector();
+				_capacity = x._capacity;
+				_size = x._size;
+				_vector = _alloc.allocate(_capacity);
+				for (size_type i = 0; i < _size; i++)
+					_alloc.construct(&_vector[i], x._vector[i]);
+				return (*this);
+			};
 			/* End Operator= */
 
 			/* ... */
