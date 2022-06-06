@@ -29,14 +29,17 @@ namespace ft {
 			explicit vector(size_type n, const value_type& val = value_type(),
 							const allocator_type& alloc = allocator_type())
 			: _alloc(alloc), _size(n), _capacity(_size), _vector(_alloc.allocate(_capacity)) {
-				for (size_type i = 0; i < _capacity; i++)
+				for (size_type i = 0; i < _size; i++)
 					_alloc.construct(&_vector[i], val);
 			};
 
 			template <class InputIterator>
 					vector(InputIterator first, InputIterator last,
-					const allocator_type& alloc = allocator_type())
-			: _alloc(alloc), _size(last - first), _capacity(_size), _vector(_alloc.allocate(_capacity)) {};
+					const allocator_type& alloc = allocator_type()) {
+				(void)first;
+				(void)last;
+				(void)alloc;
+			};
 
 			vector(const vector& x) {
 				(void)x;
@@ -77,6 +80,16 @@ namespace ft {
 
 			/* End Iterators */
 
+			/* Capacity */
+			size_type size() const {
+				return (_size);
+			};
+			size_type capacity() const {
+				return (_capacity);
+			};
+			/* ... */
+			/* End Capacity */
+
 
 			/* Element access */
 			reference operator[](size_type n) {
@@ -91,21 +104,20 @@ namespace ft {
 
 			/* End Element access */
 
-			void reallocate(size_type size)
-			{
-				pointer tmp = _alloc.allocate(size);
-				for (size_type i = 0; i < size; i++)
-					_alloc.construct(&tmp[i], _vector[i]);
-				this->~vector();
-				_capacity = size;
-				_vector = tmp;
-			};
+			// void reallocate(size_type size) {
+			// 	pointer tmp = _alloc.allocate(size);
+			// 	for (size_type i = 1; i < size; i++)
+			// 		_alloc.construct(&tmp[i], _vector[i - 1]);
+			// 	this->~vector();
+			// 	_capacity = size;
+			// 	_vector = tmp;
+			// };
 
-			void push_back(const T& value)
-			{
-				reallocate(_size + 1);
-				_alloc.construct(&_vector[0], value);
-			};
+			// void push_back(const T& value) {
+			// 	// pointer tmp = _alloc.allocate(_size + 1);
+			// 	// reallocate(_size + 1);
+			// 	// _alloc.construct(&_vector[_size], value);
+			// };
 
 
 		protected:

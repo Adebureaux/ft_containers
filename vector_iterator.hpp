@@ -23,6 +23,12 @@ namespace ft {
 			/* End Constructors */
 
 			/* Operator overload */
+			bool operator==(const vector_iterator &rhs) const {
+				return (_itr == rhs._itr ? true : false);
+			};
+			bool operator!=(const vector_iterator &rhs) const {
+				return (_itr != rhs._itr ? true : false);
+			};
 			vector_iterator& operator++(void) {
 				_itr++;
 				return (*this); 
