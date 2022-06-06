@@ -44,7 +44,6 @@ namespace ft {
 			: _capacity(0), _vector(_alloc.allocate(_capacity)) {
 				*this = x;
 			};
-	
 			/* End Constructors */
 
 			/* Destructor */
@@ -83,9 +82,18 @@ namespace ft {
 			const_iterator end() const {
 				return iterator(&_vector[_size]); 
 			};
-
-			/* ... */
-
+			// reverse_iterator rbegin() {
+			// 	return reverse_iterator(&_vector[0]);
+			// };
+			// const_reverse_iterator rbegin() const {
+			// 	return reverse_iterator(&_vector[0]);
+			// };
+			// reverse_iterator rend() {
+			// 	return reverse_iterator(&_vector[_size]);
+			// };
+			// const_reverse_iterator rend() const {
+			// 	return reverse_iterator(&_vector[_size]); 
+			// };
 			/* End Iterators */
 
 			/* Capacity */

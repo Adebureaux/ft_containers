@@ -38,10 +38,10 @@ namespace ft {
 				++*this;
 				return (tmp);
 			};
-			bool operator<(const vector_iterator &rhs) const {
+			bool operator<(const vector_iterator& rhs) const {
 				return (_itr < rhs._itr ? true : false);
 			};
-			bool operator>(const vector_iterator &rhs) const {
+			bool operator>(const vector_iterator& rhs) const {
 				return (_itr > rhs._itr ? true : false);
 			};
 			reference operator*() {
