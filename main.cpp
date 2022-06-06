@@ -33,12 +33,14 @@ int main(void)
 	}
 	std::cout << std::endl;
 	{
-		ft::vector<int> vec(250, 3);
-		ft::vector<int> conscpy(100, 3);
-		conscpy = vec;
-		// std::cout << "Size = " << vec.size() << " | " << "Capacity = " << vec.capacity() << std::endl;
-		ft::vector<int> copy(vec.begin(), vec.end());
-		// std::cout << "Size = " << copy.size() << " | " << "Capacity = " << copy.capacity() << std::endl;
+		std::vector<int> initial(100, 1);
+		std::vector<int> vec(initial.begin(), initial.end());
+		std::cout << vec.size() << std::endl;
+	}
+	{
+		ft::vector<double> initial(300000, 1);
+		ft::vector<double> vec(initial.begin(), initial.end());
+		std::cout << vec.size() << std::endl;
 	}
 	/* ft::vector */
 	// {

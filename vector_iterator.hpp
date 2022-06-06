@@ -18,7 +18,7 @@ namespace ft {
 			/* End Typedefs */
 
 			/* Constructors */
-			vector_iterator() : _itr(NULL) {};
+			vector_iterator() : _itr(nullptr) {};
 			vector_iterator(pointer itr) : _itr(itr) {};
 			/* End Constructors */
 
@@ -31,7 +31,7 @@ namespace ft {
 			};
 			vector_iterator& operator++() {
 				_itr++;
-				return (*this); 
+				return (*this);
 			};
 			vector_iterator operator++(int) {
 				vector_iterator tmp = *this;
@@ -52,7 +52,14 @@ namespace ft {
 			}
 			/* End Operator overload */
 
-		protected:
+			/* Distance */
+			template <class InputIterator>
+			static difference_type distance(InputIterator first, InputIterator last) {
+				return (last._itr - first._itr);
+			};
+			/* End Distance */
+
+		private:
 			pointer _itr;
 	};
 }
