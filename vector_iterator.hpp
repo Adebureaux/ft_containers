@@ -1,26 +1,36 @@
 #ifndef VECTOR_ITERATOR_HPP
 # define VECTOR_ITERATOR_HPP
 
-#include <cstdio>
-#include <cstddef>
-#include <memory>
+#include "tools.hpp"
 
 namespace ft {
 	template <class T>
 	class vector_iterator {
 		public:
 			/* Typedefs */
-			typedef T												value_type;
-			typedef T&												reference;
-			typedef T*												pointer;
-			typedef std::ptrdiff_t									difference_type;
-			typedef	size_t											size_type;
+			typedef std::ptrdiff_t					difference_type;
+			typedef T								value_type;
+			typedef T*								pointer;
+			typedef T&								reference;
+			typedef ft::random_access_iterator_tag	iterator_category;
 			/* End Typedefs */
 
 			/* Constructors */
-			vector_iterator() : _itr(nullptr) {};
+			vector_iterator() : _itr(0) {};
 			vector_iterator(pointer itr) : _itr(itr) {};
+			vector_iterator(const vector_iterator& x) { *this = x; };
 			/* End Constructors */
+
+			/* Destructor */
+			~vector_iterator() {};
+			/* End Destructor */
+			
+			/* Operator= */
+			vector_iterator& operator=(const vector_iterator& x) {
+				_itr = x._itr;
+				return (*this);
+			};
+			/* End Operator= */
 
 			/* Operator overload */
 			bool operator==(const vector_iterator &rhs) const {
@@ -29,14 +39,35 @@ namespace ft {
 			bool operator!=(const vector_iterator &rhs) const {
 				return (_itr != rhs._itr ? true : false);
 			};
+			reference operator*() const {
+				return (*_itr);
+			};
+			pointer operator->() const {
+				return (_itr);
+			};
 			vector_iterator& operator++() {
 				_itr++;
 				return (*this);
 			};
 			vector_iterator operator++(int) {
 				vector_iterator tmp = *this;
-				++*this;
+				++(*this);
 				return (tmp);
+			};
+			vector_iterator& operator--() {
+				_itr--;
+				return (*this);
+			};
+			vector_iterator operator--(int) {
+				vector_iterator tmp = *this;
+				--(*this);
+				return (tmp);
+			};
+			vector_iterator operator+(const vector_iterator &rhs) const {
+				return (vector_iterator(_itr + rhs.itr));
+			};
+			vector_iterator operator-(const vector_iterator &rhs) const {
+				return (vector_iterator(_itr - rhs.itr));
 			};
 			bool operator<(const vector_iterator& rhs) const {
 				return (_itr < rhs._itr ? true : false);
@@ -44,21 +75,24 @@ namespace ft {
 			bool operator>(const vector_iterator& rhs) const {
 				return (_itr > rhs._itr ? true : false);
 			};
-			reference operator*() {
-				return (*_itr);
-			}
-			pointer operator->() {
-				return (_itr);
-			}
-			/* End Operator overload */
-
-			/* Distance */
-			template <class InputIterator>
-			static difference_type distance(InputIterator first, InputIterator last) {
-				return (last._itr - first._itr);
+			bool operator<=(const vector_iterator& rhs) const {
+				return (_itr <= rhs._itr ? true : false);
 			};
-			/* End Distance */
-
+			bool operator>=(const vector_iterator& rhs) const {
+				return (_itr >= rhs._itr ? true : false);
+			};
+			vector_iterator& operator+=(const vector_iterator& rhs) {
+				_itr += rhs._itr;
+				return (*this);
+			};
+			vector_iterator& operator-=(const vector_iterator& rhs) {
+				_itr -= rhs._itr;
+				return (*this);
+			};
+			reference operator[](size_t n) const {
+				return (_itr[n]);
+			};
+			/* End Operator overload */
 		private:
 			pointer _itr;
 	};

@@ -1,7 +1,6 @@
 #ifndef VECTOR_HPP
 # define VECTOR_HPP
 
-#include "vector_iterator.hpp"
 #include "tools.hpp"
 
 namespace ft {
@@ -17,8 +16,8 @@ namespace ft {
 			typedef const T*										const_pointer;
 			typedef ft::vector_iterator<value_type>					iterator;
 			typedef ft::vector_iterator<value_type const>			const_iterator;
-			// typedef ft::reverse_iterator<iterator>					reverse_iterator;
-			// typedef ft::reverse_iterator<iterator const>			const_reverse_iterator;
+			typedef ft::reverse_iterator<iterator>					reverse_iterator;
+			typedef ft::reverse_iterator<iterator const>			const_reverse_iterator;
 			typedef std::ptrdiff_t									difference_type;
 			typedef	size_t											size_type;
 			/* End Typedefs */
@@ -26,7 +25,7 @@ namespace ft {
 			/* Constructors */
 			explicit vector(const allocator_type& alloc = allocator_type())
 			: _alloc(alloc), _size(0), _capacity(_size), _vector(_alloc.allocate(_capacity)) {};
-	
+
 			explicit vector(size_type n, const value_type& val = value_type(), const allocator_type& alloc = allocator_type())
 			: _alloc(alloc), _size(n), _capacity(_size), _vector(_alloc.allocate(_capacity)) {
 				for (size_type i = 0; i < _size; i++)
@@ -35,7 +34,7 @@ namespace ft {
 
 			template <class InputIterator>
 			vector(InputIterator first, InputIterator last, const allocator_type& alloc = allocator_type(), typename ft::enable_if<!ft::is_integral<InputIterator>::value, InputIterator>::type* = 0)
-			: _alloc(alloc), _size(iterator::distance(first, last)), _capacity(_size), _vector(_alloc.allocate(_capacity)) {
+			: _alloc(alloc), _size(ft::distance(first, last)), _capacity(_size), _vector(_alloc.allocate(_capacity)) {
 				for (size_type i = 0; i < _size; i++, first++)
 					_alloc.construct(&_vector[i], *first);
 			};
@@ -77,23 +76,23 @@ namespace ft {
 				return iterator(&_vector[0]);
 			};
 			iterator end() {
-				return iterator(&_vector[_size]);
+				return (iterator(&_vector[_size]));
 			};
 			const_iterator end() const {
-				return iterator(&_vector[_size]); 
+				return (iterator(&_vector[_size])); 
 			};
-			// reverse_iterator rbegin() {
-			// 	return reverse_iterator(&_vector[0]);
-			// };
-			// const_reverse_iterator rbegin() const {
-			// 	return reverse_iterator(&_vector[0]);
-			// };
-			// reverse_iterator rend() {
-			// 	return reverse_iterator(&_vector[_size]);
-			// };
-			// const_reverse_iterator rend() const {
-			// 	return reverse_iterator(&_vector[_size]); 
-			// };
+			reverse_iterator rbegin() {
+				return (reverse_iterator(&_vector[0]));
+			};
+			const_reverse_iterator rbegin() const {
+				return (reverse_iterator(&_vector[0]));
+			};
+			reverse_iterator rend() {
+				return (reverse_iterator(&_vector[_size]));
+			};
+			const_reverse_iterator rend() const {
+				return (reverse_iterator(&_vector[_size])); 
+			};
 			/* End Iterators */
 
 			/* Capacity */
@@ -120,23 +119,23 @@ namespace ft {
 
 			/* End Element access */
 
-			// void reallocate(size_type size) {
-			// 	pointer tmp = _alloc.allocate(size);
-			// 	for (size_type i = 1; i < size; i++)
-			// 		_alloc.construct(&tmp[i], _vector[i - 1]);
-			// 	this->~vector();
-			// 	_capacity = size;
-			// 	_vector = tmp;
-			// };
+			void reallocate(size_type size) {
+				pointer tmp = _alloc.allocate(size);
+				for (size_type i = 0; i < _size; ++i)
+					_alloc.construct(&tmp[i], _vector[i]);
+				this->~vector();
+				_capacity = size;
+				_vector = tmp;
+			};
 
-			// void push_back(const T& value) {
-			// 	// pointer tmp = _alloc.allocate(_size + 1);
-			// 	// reallocate(_size + 1);
-			// 	// _alloc.construct(&_vector[_size], value);
-			// };
+			void push_back(const T& value) {
+				if (!_capacity)
+					reallocate(1);
+				else if (_size + 1 > _capacity)
+					reallocate(_capacity * 2);
+				_alloc.construct(&_vector[_size++], value);
+			};
 
-
-		protected:
 
 		private:
 			Alloc		_alloc;

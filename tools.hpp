@@ -1,6 +1,13 @@
 #ifndef TOOLS_HPP
 # define TOOLS_HPP
 
+#include <cstdio>
+#include <cstddef>
+#include <memory>
+#include "iterator_traits.hpp"
+#include "reverse_iterator.hpp"
+#include "vector_iterator.hpp"
+
 namespace ft {
 	/* Enable_if */
 	template <bool B, class T = void>
@@ -61,5 +68,15 @@ namespace ft {
 		static const bool value = true;
 	};
 	/* End Is_integral */
+
+	/* Distance */
+	template <class InputIterator>
+	std::ptrdiff_t distance(InputIterator first, InputIterator last) {
+		std::ptrdiff_t count = 0;
+		while (first++ != last)
+			count++;
+		return (count);
+	};
+	/* End Distance */
 }
 #endif
