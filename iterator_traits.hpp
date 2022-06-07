@@ -3,7 +3,7 @@
 
 namespace ft {
 	template <class T>
-	class iterator_traits<T*> {
+	class iterator_traits {
 		public:
 			/* Typedefs */
 			typedef T												value_type;
