@@ -48,7 +48,7 @@ namespace ft {
 				return (*tmp);
 			};
 			reverse_iterator operator+(difference_type n) const {
-				return (*(_itr) - n);
+				return reverse_iterator(_itr - n);
 			};
 			reverse_iterator& operator++() {
 				_itr--;
@@ -64,7 +64,9 @@ namespace ft {
 				return (*this);
 			};
 			reverse_iterator operator-(difference_type n) const {
-				return (reverse_iterator(_itr + n));
+				reverse_iterator tmp = *this;
+				tmp._itr += n;
+				return (tmp);
 			};
 			reverse_iterator& operator--() {
 				_itr++;
@@ -117,19 +119,19 @@ namespace ft {
 	};
 	/* End Relational operators */
 
-	/* Operator+ */
-	template <class Iterator>
-	reverse_iterator<Iterator> operator+(typename reverse_iterator<Iterator>::difference_type n, const reverse_iterator<Iterator>& rev_it) {
+	// /* Operator+ */
+	// template <class Iterator>
+	// reverse_iterator<Iterator> operator+(typename reverse_iterator<Iterator>::difference_type n, const reverse_iterator<Iterator>& rev_it) {
 
-		return (rev_it.operator+(n));
-	};
-	/* End Operator+ */
-	/* Operator- */
-	template <class Iterator>
-	typename reverse_iterator<Iterator>::difference_type operator-(const reverse_iterator<Iterator>& lhs, const reverse_iterator<Iterator>& rhs) {
-		return (lhs - rhs);
-	};
-	/* End Operator+ */
+	// 	return (rev_it * n);
+	// };
+	// /* End Operator+ */
+	// /* Operator- */
+	// template <class Iterator>
+	// typename reverse_iterator<Iterator>::difference_type operator-(const reverse_iterator<Iterator>& lhs, const reverse_iterator<Iterator>& rhs) {
+	// 	return (lhs * rhs);
+	// };
+	// /* End Operator+ */
 }
 #endif
 			
