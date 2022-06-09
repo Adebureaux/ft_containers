@@ -36,6 +36,7 @@ namespace ft {
 			pointer getitr() const {
 				return (_itr);
 			}
+			/* End Getter */
 
 			/* Operator overload */
 			bool operator==(const vector_iterator &rhs) const {
