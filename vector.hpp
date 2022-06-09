@@ -14,10 +14,10 @@ namespace ft {
 			typedef const T&										const_reference;
 			typedef T*												pointer;
 			typedef const T*										const_pointer;
-			typedef ft::vector_iterator<value_type>					iterator;
-			typedef ft::vector_iterator<value_type const>			const_iterator;
+			typedef typename ft::vector_iterator<value_type>		iterator;
+			typedef typename ft::vector_iterator<const value_type>	const_iterator;
 			typedef ft::reverse_iterator<iterator>					reverse_iterator;
-			typedef ft::reverse_iterator<iterator const>			const_reverse_iterator;
+			typedef ft::reverse_iterator<const iterator>			const_reverse_iterator;
 			typedef std::ptrdiff_t									difference_type;
 			typedef	size_t											size_type;
 			/* End Typedefs */
@@ -82,16 +82,16 @@ namespace ft {
 				return (iterator(&_vector[_size])); 
 			};
 			reverse_iterator rbegin() {
-				return (reverse_iterator(&_vector[0]));
-			};
-			const_reverse_iterator rbegin() const {
-				return (reverse_iterator(&_vector[0]));
-			};
-			reverse_iterator rend() {
 				return (reverse_iterator(&_vector[_size]));
 			};
+			const_reverse_iterator rbegin() const {
+				return (reverse_iterator(&_vector[_size]));
+			};
+			reverse_iterator rend() {
+				return (reverse_iterator(&_vector[0]));
+			};
 			const_reverse_iterator rend() const {
-				return (reverse_iterator(&_vector[_size])); 
+				return (reverse_iterator(&_vector[0])); 
 			};
 			/* End Iterators */
 

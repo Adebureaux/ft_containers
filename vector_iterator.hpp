@@ -63,11 +63,11 @@ namespace ft {
 				--(*this);
 				return (tmp);
 			};
-			vector_iterator operator+(const vector_iterator &rhs) const {
-				return (vector_iterator(_itr + rhs.itr));
+			vector_iterator operator+(difference_type n) const {
+				return (vector_iterator(_itr + n));
 			};
-			vector_iterator operator-(const vector_iterator &rhs) const {
-				return (vector_iterator(_itr - rhs.itr));
+			vector_iterator operator-(difference_type n) const {
+				return (vector_iterator(_itr - n));
 			};
 			bool operator<(const vector_iterator& rhs) const {
 				return (_itr < rhs._itr ? true : false);
@@ -81,7 +81,7 @@ namespace ft {
 			bool operator>=(const vector_iterator& rhs) const {
 				return (_itr >= rhs._itr ? true : false);
 			};
-			vector_iterator& operator+=(const vector_iterator& rhs) {
+			vector_iterator& operator+=(difference_type n) {
 				_itr += rhs._itr;
 				return (*this);
 			};
