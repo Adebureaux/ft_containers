@@ -32,6 +32,11 @@ namespace ft {
 			};
 			/* End Operator= */
 
+			/* Getter */
+			pointer getitr() const {
+				return (_itr);
+			}
+
 			/* Operator overload */
 			bool operator==(const vector_iterator &rhs) const {
 				return (_itr == rhs._itr ? true : false);
@@ -93,6 +98,7 @@ namespace ft {
 				return (_itr[n]);
 			};
 			/* End Operator overload */
+
 		private:
 			pointer _itr;
 	};

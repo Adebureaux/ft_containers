@@ -36,14 +36,13 @@ namespace ft {
 
 			/* Base */
 			iterator_type base() const {
-				return (_itr);
+				return (_itr - 1);
 			};
 			/* End Base */
 
 			/* Operator overload */
 			reference operator*() const {
-				iterator_type tmp = base();
-				return (*(--tmp));
+				return (*this->base());
 			};
 			reverse_iterator operator+(difference_type n) const {
 				return (reverse_iterator(_itr - n));
@@ -121,10 +120,11 @@ namespace ft {
 		return (rev_it + n);
 	};
 	/* End Operator+ */
+
 	/* Operator- */
 	template <class Iterator>
 	typename reverse_iterator<Iterator>::difference_type operator-(const reverse_iterator<Iterator>& lhs, const reverse_iterator<Iterator>& rhs) {
-		return (*rhs.base() - *lhs.base());
+		return (rhs.base().getitr() - lhs.base().getitr());
 	};
 	/* End Operator+ */
 }

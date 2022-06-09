@@ -132,9 +132,13 @@ int main(void) {
 		std::reverse_iterator<std::vector<int>::iterator> from,until;
 
 		from = myvector.rbegin();
-		until = from;
+		until = myvector.rend();
+		std::cout << *from << std::endl;
+		std::cout << *until << std::endl;
 
 		std::cout << "myvector has " << (until-from) << " elements.\n";
+		std::cout << "myvector has " << (until-until) << " elements.\n";
+		std::cout << "myvector has " << *(5 + from) << " elements.\n";
 	}
 	{
 		ft::vector<int> myvector;
@@ -143,9 +147,13 @@ int main(void) {
 		ft::reverse_iterator<ft::vector<int>::iterator> from,until;
 
 		from = myvector.rbegin();
-		until = from;
+		until = myvector.rend();
+		std::cout << *from << std::endl;
+		std::cout << *until << std::endl;
 
 		std::cout << "myvector has " << (until-from) << " elements.\n";
+		std::cout << "myvector has " << (until-until) << " elements.\n";
+		std::cout << "myvector has " << *(5 + from) << " elements.\n";
 	}
 
 	return (0);	
