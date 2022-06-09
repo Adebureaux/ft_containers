@@ -63,10 +63,10 @@ namespace ft {
 				--(*this);
 				return (tmp);
 			};
-			vector_iterator operator+(difference_type n) const {
+			vector_iterator operator+(const difference_type n) const {
 				return (vector_iterator(_itr + n));
 			};
-			vector_iterator operator-(difference_type n) const {
+			vector_iterator operator-(const difference_type n) const {
 				return (vector_iterator(_itr - n));
 			};
 			bool operator<(const vector_iterator& rhs) const {
@@ -81,12 +81,12 @@ namespace ft {
 			bool operator>=(const vector_iterator& rhs) const {
 				return (_itr >= rhs._itr ? true : false);
 			};
-			vector_iterator& operator+=(difference_type n) {
-				_itr += rhs._itr;
+			vector_iterator& operator+=(const difference_type n) {
+				_itr += n;
 				return (*this);
 			};
-			vector_iterator& operator-=(const vector_iterator& rhs) {
-				_itr -= rhs._itr;
+			vector_iterator& operator-=(const difference_type n) {
+				_itr -= n;
 				return (*this);
 			};
 			reference operator[](size_t n) const {
