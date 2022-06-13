@@ -17,7 +17,7 @@ namespace ft {
 			typedef typename ft::vector_iterator<value_type>		iterator;
 			typedef typename ft::vector_iterator<const value_type>	const_iterator;
 			typedef ft::reverse_iterator<iterator>					reverse_iterator;
-			typedef ft::reverse_iterator<const iterator>			const_reverse_iterator;
+			typedef ft::reverse_iterator<const_iterator>			const_reverse_iterator;
 			typedef std::ptrdiff_t									difference_type;
 			typedef	size_t											size_type;
 			/* End Typedefs */
@@ -65,9 +65,6 @@ namespace ft {
 			};
 			/* End Operator= */
 
-			/* ... */
-
-
 			/* Iterators */
 			iterator begin() {
 				return iterator(&_vector[0]);
@@ -99,8 +96,23 @@ namespace ft {
 			size_type size() const {
 				return (_size);
 			};
+			size_type max_size() const {
+				return (std::numeric_limits<difference_type>::max() / sizeof(value_type));
+			};
+			void resize(size_type n, value_type val = value_type()) {
+				pointer tmp = _alloc.allocate(n);
+				for (size_type i = 0; i < n; i++)
+					i < _size ? _alloc.construct(&tmp[i], _vector[i]) : _alloc.construct(&tmp[i], val);
+				this->~vector();
+				_capacity = _capacity < n ? n : _capacity;
+				_size = n;
+				_vector = tmp;
+			};
 			size_type capacity() const {
 				return (_capacity);
+			};
+			bool empty() const {
+				return (!_size ? true : false);
 			};
 			/* ... */
 			/* End Capacity */
@@ -119,23 +131,20 @@ namespace ft {
 
 			/* End Element access */
 
-			void reallocate(size_type size) {
-				pointer tmp = _alloc.allocate(size);
-				for (size_type i = 0; i < _size; ++i)
-					_alloc.construct(&tmp[i], _vector[i]);
-				this->~vector();
-				_capacity = size;
-				_vector = tmp;
-			};
-
 			void push_back(const T& value) {
-				if (!_capacity)
-					reallocate(1);
-				else if (_size + 1 > _capacity)
-					reallocate(_capacity * 2);
+				
+				if (!_capacity || _size + 1 > _capacity)
+				{
+					size_type size = !_capacity ? 1 : _capacity * 2;
+					pointer tmp = _alloc.allocate(size);
+					for (size_type i = 0; i < _size; i++)
+						_alloc.construct(&tmp[i], _vector[i]);
+					this->~vector();
+					_capacity = size;
+					_vector = tmp;
+				}
 				_alloc.construct(&_vector[_size++], value);
 			};
-
 
 		private:
 			Alloc		_alloc;

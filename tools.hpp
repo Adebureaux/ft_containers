@@ -4,6 +4,7 @@
 #include <cstdio>
 #include <cstddef>
 #include <memory>
+#include <limits>
 #include "iterator_traits.hpp"
 #include "reverse_iterator.hpp"
 #include "vector_iterator.hpp"
