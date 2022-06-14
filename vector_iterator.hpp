@@ -100,6 +100,11 @@ namespace ft {
 			};
 			/* End Operator overload */
 
+			template <class InputIterator>
+			static std::ptrdiff_t distance(InputIterator first, InputIterator last) {
+				return (last.getitr() - first.getitr());
+			};
+
 		private:
 			pointer _itr;
 	};

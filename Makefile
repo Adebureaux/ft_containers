@@ -8,8 +8,6 @@ OBJS		= ${OBJS_DIR}${SRCS:.cpp=.o}
 
 DEPS		= ${OBJS:.o=.d}
 
-HDIR		= vector.hpp
-
 RM			= rm -rf
 
 CFLAGS		= -std=c++98 -Wall -Wextra -Werror -g
@@ -28,6 +26,7 @@ ${OBJS_DIR}%.o: %.cpp
 all: ${NAME}
 
 clean:
+	${RM} test/ft_vector.txt test/std_vector.txt test/ft_vector_err.log test/std_vector_err.log
 	${RM} ${OBJS_DIR}
 
 fclean: clean
@@ -35,4 +34,7 @@ fclean: clean
 
 re: fclean all
 
-.PHONY: all clean fclean re
+test:
+	@bash test/test.sh
+
+.PHONY: all clean fclean re test

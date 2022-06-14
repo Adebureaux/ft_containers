@@ -27,14 +27,17 @@ namespace ft {
 			: _alloc(alloc), _size(0), _capacity(_size), _vector(_alloc.allocate(_capacity)) {};
 
 			explicit vector(size_type n, const value_type& val = value_type(), const allocator_type& alloc = allocator_type())
-			: _alloc(alloc), _size(n), _capacity(_size), _vector(_alloc.allocate(_capacity)) {
+			: _alloc(alloc), _size(n), _capacity(_size) {
+				if (n > max_size())
+					throw (std::length_error("cannot create ft::vector larger than max_size()"));
+				_vector = _alloc.allocate(_capacity);
 				for (size_type i = 0; i < _size; i++)
 					_alloc.construct(&_vector[i], val);
 			};
 
 			template <class InputIterator>
 			vector(InputIterator first, InputIterator last, const allocator_type& alloc = allocator_type(), typename ft::enable_if<!ft::is_integral<InputIterator>::value, InputIterator>::type* = 0)
-			: _alloc(alloc), _size(ft::distance(first, last)), _capacity(_size), _vector(_alloc.allocate(_capacity)) {
+			: _alloc(alloc), _size(vector_iterator<T>::distance(first, last)), _capacity(_size), _vector(_alloc.allocate(_capacity)) {
 				for (size_type i = 0; i < _size; i++, first++)
 					_alloc.construct(&_vector[i], *first);
 			};
@@ -100,6 +103,8 @@ namespace ft {
 				return (std::numeric_limits<difference_type>::max() / sizeof(value_type));
 			};
 			void resize(size_type n, value_type val = value_type()) {
+				if (n > max_size())
+					throw (std::length_error("vector::resize larger than max_size()"));
 				pointer tmp = _alloc.allocate(n);
 				for (size_type i = 0; i < n; i++)
 					i < _size ? _alloc.construct(&tmp[i], _vector[i]) : _alloc.construct(&tmp[i], val);
@@ -114,16 +119,36 @@ namespace ft {
 			bool empty() const {
 				return (!_size ? true : false);
 			};
-			/* ... */
+			void reserve(size_type n) {
+				if (n > max_size())
+					throw (std::length_error("vector::reserve larger than max_size()"));
+				if (n > _size)
+				{
+					pointer tmp = _alloc.allocate(n);
+					for (size_type i = 0; i < _size; i++)
+						_alloc.construct(&tmp[i], _vector[i]);
+					this->~vector();
+					_capacity = n;
+					_vector = tmp;
+				}
+			};
 			/* End Capacity */
-
 
 			/* Element access */
 			reference operator[](size_type n) {
 				return (_vector[n]);
 			};
-
 			const_reference operator[](size_type n) const {
+				return (_vector[n]);
+			};
+			reference at(size_type n){
+				if (n >= _size)
+					throw (std::out_of_range("vector::at the position is out of range"));
+				return (_vector[n]);
+			};
+			const_reference at(size_type n) const {
+				if (n >= _size)
+					throw (std::out_of_range("vector::at the position is out of range"));
 				return (_vector[n]);
 			};
 

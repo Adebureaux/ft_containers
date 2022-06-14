@@ -70,14 +70,17 @@ namespace ft {
 	};
 	/* End Is_integral */
 
-	/* Distance */
-	template <class InputIterator>
-	std::ptrdiff_t distance(InputIterator first, InputIterator last) {
-		std::ptrdiff_t count = 0;
-		while (first++ != last)
-			count++;
-		return (count);
-	};
-	/* End Distance */
+	// /* Distance */
+	// template <class InputIterator>
+	// std::ptrdiff_t distance(InputIterator first, InputIterator last) {
+	// 	std::ptrdiff_t count = 0;
+	// 	while (first++ != last)
+	// 	{
+	// 		count++;
+	// 		std::cout << count << std::endl;
+	// 	}
+	// 	return (count);
+	// };
+	// /* End Distance */
 }
 #endif
