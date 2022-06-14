@@ -102,7 +102,7 @@ namespace ft {
 
 			template <class InputIterator>
 			static std::ptrdiff_t distance(InputIterator first, InputIterator last) {
-				return (last.getitr() - first.getitr());
+				return (std::max(last.getitr() - first.getitr(), first.getitr() - last.getitr()));
 			};
 
 		private:

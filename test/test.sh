@@ -6,7 +6,7 @@ c++ -std=c++98 -Wall -Wextra -Werror vector.cpp -o ft_vector
 echo "Compiling test with std::vector"
 c++ -DLOC=std -std=c++98 -Wall -Wextra -Werror vector.cpp -o std_vector
 
-valgrind -q ./ft_vector > ft_vector.txt 2> ft_vector_err.log
+./ft_vector > ft_vector.txt 2> ft_vector_err.log
 ./std_vector > std_vector.txt 2> std_vector_err.log
 
 echo "Checking diff"

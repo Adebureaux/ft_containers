@@ -34,6 +34,12 @@ namespace ft {
 			};
 			/* End Operator= */
 
+			/* Getter */
+			pointer getitr() const {
+				return &(operator*());
+			}
+			/* End Getter */
+
 			/* Base */
 			iterator_type base() const {
 				return (_itr - 1);
@@ -84,7 +90,12 @@ namespace ft {
 			};
 			/* End Operator overload */
 
-		public:
+			template <class InputIterator>
+			static std::ptrdiff_t distance(InputIterator first, InputIterator last) {
+				return (last.getitr() - first.getitr());
+			};
+
+		private:
 			iterator_type _itr;
 	};
 	/* Relational operators */
