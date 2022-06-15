@@ -76,7 +76,7 @@ namespace ft {
 		std::ptrdiff_t distance = 0;
 		if (first > last)
 			throw (std::length_error("cannot create ft::vector larger than max_size()"));
-		while (first++ != last)
+		while (first++ < last)
 			distance++;
 		return (distance);
 	};
