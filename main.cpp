@@ -4,10 +4,15 @@
 #include "vector.hpp"
 
 int main(void) {
-	std::vector<int> a(100, 100);
-	std::vector<int> b(a.begin(), a.end());
-	std::cout << b.size() << std::endl;
-	std::vector<int> c(a.rbegin(), a.rend());
-	std::cout << c.size() << std::endl;
+	ft::vector<int> a;
+	std::cout << "SIZE = " << a.size() << " CAPACITY = " << a.capacity() << std::endl;
+	for (int i = 0; i < 10; i++)
+		a.push_back(i);
+	std::cout << "SIZE = " << a.size() << " CAPACITY = " << a.capacity() << std::endl;
+	a.resize(12);
+	std::cout << "SIZE = " << a.size() << " CAPACITY = " << a.capacity() << std::endl;
+	for (int i = 0; i < 10; i++)
+		a.push_back(i);
+	std::cout << "SIZE = " << a.size() << " CAPACITY = " << a.capacity() << std::endl;
 	return (0);
 }

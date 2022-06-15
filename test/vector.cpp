@@ -1,4 +1,5 @@
 #include <vector>
+#include <string>
 #include <iostream>
 #include "../vector.hpp"
 
@@ -35,14 +36,16 @@ int main(void)
 	LOC::vector<long long> longvec;
 	LOC::vector<double> doublevec;
 	LOC::vector<char> charvec;
+	LOC::vector<std::string> strvec;
 	std::cout << intvec.max_size() << std::endl;
 	std::cout << longvec.max_size() << std::endl;
 	std::cout << doublevec.max_size() << std::endl;
 	std::cout << charvec.max_size() << std::endl;
+	std::cout << strvec.max_size() << std::endl;
 	std::cout << a.size() << std::endl;
 	std::cout << a.capacity() << std::endl;
 	a.resize(5);
-	a.resize(8,100);
+	a.resize(8, 100);
 	a.resize(12);
 	for (unsigned long i = 0; i < a.size(); i++)
 		std::cout << a[i] << ' ';
@@ -115,4 +118,42 @@ int main(void)
 	catch (const std::exception& e) {
 		std::cerr << e.what() << std::endl;
 	}
+	LOC::vector<int> baz(a.rend(), a.rend());
+	LOC::vector<int> doo(a.rbegin(), a.rbegin());
+	std::cout << baz.empty() << " " << doo.empty() << std::endl;
+	LOC::vector<int> zoo(a.begin(), a.end());
+	for (unsigned long i = 0; i < zoo.size(); i++)
+		std::cout << zoo[i] << ' ';
+	LOC::vector<int> paz;
+	paz.push_back(78);
+	paz.push_back(16);
+	paz.front() -= paz.back();
+	std::cout << paz.front() << std::endl;
+	std::cout << paz.back() << std::endl;
+	for (int i = 0; i < 2000; i++)
+		a.push_back(i);
+	LOC::vector<int> first(7, 200);
+	LOC::vector<int> second;
+	LOC::vector<int> third;
+	first.assign(7, 100);
+	LOC::vector<int>::iterator it;
+	it = first.begin() + 1;
+	second.assign(it, first.end() - 1);
+	int myints[] = { 1776, 7, 4 };
+	third.assign(myints, myints + 3);
+	std::cout << first.size() << " FIRST " << first.capacity() << std::endl;
+	it = first.begin();
+	while (it != first.end())
+		std::cout << *it++ << " ";
+	std::cout << std::endl;
+	std::cout << second.size() << " SECOND " << second.capacity() << std::endl;
+	it = second.begin();
+	while (it != second.end())
+		std::cout << *it++ << " ";
+	std::cout << std::endl;
+	std::cout << third.size() << " THIRD " << third.capacity() << std::endl;
+	it = third.begin();
+	while (it != third.end())
+		std::cout << *it++ << " ";
+	std::cout << std::endl;
 }

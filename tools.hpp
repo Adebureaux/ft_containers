@@ -70,17 +70,16 @@ namespace ft {
 	};
 	/* End Is_integral */
 
-	// /* Distance */
-	// template <class InputIterator>
-	// std::ptrdiff_t distance(InputIterator first, InputIterator last) {
-	// 	std::ptrdiff_t count = 0;
-	// 	while (first++ != last)
-	// 	{
-	// 		count++;
-	// 		std::cout << count << std::endl;
-	// 	}
-	// 	return (count);
-	// };
-	// /* End Distance */
+	/* Distance */
+	template <class InputIterator>
+	std::ptrdiff_t distance(InputIterator first, InputIterator last) {
+		std::ptrdiff_t distance = 0;
+		if (first > last)
+			throw (std::length_error("cannot create ft::vector larger than max_size()"));
+		while (first++ != last)
+			distance++;
+		return (distance);
+	};
+	/* End Distance */
 }
 #endif

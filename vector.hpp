@@ -37,7 +37,7 @@ namespace ft {
 
 			template <class InputIterator>
 			vector(InputIterator first, InputIterator last, const allocator_type& alloc = allocator_type(), typename ft::enable_if<!ft::is_integral<InputIterator>::value, InputIterator>::type* = 0)
-			: _alloc(alloc), _size(vector_iterator<T>::distance(first, last)), _capacity(_size), _vector(_alloc.allocate(_capacity)) {
+			: _alloc(alloc), _size(ft::distance(first, last)), _capacity(_size), _vector(_alloc.allocate(_capacity)) {
 				for (size_type i = 0; i < _size; i++, first++)
 					_alloc.construct(&_vector[i], *first);
 			};
@@ -100,7 +100,7 @@ namespace ft {
 				return (_size);
 			};
 			size_type max_size() const {
-				return (std::numeric_limits<difference_type>::max() / sizeof(value_type));
+				return (_alloc.max_size());
 			};
 			void resize(size_type n, value_type val = value_type()) {
 				if (n > max_size())
@@ -151,25 +151,72 @@ namespace ft {
 					throw (std::out_of_range("vector::at the position is out of range"));
 				return (_vector[n]);
 			};
-
-			/* ... */
-
+			reference front() {
+				return (_vector[0]);
+			};
+			const_reference front() const {
+				return (_vector[0]);
+			};
+			reference back() {
+				return (_vector[_size - 1]);
+			};
+			const_reference back() const {
+				return (_vector[_size - 1]);
+			};
 			/* End Element access */
 
+			/* Modifiers */
+			template <class InputIterator>
+			void assign (InputIterator first, InputIterator last, typename ft::enable_if<!ft::is_integral<InputIterator>::value, InputIterator>::type* = 0) {
+				_size = ft::distance(first, last);
+				if (_size > _capacity)
+				{
+					_capacity = _size;
+					pointer tmp = _alloc.allocate(_capacity);
+					for (size_type i = 0; i < _size; i++, first++)
+						_alloc.construct(&tmp[i], *first);
+					this->~vector();
+					_vector = tmp;
+				}
+				else
+				{
+					for (size_type i = 0; i < _size; i++, first++)
+						_alloc.construct(&_vector[i], *first);
+				}
+			};
+			void assign(size_type n, const value_type& val) {
+				_size = n;
+				if (_size > _capacity)
+				{
+					_capacity = _size;
+					pointer tmp = _alloc.allocate(_capacity);
+					for (size_type i = 0; i < _size; i++)
+						_alloc.construct(&tmp[i], val);
+					this->~vector();
+					_vector = tmp;
+				}
+				else
+				{
+					for (size_type i = 0; i < _size; i++)
+						_alloc.construct(&_vector[i], val);
+				}
+			};
 			void push_back(const T& value) {
-				
 				if (!_capacity || _size + 1 > _capacity)
 				{
-					size_type size = !_capacity ? 1 : _capacity * 2;
-					pointer tmp = _alloc.allocate(size);
+					size_type capacity = !_capacity ? 1 : _capacity * 2;
+					pointer tmp = _alloc.allocate(capacity);
 					for (size_type i = 0; i < _size; i++)
+					{
 						_alloc.construct(&tmp[i], _vector[i]);
+					}
 					this->~vector();
-					_capacity = size;
+					_capacity = capacity;
 					_vector = tmp;
 				}
 				_alloc.construct(&_vector[_size++], value);
 			};
+			/* End Modifiers */
 
 		private:
 			Alloc		_alloc;

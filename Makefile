@@ -26,15 +26,22 @@ ${OBJS_DIR}%.o: %.cpp
 all: ${NAME}
 
 clean:
-	${RM} test/ft_vector.txt test/std_vector.txt test/ft_vector_err.log test/std_vector_err.log
+	${RM} test/ft_vector.out test/std_vector.out test/ft_vector_err.log test/std_vector_err.log
 	${RM} ${OBJS_DIR}
 
 fclean: clean
+	${RM} test/ft_vector test/std_vector
 	${RM} ${NAME}
 
 re: fclean all
 
-test:
-	@bash test/test.sh
+vector:
+	@echo "Compiling test with ft::vector"
+	${COMPILER} ${CFLAGS} test/vector.cpp -o test/ft_vector
+	@echo "Compiling test with std::vector"
+	${COMPILER} -DLOC=std ${CFLAGS} test/vector.cpp -o test/std_vector
+	@bash test/vector_test.sh
 
-.PHONY: all clean fclean re test
+test: vector
+
+.PHONY: all clean fclean re vector test
