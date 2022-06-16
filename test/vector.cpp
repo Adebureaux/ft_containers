@@ -49,7 +49,7 @@ int main(void)
 	a.resize(12);
 	for (unsigned long i = 0; i < a.size(); i++)
 		std::cout << a[i] << ' ';
-	std::cout << std::endl;;
+	std::cout << std::endl;
 	std::cout << a.size() << std::endl;
 	std::cout << a.capacity() << std::endl;
 	std::cout << a.empty() << std::endl;
@@ -130,7 +130,7 @@ int main(void)
 	paz.front() -= paz.back();
 	std::cout << paz.front() << std::endl;
 	std::cout << paz.back() << std::endl;
-	for (int i = 0; i < 2000; i++)
+	for (int i = 0; i < 3; i++)
 		a.push_back(i);
 	LOC::vector<int> first(7, 200);
 	LOC::vector<int> second;
@@ -156,4 +156,57 @@ int main(void)
 	while (it != third.end())
 		std::cout << *it++ << " ";
 	std::cout << std::endl;
+	start = a.begin();
+	while (start != a.end())
+		std::cout << *start++ << ' ';
+	a.resize(8, 100);
+	start = a.begin();
+	while (start != a.end())
+		std::cout << *start++ << ' ';
+	std::cout << std::endl;
+	std::cout << "SIZE = " << a.size() << " CAPACITY = " << a.capacity() << std::endl;
+	a.resize(25);
+	std::cout << "SIZE = " << a.size() << " CAPACITY = " << a.capacity() << std::endl;
+	a.resize(0);
+	try {
+		a.resize(-1);
+	}
+	catch (const std::exception& e) {
+		std::cerr << e.what() << std::endl;
+	}
+	a.resize(25, 10);
+	start = a.begin();
+	while (start != a.end())
+		std::cout << *start++ << ' ';
+	std::cout << std::endl;
+	std::cout << "SIZE = " << a.size() << " CAPACITY = " << a.capacity() << std::endl;
+	a.assign(28, 42);
+	std::cout << "SIZE = " << a.size() << " CAPACITY = " << a.capacity() << std::endl;
+	start = a.begin();
+	while (start < a.end())
+		std::cout << *start++ << ' ';
+	std::cout << std::endl;
+	a.assign(start, a.end());
+	start = a.begin();
+	while (start - 12 < a.end())
+		std::cout << *start++ << ' ';
+	std::cout << std::endl;
+	std::cout << "SIZE = " << a.size() << " CAPACITY = " << a.capacity() << std::endl;
+	a.assign(18, 42);
+	LOC::vector<int> c(100, 25);
+	c = a;
+	start = c.begin();
+	while (start < c.end())
+		std::cout << *start++ << ' ';
+	std::cout << std::endl;
+	std::cout << "SIZE = " << c.size() << " CAPACITY = " << c.capacity() << std::endl;
+	LOC::vector<int> d(c);
+	start = d.begin();
+	for (unsigned long i = 0; i < d.size(); i++)
+		std::cout << d[i] << ' ';
+	std::cout << std::endl;
+	std::cout << "SIZE = " << d.size() << " CAPACITY = " << d.capacity() << std::endl;
+	LOC::vector<int> e;
+	e = a;
+	std::cout << "SIZE = " << e.size() << " CAPACITY = " << e.capacity() << std::endl;
 }

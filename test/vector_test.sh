@@ -3,12 +3,12 @@
 cd test
 
 start=`date +%s%N`
-valgrind ./ft_vector > ft_vector.out #2> ft_vector_err.log
+valgrind ./ft_vector > ft_vector.out 2> ft_vector_err.log
 end=`date +%s%N`
 ft_execution=`expr $end - $start`
 
 start=`date +%s%N`
-./std_vector > std_vector.out 2> std_vector_err.log
+valgrind ./std_vector > std_vector.out 2> std_vector_err.log
 end=`date +%s%N`
 std_execution=`expr $end - $start`
 

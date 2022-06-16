@@ -4,11 +4,13 @@
 #include "vector.hpp"
 
 int main(void) {
-	std::vector<int> a;
-	for (int i = 0; i < 10; i++)
-		a.push_back(i);
-	a.resize(5);
-	for (int i = 0; i < 10; i++)
-		a.push_back(i);
-	return (0);
+	ft::vector<int> a;
+	a.assign(18, 42);
+	ft::vector<int> c(100, 25);
+	c = a;
+	std::cout << "SIZE = " << c.size() << " CAPACITY = " << c.capacity() << std::endl;
+	ft::vector<int>::iterator start = c.begin();
+	while (start < c.end())
+		std::cout << *start++ << ' ';
+	std::cout << '\n';
 }
