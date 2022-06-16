@@ -225,6 +225,25 @@ namespace ft {
 				}
 				_alloc.construct(&_vector[_size++], value);
 			};
+			void pop_back() {
+				if (_size)
+					_alloc.destroy(&_vector[--_size]);
+			};
+			iterator insert(iterator position, const value_type& val) {
+				(void)position;
+				(void)val;
+			};
+			void insert(iterator position, size_type n, const value_type& val) {
+				(void)position;
+				(void)n;
+				(void)val;
+			};
+			template <class InputIterator>
+			void insert(iterator position, InputIterator first, InputIterator last, typename ft::enable_if<!ft::is_integral<InputIterator>::value, InputIterator>::type* = 0) {
+				(void)position;
+				(void)first;
+				(void)last;
+			};
 			/* End Modifiers */
 
 		private:

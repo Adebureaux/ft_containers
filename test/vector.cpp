@@ -209,4 +209,18 @@ int main(void)
 	LOC::vector<int> e;
 	e = a;
 	std::cout << "SIZE = " << e.size() << " CAPACITY = " << e.capacity() << std::endl;
+	e.resize(18, 25);
+	for (unsigned long i = 0; i < e.size(); i++)
+		std::cout << d[i] << ' ';
+	std::cout << std::endl;
+	int sum = 0;
+  	a.push_back(100);
+  	a.push_back(200);
+  	a.push_back(300);
+	while (!a.empty())
+	{
+		sum += a.back();
+		a.pop_back();
+	}
+	std::cout << "The elements of myvector add up to " << sum << std::endl;
 }
