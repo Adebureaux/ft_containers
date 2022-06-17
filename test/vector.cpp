@@ -211,7 +211,7 @@ int main(void)
 	std::cout << "SIZE = " << e.size() << " CAPACITY = " << e.capacity() << std::endl;
 	e.resize(18, 25);
 	for (unsigned long i = 0; i < e.size(); i++)
-		std::cout << d[i] << ' ';
+		std::cout << e[i] << ' ';
 	std::cout << std::endl;
 	int sum = 0;
   	a.push_back(100);
@@ -222,5 +222,30 @@ int main(void)
 		sum += a.back();
 		a.pop_back();
 	}
-	std::cout << "The elements of myvector add up to " << sum << std::endl;
+	std::cout << "The elements add up to " << sum << std::endl;
+	std::cout << "SIZE = " << e.size() << " CAPACITY = " << e.capacity() << std::endl;
+	e.insert(e.begin() + 8, 6, 14);
+	iter_type itr = e.insert(e.begin(), 12);
+	std::cout << *itr << std::endl;
+	e.reserve(100);
+	for (unsigned long i = 0; i < e.size(); i++)
+		std::cout << e[i] << ' ';
+	std::cout << std::endl;
+	std::cout << "SIZE = " << e.size() << " CAPACITY = " << e.capacity() << std::endl;
+	a = e;
+	it = a.begin();
+	it = a.insert(it, 200);
+	a.insert(it, 2, 300);
+	it = a.begin();
+	LOC::vector<int> f(2, 400);
+	a.insert(it + 2, f.begin(), f.end());
+	std::cout << "SIZE = " << a.size() << " CAPACITY = " << a.capacity() << std::endl;
+	int arr[] = { 501, 502, 503, 500, 55 };
+	a.insert(a.begin(), arr, arr + 3);
+	std::cout << "SIZE = " << a.size() << " CAPACITY = " << a.capacity() << std::endl;
+	a.insert(a.end(), 34, 42);
+	std::cout << "SIZE = " << a.size() << " CAPACITY = " << a.capacity() << std::endl;
+	for (it = a.begin(); it < a.end(); it++)
+		std::cout << *it << ' ';
+	std::cout << std::endl;
 }

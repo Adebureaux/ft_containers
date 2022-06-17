@@ -230,19 +230,41 @@ namespace ft {
 					_alloc.destroy(&_vector[--_size]);
 			};
 			iterator insert(iterator position, const value_type& val) {
-				(void)position;
-				(void)val;
+				size_type pos = position - begin();
+				insert(position, 1, val);
+				return (&_vector[pos]);
 			};
 			void insert(iterator position, size_type n, const value_type& val) {
-				(void)position;
-				(void)n;
-				(void)val;
+				size_type i = 0;
+				if (_size + n > _capacity)
+					_capacity += n;
+				pointer tmp = _alloc.allocate(_capacity);
+				for (iterator it = begin(); it < position; it++)
+					_alloc.construct(&tmp[i++], *it);
+				for (size_type j = i; j < n + i; j++)
+					_alloc.construct(&tmp[j], val);
+				for (size_type k = n + i; k < _size + n; k++)
+					_alloc.construct(&tmp[k], _vector[k - n]);
+				this->~vector();
+				_vector = tmp;
+				_size += n;
 			};
 			template <class InputIterator>
 			void insert(iterator position, InputIterator first, InputIterator last, typename ft::enable_if<!ft::is_integral<InputIterator>::value, InputIterator>::type* = 0) {
-				(void)position;
-				(void)first;
-				(void)last;
+				size_type i = 0;
+				size_type n = ft::distance(first, last);
+				if (_size + n > _capacity)
+					_capacity *= 2;
+				pointer tmp = _alloc.allocate(_capacity);
+				for (iterator it = begin(); it < position; it++)
+					_alloc.construct(&tmp[i++], *it);
+				for (size_type j = i; j < n + i; j++, first++)
+					_alloc.construct(&tmp[j], *first);
+				for (size_type k = n + i; k < _size + n; k++)
+					_alloc.construct(&tmp[k], _vector[k - n]);
+				this->~vector();
+				_vector = tmp;
+				_size += n;
 			};
 			/* End Modifiers */
 
