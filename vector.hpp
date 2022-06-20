@@ -122,7 +122,7 @@ namespace ft {
 					if (n > _capacity)
 						reserve(n);
 					for (size_type i = _size; i < n; i++)
-						push_back(val);
+						_alloc.construct(&_vector[_size++], val);
 				}
 			};
 			size_type capacity() const {
@@ -237,35 +237,67 @@ namespace ft {
 			void insert(iterator position, size_type n, const value_type& val) {
 				size_type i = 0;
 				if (_size + n > _capacity)
-					_capacity += n;
-				pointer tmp = _alloc.allocate(_capacity);
-				for (iterator it = begin(); it < position; it++)
-					_alloc.construct(&tmp[i++], *it);
-				for (size_type j = i; j < n + i; j++)
-					_alloc.construct(&tmp[j], val);
-				for (size_type k = n + i; k < _size + n; k++)
-					_alloc.construct(&tmp[k], _vector[k - n]);
-				this->~vector();
-				_vector = tmp;
-				_size += n;
+				{
+					_capacity = _capacity * 2 >= _size + n ? _capacity * 2 : _size + n;
+					pointer tmp = _alloc.allocate(_capacity);
+					for (iterator it = begin(); it < position; it++)
+						_alloc.construct(&tmp[i++], *it);
+					for (size_type j = i; j < n + i; j++)
+						_alloc.construct(&tmp[j], val);
+					for (size_type k = n + i; k < _size + n; k++)
+						_alloc.construct(&tmp[k], _vector[k - n]);
+					this->~vector();
+					_vector = tmp;
+					_size += n;
+				}
+				else
+				{
+					value_type tmp;
+					std::cout << "INFO " << i << " " << _size << " " << n <<  std::endl;
+					for (size_type i = position - begin() - 1; i < _size + n; i++)
+					{
+						tmp = _vector[i];
+						_vector[i] = val;
+						_alloc.construct(&_vector[i + _size], tmp);
+					}
+					_size += n;
+				}
 			};
 			template <class InputIterator>
 			void insert(iterator position, InputIterator first, InputIterator last, typename ft::enable_if<!ft::is_integral<InputIterator>::value, InputIterator>::type* = 0) {
 				size_type i = 0;
 				size_type n = ft::distance(first, last);
 				if (_size + n > _capacity)
-					_capacity *= 2;
-				pointer tmp = _alloc.allocate(_capacity);
-				for (iterator it = begin(); it < position; it++)
-					_alloc.construct(&tmp[i++], *it);
-				for (size_type j = i; j < n + i; j++, first++)
-					_alloc.construct(&tmp[j], *first);
-				for (size_type k = n + i; k < _size + n; k++)
-					_alloc.construct(&tmp[k], _vector[k - n]);
-				this->~vector();
-				_vector = tmp;
-				_size += n;
+				{
+					_capacity = _size + n;
+					pointer tmp = _alloc.allocate(_capacity);
+					for (iterator it = begin(); it < position; it++)
+						_alloc.construct(&tmp[i++], *it);
+					for (size_type j = i; j < n + i; j++, first++)
+						_alloc.construct(&tmp[j], *first);
+					for (size_type k = n + i; k < _size + n; k++)
+						_alloc.construct(&tmp[k], _vector[k - n]);
+					this->~vector();
+					_vector = tmp;
+					_size += n;
+				}
+				else
+				{
+					value_type tmp;
+					for (size_type i = position - begin(); i < n; i++)
+					{
+						tmp = _vector[i];
+						_vector[i] = *(first++);
+						_alloc.construct(&_vector[n + _size++], tmp);
+					}
+				}
 			};
+			// iterator erase(iterator position) {
+				
+			// };
+			// iterator erase(iterator first, iterator last) {
+
+			// };
 			/* End Modifiers */
 
 		private:

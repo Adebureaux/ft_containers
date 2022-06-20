@@ -35,7 +35,7 @@ fclean: clean
 
 re: fclean all
 
-vector:
+vector: fclean
 	@echo "Compiling test with ft::vector"
 	${COMPILER} ${CFLAGS} test/vector.cpp -o test/ft_vector
 	@echo "Compiling test with std::vector"

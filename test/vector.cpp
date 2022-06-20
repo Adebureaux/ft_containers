@@ -7,6 +7,21 @@
 # define LOC ft
 #endif
 
+int i = 1;
+
+template <class T>
+void verify(LOC::vector<T> vec, std::string what) {
+	std::cout << "VECTOR TEST " << what << " SIZE = " << vec.size() << " CAPACITY = " << vec.capacity() << std::endl;
+	LOC::vector<int>::iterator it = vec.begin();
+	while (it < vec.end())
+	{
+		std::cout << *it++;
+		if (it != vec.end())
+			std::cout << ' ';
+	}
+	std::cout << std::endl;
+}
+
 int main(void)
 {
 	LOC::vector<int> a;
@@ -47,9 +62,7 @@ int main(void)
 	a.resize(5);
 	a.resize(8, 100);
 	a.resize(12);
-	for (unsigned long i = 0; i < a.size(); i++)
-		std::cout << a[i] << ' ';
-	std::cout << std::endl;
+	verify(a, "RESIZE 1");
 	std::cout << a.size() << std::endl;
 	std::cout << a.capacity() << std::endl;
 	std::cout << a.empty() << std::endl;
@@ -76,23 +89,23 @@ int main(void)
 	LOC::vector<int>::size_type sz;
 	LOC::vector<int> foo;
 	sz = foo.capacity();
-	std::cout << "making foo grow:"  << std::endl;;
+	std::cout << "MAKING FOO GROW:"  << std::endl;;
 	for (int i = 0; i < 100; i++) {
 		foo.push_back(i);
 		if (sz != foo.capacity()) {
 			sz = foo.capacity();
-			std::cout << "capacity changed: " << sz << std::endl;
+			std::cout << "CAPACITY CHANGED: " << sz << std::endl;
 		}
 	}
 	LOC::vector<int> bar;
 	sz = bar.capacity();
 	bar.reserve(100);
-	std::cout << "making bar grow:" << std::endl;
+	std::cout << "MAKING BAR GROW:" << std::endl;
 	for (int i = 0; i < 100; i++) {
 		bar.push_back(i);
 		if (sz != bar.capacity()) {
 			sz = bar.capacity();
-			std::cout << "capacity changed: " << sz << std::endl;
+			std::cout << "CAPACITY CHANGED: " << sz << std::endl;
 		}
 	}
 	try {
@@ -154,20 +167,18 @@ int main(void)
 	std::cout << third.size() << " THIRD " << third.capacity() << std::endl;
 	it = third.begin();
 	while (it != third.end())
-		std::cout << *it++ << " ";
+		std::cout << *it++ << ' ';
 	std::cout << std::endl;
 	start = a.begin();
 	while (start != a.end())
 		std::cout << *start++ << ' ';
+	std::cout << std::endl;
 	a.resize(8, 100);
-	start = a.begin();
-	while (start != a.end())
-		std::cout << *start++ << ' ';
-	std::cout << std::endl;
-	std::cout << "SIZE = " << a.size() << " CAPACITY = " << a.capacity() << std::endl;
+	verify(a, "RESIZE 2");
 	a.resize(25);
-	std::cout << "SIZE = " << a.size() << " CAPACITY = " << a.capacity() << std::endl;
+	verify(a, "RESIZE 3");
 	a.resize(0);
+	verify(a, "RESIZE 4");
 	try {
 		a.resize(-1);
 	}
@@ -175,44 +186,25 @@ int main(void)
 		std::cerr << e.what() << std::endl;
 	}
 	a.resize(25, 10);
-	start = a.begin();
-	while (start != a.end())
-		std::cout << *start++ << ' ';
-	std::cout << std::endl;
-	std::cout << "SIZE = " << a.size() << " CAPACITY = " << a.capacity() << std::endl;
+	verify(a, "RESIZE 5");
 	a.assign(28, 42);
-	std::cout << "SIZE = " << a.size() << " CAPACITY = " << a.capacity() << std::endl;
+	verify(a, "ASSIGN 1");
 	start = a.begin();
-	while (start < a.end())
-		std::cout << *start++ << ' ';
-	std::cout << std::endl;
 	a.assign(start, a.end());
-	start = a.begin();
-	while (start - 12 < a.end())
-		std::cout << *start++ << ' ';
-	std::cout << std::endl;
-	std::cout << "SIZE = " << a.size() << " CAPACITY = " << a.capacity() << std::endl;
+	verify(a, "ASSIGN 2");
 	a.assign(18, 42);
 	LOC::vector<int> c(100, 25);
 	c = a;
 	start = c.begin();
-	while (start < c.end())
-		std::cout << *start++ << ' ';
-	std::cout << std::endl;
-	std::cout << "SIZE = " << c.size() << " CAPACITY = " << c.capacity() << std::endl;
+	verify(c, "COPY CRUSH");
 	LOC::vector<int> d(c);
 	start = d.begin();
-	for (unsigned long i = 0; i < d.size(); i++)
-		std::cout << d[i] << ' ';
-	std::cout << std::endl;
-	std::cout << "SIZE = " << d.size() << " CAPACITY = " << d.capacity() << std::endl;
+	verify(d, "COPY CONSTRUCTOR");
 	LOC::vector<int> e;
 	e = a;
-	std::cout << "SIZE = " << e.size() << " CAPACITY = " << e.capacity() << std::endl;
+	verify(e, "EQUAL");
 	e.resize(18, 25);
-	for (unsigned long i = 0; i < e.size(); i++)
-		std::cout << e[i] << ' ';
-	std::cout << std::endl;
+	verify(e, "RESIZE 6");
 	int sum = 0;
   	a.push_back(100);
   	a.push_back(200);
@@ -222,30 +214,37 @@ int main(void)
 		sum += a.back();
 		a.pop_back();
 	}
-	std::cout << "The elements add up to " << sum << std::endl;
-	std::cout << "SIZE = " << e.size() << " CAPACITY = " << e.capacity() << std::endl;
+	std::cout << "SUM OF ELEMENTS " << sum << std::endl;
+	verify(e, "POP_BACK 1");
 	e.insert(e.begin() + 8, 6, 14);
 	iter_type itr = e.insert(e.begin(), 12);
 	std::cout << *itr << std::endl;
 	e.reserve(100);
-	for (unsigned long i = 0; i < e.size(); i++)
-		std::cout << e[i] << ' ';
-	std::cout << std::endl;
-	std::cout << "SIZE = " << e.size() << " CAPACITY = " << e.capacity() << std::endl;
-	a = e;
-	it = a.begin();
-	it = a.insert(it, 200);
-	a.insert(it, 2, 300);
-	it = a.begin();
-	LOC::vector<int> f(2, 400);
-	a.insert(it + 2, f.begin(), f.end());
-	std::cout << "SIZE = " << a.size() << " CAPACITY = " << a.capacity() << std::endl;
-	int arr[] = { 501, 502, 503, 500, 55 };
-	a.insert(a.begin(), arr, arr + 3);
-	std::cout << "SIZE = " << a.size() << " CAPACITY = " << a.capacity() << std::endl;
-	a.insert(a.end(), 34, 42);
-	std::cout << "SIZE = " << a.size() << " CAPACITY = " << a.capacity() << std::endl;
-	for (it = a.begin(); it < a.end(); it++)
-		std::cout << *it << ' ';
-	std::cout << std::endl;
+	verify(e, "INSERT 1");
+	// a = e;
+	// it = a.begin();
+	// it = a.insert(it, 200);
+	// a.insert(it, 2, 300);
+	// it = a.begin();
+	// LOC::vector<int> f(2, 400);
+	// a.insert(it + 2, f.begin(), f.end());
+	// verify(a, "INSERT 2");
+	// int arr[] = { 501, 502, 503, 500, 55 };
+	// a.insert(a.begin(), arr, arr + 3);
+	// verify(a, "INSERT 3");
+	// a.insert(a.end(), 34, 42);
+	// verify(a, "INSERT 3");
+	// a.insert(a.begin() + 10, 2, 22);
+	// verify(a, "INSERT 4");
+	// LOC::vector<int> g(1, 1);
+	// a.insert(a.begin(), g.begin(), g.begin());
+	// a.insert(a.begin(), g.begin(), g.end());
+	// a.insert(a.end(), g.end(), g.end());
+	// verify(a, "INSERT 5");
+	// for (int i = 0; i < 148; i++)
+	// 	a.insert(a.begin() + 12, i);
+	// verify(a, "INSERT 6");
+	// while (a.size() > 21)
+	// 	a.pop_back();
+	// verify(a, "POP_BACK 2");
 }
