@@ -12,13 +12,13 @@ valgrind ./std_vector > std_vector.out 2> std_vector_err.log
 end=`date +%s%N`
 std_execution=`expr $end - $start`
 
-echo -n "Checking time execution : "
 diff=`expr $ft_execution / $std_execution`
+echo -n "Checking time execution : "
 if [[ $diff > 20 ]]
 then
 	echo -e "\033[1;31mFailed ! The execution is more than $diff times slower.\033[m"
 else
-	echo -e "\033[1;32mSuccess !\033[m"
+	echo -e "\033[1;32mSuccess ! The execution is $diff times slower.\033[m"
 fi
 
 echo -n "Checking outfile diff   : "
