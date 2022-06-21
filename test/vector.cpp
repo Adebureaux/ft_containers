@@ -10,7 +10,7 @@
 int i = 1;
 
 template <class T>
-void verify(LOC::vector<T> vec, std::string what) {
+void verify(LOC::vector<T>& vec, std::string what) {
 	std::cout << "VECTOR TEST " << what << " SIZE = " << vec.size() << " CAPACITY = " << vec.capacity() << std::endl;
 	LOC::vector<int>::iterator it = vec.begin();
 	while (it < vec.end())
@@ -30,8 +30,8 @@ int main(void)
 	typedef LOC::vector<int>::iterator iter_type;
 	iter_type from (a.begin());
 	iter_type until (a.end());
-	LOC::reverse_iterator<iter_type> rev_until (from);
-	LOC::reverse_iterator<iter_type> rev_from (until);
+	LOC::reverse_iterator<iter_type> rev_until(from);
+	LOC::reverse_iterator<iter_type> rev_from(until);
 	while (rev_from != rev_until)
 		std::cout << *rev_from++ << ' ';
 	std::cout << std::endl;
@@ -217,34 +217,40 @@ int main(void)
 	std::cout << "SUM OF ELEMENTS " << sum << std::endl;
 	verify(e, "POP_BACK 1");
 	e.insert(e.begin() + 8, 6, 14);
-	iter_type itr = e.insert(e.begin(), 12);
+	iter_type itr = e.insert(e.begin() + 2, 12);
 	std::cout << *itr << std::endl;
 	e.reserve(100);
 	verify(e, "INSERT 1");
-	// a = e;
-	// it = a.begin();
-	// it = a.insert(it, 200);
-	// a.insert(it, 2, 300);
-	// it = a.begin();
-	// LOC::vector<int> f(2, 400);
-	// a.insert(it + 2, f.begin(), f.end());
-	// verify(a, "INSERT 2");
-	// int arr[] = { 501, 502, 503, 500, 55 };
-	// a.insert(a.begin(), arr, arr + 3);
-	// verify(a, "INSERT 3");
-	// a.insert(a.end(), 34, 42);
-	// verify(a, "INSERT 3");
-	// a.insert(a.begin() + 10, 2, 22);
-	// verify(a, "INSERT 4");
-	// LOC::vector<int> g(1, 1);
-	// a.insert(a.begin(), g.begin(), g.begin());
-	// a.insert(a.begin(), g.begin(), g.end());
-	// a.insert(a.end(), g.end(), g.end());
-	// verify(a, "INSERT 5");
-	// for (int i = 0; i < 148; i++)
-	// 	a.insert(a.begin() + 12, i);
-	// verify(a, "INSERT 6");
-	// while (a.size() > 21)
-	// 	a.pop_back();
-	// verify(a, "POP_BACK 2");
+	a = e;
+	it = a.begin();
+	it = a.insert(it, 200);
+	a.insert(it, 2, 300);
+	it = a.begin();
+	LOC::vector<int> f(2, 400);
+	a.insert(it + 2, f.begin(), f.end());
+	verify(a, "INSERT 2");
+	int arr[] = { 501, 502, 503, 500, 55 };
+	a.insert(a.begin(), arr, arr + 3);
+	verify(a, "INSERT 3");
+	a.insert(a.end(), 34, 42);
+	verify(a, "INSERT 3");
+	a.insert(a.begin() + 10, 2, 22);
+	verify(a, "INSERT 4");
+	LOC::vector<int> g(1, 1);
+	a.insert(a.begin(), g.begin(), g.begin());
+	a.insert(a.begin(), g.begin(), g.end());
+	a.insert(a.end(), g.end(), g.end());
+	verify(a, "INSERT 5");
+	for (int i = 0; i < 148; i++)
+		a.insert(a.begin() + 12, i);
+	verify(a, "INSERT 6");
+	while (a.size() > 21)
+		a.pop_back();
+	verify(a, "POP_BACK 2");
+	LOC::vector<int> h;
+	for (int i = 0; i < 6; i++)
+		h.push_back(i);
+	h.reserve(100);
+	h.insert(h.begin(), 3, 9);
+	verify(h, "INSERT 7");
 }

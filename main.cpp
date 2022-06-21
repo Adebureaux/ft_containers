@@ -5,20 +5,24 @@
 
 int main(void) {
 	{
-		std::vector<int> a(1, 21);
+		ft::vector<int> a;
+		for (int i = 0; i < 6; i++)
+			a.push_back(i);
 		a.reserve(100);
-		a.insert(a.begin(), 42);
-		std::vector<int>::iterator it = a.begin();
+		a.insert(a.end() - 2, 3, 9);
+		ft::vector<int>::iterator it = a.begin();
 		while (it != a.end())
 			std::cout << *(it++) << ' ';
 		std::cout << std::endl;
 		std::cout << "SIZE = " << a.size() << " CAPACITY = " << a.capacity() << std::endl;
 	}
 	{
-		ft::vector<int> a(1, 21);
+		std::vector<int> a;
+		for (int i = 0; i < 6; i++)
+			a.push_back(i);
 		a.reserve(100);
-		a.insert(a.begin(), 42);
-		ft::vector<int>::iterator it = a.begin();
+		a.insert(a.end() - 2, 3, 9);
+		std::vector<int>::iterator it = a.begin();
 		while (it != a.end())
 			std::cout << *(it++) << ' ';
 		std::cout << std::endl;

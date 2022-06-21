@@ -238,7 +238,7 @@ namespace ft {
 				size_type i = 0;
 				if (_size + n > _capacity)
 				{
-					_capacity = _capacity * 2 >= _size + n ? _capacity * 2 : _size + n;
+					_capacity = _size + std::max(_size, n);
 					pointer tmp = _alloc.allocate(_capacity);
 					for (iterator it = begin(); it < position; it++)
 						_alloc.construct(&tmp[i++], *it);
@@ -248,20 +248,23 @@ namespace ft {
 						_alloc.construct(&tmp[k], _vector[k - n]);
 					this->~vector();
 					_vector = tmp;
-					_size += n;
+				}
+				else if (position != end())
+				{
+					size_type j = 0;
+					for (size_type i = _size; i < _size + n; i++)
+						_alloc.construct(&_vector[i], _vector[i - n]);
+					for (size_type i = _size - n; i < _size; i++)
+						_vector[i] = _vector[i - n];
+					for (size_type i = position - begin(); j < n; i++, j++)
+						_vector[i] = val;
 				}
 				else
 				{
-					value_type tmp;
-					std::cout << "INFO " << i << " " << _size << " " << n <<  std::endl;
-					for (size_type i = position - begin() - 1; i < _size + n; i++)
-					{
-						tmp = _vector[i];
-						_vector[i] = val;
-						_alloc.construct(&_vector[i + _size], tmp);
-					}
-					_size += n;
+					for (size_type i = _size; i < _size + n; i++)
+						_alloc.construct(&_vector[i], val);
 				}
+				_size += n;
 			};
 			template <class InputIterator>
 			void insert(iterator position, InputIterator first, InputIterator last, typename ft::enable_if<!ft::is_integral<InputIterator>::value, InputIterator>::type* = 0) {
@@ -269,7 +272,7 @@ namespace ft {
 				size_type n = ft::distance(first, last);
 				if (_size + n > _capacity)
 				{
-					_capacity = _size + n;
+					_capacity = _size + std::max(_size, n);
 					pointer tmp = _alloc.allocate(_capacity);
 					for (iterator it = begin(); it < position; it++)
 						_alloc.construct(&tmp[i++], *it);
@@ -279,18 +282,23 @@ namespace ft {
 						_alloc.construct(&tmp[k], _vector[k - n]);
 					this->~vector();
 					_vector = tmp;
-					_size += n;
+				}
+				else if (position != end())
+				{
+					size_type j = 0;
+					for (size_type i = _size; i < _size + n; i++)
+						_alloc.construct(&_vector[i], _vector[i - n]);
+					for (size_type i = _size - n; i < _size; i++)
+						_vector[i] = _vector[i - n];
+					for (size_type i = position - begin(); j < n; i++, first++, j++)
+						_vector[i] = *first;
 				}
 				else
 				{
-					value_type tmp;
-					for (size_type i = position - begin(); i < n; i++)
-					{
-						tmp = _vector[i];
-						_vector[i] = *(first++);
-						_alloc.construct(&_vector[n + _size++], tmp);
-					}
+					for (size_type i = _size; i < _size + n; i++, first++)
+						_alloc.construct(&_vector[i], *first);
 				}
+				_size += n;
 			};
 			// iterator erase(iterator position) {
 				
