@@ -129,7 +129,7 @@ int main(void)
 		LOC::vector<int> b(a.rend(), a.rbegin());
 	}
 	catch (const std::exception& e) {
-		std::cerr << e.what() << std::endl;
+		std::cerr << e.what() << "coucout" << std::endl;
 	}
 	LOC::vector<int> baz(a.rend(), a.rend());
 	LOC::vector<int> doo(a.rbegin(), a.rbegin());
