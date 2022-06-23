@@ -252,12 +252,15 @@ namespace ft {
 				}
 				else
 				{
-					j = 0;
-					for (i = position - begin(); j < n; i++, j++)
+					size_type pos = position - begin();
+					for (i = _size + pos - 1; j < pos; i--, j++)
 					{
-						_vector[i + n] = _vector[i];
-						_vector[i] = val;
+						std::cout << "index " << i - pos << " val " << _vector[i - pos] << " goes to index " << i - 1 << std::endl;
+						_vector[i - 1] = _vector[i - pos];
 					}
+					j = 0;
+					for (i = pos; j < n; i++, j++)
+						_vector[i] = val;
 				}
 				_size += n;
 			};
@@ -279,23 +282,13 @@ namespace ft {
 					this->~vector();
 					_vector = tmp;
 				}
-				else if (position + n > end())
-				{
-					for (i = _size; i < _size + n; i++)
-						_alloc.construct(&_vector[i], _vector[i - n]);
-					for (i = position - begin(); j < n; i++, first++, j++)
-						_vector[i] = *first;
-				}
 				else
 				{
-					for (i = _size; i < _size + n; i++)
-						_alloc.construct(&_vector[i], _vector[i - n]);
-					iterator it = end();
-					for (i = _size + 1; it > position; it--, i--)
-						_vector[i] = _vector[i - n];
-					j = 0;
-					for (i = position - begin(); j < n; j++, i++, first++)
+					for (i = position - begin(); j < n; i++, j++, first++)
+					{
+						_vector[i + n] = _vector[i];
 						_vector[i] = *first;
+					}
 				}
 				_size += n;
 			};
