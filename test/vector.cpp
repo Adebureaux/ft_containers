@@ -256,8 +256,7 @@ int main(void)
 	LOC::vector<std::string> i;
 	i.insert(i.begin(), "hi");
 	i.insert(i.begin() + 1, 8, "hey");
-	i.reserve(800);
-	for (int j = 0; j < 1000; j++)
-		i.insert(i.begin(), "slt");
+	for (int j = 0; j < 20; j++)
+		i.insert(i.begin(), "hello");
 	verify(i, "INSERT 8");
 }
