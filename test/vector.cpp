@@ -12,7 +12,7 @@ int i = 1;
 template <class T>
 void verify(LOC::vector<T>& vec, std::string what) {
 	std::cout << "VECTOR TEST " << what << " SIZE = " << vec.size() << " CAPACITY = " << vec.capacity() << std::endl;
-	LOC::vector<int>::iterator it = vec.begin();
+	typename LOC::vector<T>::iterator it = vec.begin();
 	while (it < vec.end())
 	{
 		std::cout << *it++;
@@ -129,7 +129,7 @@ int main(void)
 		LOC::vector<int> b(a.rend(), a.rbegin());
 	}
 	catch (const std::exception& e) {
-		std::cerr << e.what() << "coucout" << std::endl;
+		std::cerr << e.what() << std::endl;
 	}
 	LOC::vector<int> baz(a.rend(), a.rend());
 	LOC::vector<int> doo(a.rbegin(), a.rbegin());
@@ -253,4 +253,11 @@ int main(void)
 	h.reserve(100);
 	h.insert(h.begin(), 3, 9);
 	verify(h, "INSERT 7");
+	LOC::vector<std::string> i;
+	i.insert(i.begin(), "hi");
+	i.insert(i.begin() + 1, 8, "hey");
+	i.reserve(800);
+	for (int j = 0; j < 1000; j++)
+		i.insert(i.begin(), "slt");
+	verify(i, "INSERT 8");
 }
