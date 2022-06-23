@@ -5,27 +5,26 @@
 
 int main(void) {
 	{
-		ft::vector<int> a;
-		for (int i = 0; i < 6; i++)
-			a.push_back(i);
-		a.reserve(100);
-		a.insert(a.end() - 2, 3, 9);
-		ft::vector<int>::iterator it = a.begin();
-		while (it != a.end())
-			std::cout << *(it++) << ' ';
-		std::cout << std::endl;
-		std::cout << "SIZE = " << a.size() << " CAPACITY = " << a.capacity() << std::endl;
+		std::vector<int> myvector;
+		for (int i=1; i<=10; i++) myvector.push_back(i);
+		std::vector<int>::iterator itr = myvector.erase(myvector.end() - 1);
+		std::cout << *itr << std::endl;
+		// myvector.erase(myvector.begin(),myvector.begin()+3);
+		std::cout << "myvector contains:";
+		for (unsigned i=0; i<myvector.size(); ++i)
+			std::cout << ' ' << myvector[i];
+		std::cout << '\n';
 	}
 	{
-		std::vector<int> a;
-		for (int i = 0; i < 6; i++)
-			a.push_back(i);
-		a.reserve(100);
-		a.insert(a.end() - 2, 3, 9);
-		std::vector<int>::iterator it = a.begin();
-		while (it != a.end())
-			std::cout << *(it++) << ' ';
-		std::cout << std::endl;
-		std::cout << "SIZE = " << a.size() << " CAPACITY = " << a.capacity() << std::endl;
+		ft::vector<int> myvector;
+		for (int i=1; i<=10; i++) myvector.push_back(i);
+		ft::vector<int>::iterator itr = myvector.erase(myvector.end() - 1);
+		std::cout << *itr << std::endl;
+		// myvector.erase(myvector.begin(),myvector.begin()+3);
+		std::cout << "myvector contains:";
+		for (unsigned i=0; i<myvector.size(); ++i)
+			std::cout << ' ' << myvector[i];
+		std::cout << '\n';
 	}
+	return (0);
 }

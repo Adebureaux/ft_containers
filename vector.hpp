@@ -266,12 +266,19 @@ namespace ft {
 				_vector = tmp;
 				_size += n;
 			};
-			// iterator erase(iterator position) {
-				
-			// };
-			// iterator erase(iterator first, iterator last) {
-
-			// };
+			iterator erase(iterator position) {
+				size_type pos = position - begin();
+				for (size_type i = pos; i < _size; i++)
+					_vector[i] = _vector[i + 1];
+				pop_back();
+				return (&_vector[pos]);
+			};
+			iterator erase(iterator first, iterator last) {
+				size_type pos = last - first;
+				while (first < last)
+					erase(first++);
+				return (&_vector[pos]);
+			};
 			/* End Modifiers */
 
 		private:
