@@ -237,51 +237,33 @@ namespace ft {
 			void insert(iterator position, size_type n, const value_type& val) {
 				size_type i = 0;
 				if (_size + n > _capacity)
-				{
 					_capacity = _size + std::max(_size, n);
-					pointer tmp = _alloc.allocate(_capacity);
-					for (iterator it = begin(); it < position; it++)
-						_alloc.construct(&tmp[i++], *it);
-					for (size_type j = i; j < n + i; j++)
-						_alloc.construct(&tmp[j], val);
-					for (size_type k = n + i; k < _size + n; k++)
-						_alloc.construct(&tmp[k], _vector[k - n]);
-					this->~vector();
-					_vector = tmp;
-				}
-				else
-				{
-					i = position - begin();
-					_shift_right(i, n);
-					for (size_type j = 0; j < n; j++)
-						_alloc.construct(&_vector[i + j], val);
-				}
+				pointer tmp = _alloc.allocate(_capacity);
+				for (iterator it = begin(); it < position; it++)
+					_alloc.construct(&tmp[i++], *it);
+				for (size_type j = i; j < n + i; j++)
+					_alloc.construct(&tmp[j], val);
+				for (size_type k = n + i; k < _size + n; k++)
+					_alloc.construct(&tmp[k], _vector[k - n]);
+				this->~vector();
+				_vector = tmp;
 				_size += n;
 			};
 			template <class InputIterator>
 			void insert(iterator position, InputIterator first, InputIterator last, typename ft::enable_if<!ft::is_integral<InputIterator>::value, InputIterator>::type* = 0) {
 				size_type i = 0;
-				size_type n = std::distance(first, last);
+				size_type n = ft::distance(first, last);
 				if (_size + n > _capacity)
-				{
 					_capacity = _size + std::max(_size, n);
-					pointer tmp = _alloc.allocate(_capacity);
-					for (iterator it = begin(); it < position; it++)
-						_alloc.construct(&tmp[i++], *it);
-					for (size_type j = i; j < n + i; j++, first++)
-						_alloc.construct(&tmp[j], *first);
-					for (size_type k = n + i; k < _size + n; k++)
-						_alloc.construct(&tmp[k], _vector[k - n]);
-					this->~vector();
-					_vector = tmp;
-				}
-				else
-				{
-					i = position - begin();
-					_shift_right(i, n);
-					for (size_type j = 0; j < n; j++, first++)
-						_alloc.construct(&_vector[i + j], *first);
-				}
+				pointer tmp = _alloc.allocate(_capacity);
+				for (iterator it = begin(); it < position; it++)
+					_alloc.construct(&tmp[i++], *it);
+				for (size_type j = i; j < n + i; j++, first++)
+					_alloc.construct(&tmp[j], *first);
+				for (size_type k = n + i; k < _size + n; k++)
+					_alloc.construct(&tmp[k], _vector[k - n]);
+				this->~vector();
+				_vector = tmp;
 				_size += n;
 			};
 			iterator erase(iterator position) {
@@ -298,28 +280,6 @@ namespace ft {
 				return (&_vector[pos]);
 			};
 			/* End Modifiers */
-
-		private:
-		void _shift_right(size_type position, size_type n)
-		{
-			if (empty())
-				return;
-			for (size_type i = _size - 1; i >= position; i--)
-			{
-				_alloc.construct(&_vector[i + n], _vector[i]);
-				_alloc.destroy(&_vector[i]);
-			}
-		};
-		void _shift_left(size_type position, size_type n)
-		{
-			if (empty())
-				return;
-			for (size_type i = position; i < _size - n; i++)
-			{
-				_alloc.construct(&_vector[i], _vector[i + n]);
-				_alloc.destroy(&_vector[i + n]);
-			}
-		};
 
 		private:
 			Alloc		_alloc;
