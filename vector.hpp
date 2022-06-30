@@ -281,6 +281,19 @@ namespace ft {
 			};
 			/* End Modifiers */
 
+			/* TESTS */
+			void _rightshift(size_type pos, size_type n)
+			{
+				for (size_type i = _size - 1; i >= pos; i--)
+				{
+					if (i + n >= _size)
+						_alloc.construct(&_vector[i + n], _vector[i]);
+					else
+						_vector[i + n] = _vector[i];
+				}
+			};
+			/* End TESTS */
+
 		private:
 			Alloc		_alloc;
 			size_type	_size;

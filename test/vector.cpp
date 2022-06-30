@@ -259,4 +259,10 @@ int main(void)
 	for (int j = 0; j < 20; j++)
 		i.insert(i.begin(), "hello");
 	verify(i, "INSERT 8");
+	// for (int i = 1; i <= 10; i++)
+	// 	h.push_back(i);
+	// itr = h.erase(h.end() - 1);
+	// std::cout << *itr << std::endl;
+	// h.erase(h.begin(), h.begin() + 3);
+	// verify(h, "ERASE 1");
 }
