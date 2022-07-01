@@ -181,8 +181,7 @@ namespace ft {
 			template <class InputIterator>
 			void assign(InputIterator first, InputIterator last, typename ft::enable_if<!ft::is_integral<InputIterator>::value, InputIterator>::type* = 0) {
 				_size = ft::distance(first, last);
-				if (_size > _capacity)
-				{
+				if (_size > _capacity) {
 					_capacity = _size;
 					pointer tmp = _alloc.allocate(_capacity);
 					for (size_type i = 0; i < _size; i++)
@@ -190,16 +189,16 @@ namespace ft {
 					this->~vector();
 					_vector = tmp;
 				}
-				else
-				{
-					for (size_type i = 0; i < _size; i++)
+				else {
+					for (size_type i = 0; i < _size; i++) {
+						_alloc.destroy(&_vector[i]);
 						_alloc.construct(&_vector[i], first[i]);
+					}
 				}
 			};
 			void assign(size_type n, const value_type& val) {
 				_size = n;
-				if (_size > _capacity)
-				{
+				if (_size > _capacity) {
 					_capacity = _size;
 					pointer tmp = _alloc.allocate(_capacity);
 					for (size_type i = 0; i < _size; i++)
@@ -207,15 +206,15 @@ namespace ft {
 					this->~vector();
 					_vector = tmp;
 				}
-				else
-				{
-					for (size_type i = 0; i < _size; i++)
+				else {
+					for (size_type i = 0; i < _size; i++) {
+						_alloc.destroy(&_vector[i]);
 						_alloc.construct(&_vector[i], val);
+					}
 				}
 			};
 			void push_back(const T& value) {
-				if (!_capacity || _size + 1 > _capacity)
-				{
+				if (!_capacity || _size + 1 > _capacity) {
 					_capacity = !_capacity ? 1 : _capacity * 2;
 					pointer tmp = _alloc.allocate(_capacity);
 					for (size_type i = 0; i < _size; i++)
@@ -275,12 +274,18 @@ namespace ft {
 				return (&_vector[pos]);
 			};
 			iterator erase(iterator first, iterator last) {
-				size_type pos = first - begin();
 				size_type l = last - begin();
-				for (size_type i = first - begin(); i < l; i++)
+				size_type f = first - begin();
+				size_type n = last - first;
+
+				for (size_type i = f; i < l; i++)
 					_alloc.destroy(&_vector[i]);
-				_size -= pos;
-				return (&_vector[pos]);
+				for (size_type i = f; i < _size - n; i++) {
+					_alloc.construct(&_vector[i], _vector[i + n]);
+					_alloc.destroy(&_vector[i + n]);
+				}
+				_size -= n;
+				return (&_vector[f]);
 			};
 			/* End Modifiers */
 

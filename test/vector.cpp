@@ -265,4 +265,17 @@ int main(void)
 	std::cout << *itr << std::endl;
 	h.erase(h.begin(), h.begin() + 3);
 	verify(h, "ERASE 1");
+	LOC::vector<std::string>::iterator strit = i.erase(i.begin());
+	std::cout << *strit << std::endl;
+	verify(i, "ERASE 2");
+	strit = i.erase(i.begin() + 8, i.end());
+	std::cout << *strit << std::endl;
+	verify(i, "ERASE 3");
+	i.push_back("foo");
+	i.push_back("bar");
+	i.push_back("baz");
+	i.insert(i.begin(), "arr");
+	strit = i.erase(i.end());
+	std::cout << *strit << std::endl;
+	verify(i, "ERASE 4");
 }
