@@ -278,4 +278,11 @@ int main(void)
 	strit = i.erase(i.end());
 	std::cout << *strit << std::endl;
 	verify(i, "ERASE 4");
+	a.swap(b);
+	verify(a, "SWAP 1");
+	verify(b, "SWAP 2");
+	LOC::vector<std::string> j(10, "abcde");
+	j.swap(i);
+	verify(j, "SWAP 3");
+	verify(i, "SWAP 4");
 }

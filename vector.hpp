@@ -87,19 +87,19 @@ namespace ft {
 				return (iterator(&_vector[_size]));
 			};
 			const_iterator end() const {
-				return (iterator(&_vector[_size])); 
+				return (const_iterator(&_vector[_size])); 
 			};
 			reverse_iterator rbegin() {
 				return (reverse_iterator(&_vector[_size]));
 			};
 			const_reverse_iterator rbegin() const {
-				return (reverse_iterator(&_vector[_size]));
+				return (const_reverse_iterator(&_vector[_size]));
 			};
 			reverse_iterator rend() {
 				return (reverse_iterator(&_vector[0]));
 			};
 			const_reverse_iterator rend() const {
-				return (reverse_iterator(&_vector[0])); 
+				return (const_reverse_iterator(&_vector[0])); 
 			};
 			/* End Iterators */
 
@@ -287,6 +287,16 @@ namespace ft {
 				_size -= n;
 				return (&_vector[f]);
 			};
+			void swap(vector& x) {
+				std::swap(_alloc, x._alloc);
+				std::swap(_size, x._size);
+				std::swap(_capacity, x._capacity);
+				std::swap(_vector, x._vector);
+			};
+			void clear() {
+				// TO DO
+				return;
+			};
 			/* End Modifiers */
 
 		private:
@@ -295,5 +305,23 @@ namespace ft {
 			size_type	_capacity;
 			pointer		_vector;
 	};
+	// (1)	
+	// template <class T, class Alloc>
+	// bool operator== (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs);
+	// (2)	
+	// template <class T, class Alloc>
+	// bool operator!= (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs);
+	// (3)	
+	// template <class T, class Alloc>
+	// bool operator<  (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs);
+	// (4)	
+	// template <class T, class Alloc>
+	// bool operator<= (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs);
+	// (5)	
+	// template <class T, class Alloc>
+	// bool operator>  (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs);
+	// (6)	
+	// template <class T, class Alloc>
+	// bool operator>= (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs);
 }
 #endif
