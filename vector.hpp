@@ -55,8 +55,13 @@ namespace ft {
 
 			/* Operator= */
 			vector& operator=(const vector& x) {
-				if (x._size > _capacity)
-				{
+				// if (_vector)
+				// 	clear();
+				// if (x._size > _capacity)
+				// 	reserve(x._size);
+				for (size_type i = 0; i < _size; i++)
+					_alloc.construct(&_vector[i], x._vector[i]);
+				if (x._size > _capacity) {
 					this->~vector();
 					_capacity = x._size;
 					_size = x._size;
@@ -64,8 +69,7 @@ namespace ft {
 					for (size_type i = 0; i < _size; i++)
 						_alloc.construct(&_vector[i], x._vector[i]);
 				}
-				else
-				{
+				else {
 					for (size_type i = 0; i < _size; i++)
 						_alloc.destroy(&_vector[i]);
 					for (size_type i = 0; i < x._size; i++)
@@ -111,14 +115,12 @@ namespace ft {
 				return (_alloc.max_size());
 			};
 			void resize(size_type n, value_type val = value_type()) {
-				if (n < _size)
-				{
+				if (n < _size) {
 					for (size_type i = 0; i < n; i++)
 						_alloc.destroy(&_vector[i]);
 					_size = n;
 				}
-				else if (n > _size)
-				{
+				else if (n > _size) {
 					if (n > _capacity)
 						reserve(n);
 					for (size_type i = _size; i < n; i++)
@@ -134,8 +136,7 @@ namespace ft {
 			void reserve(size_type n) {
 				if (n > max_size())
 					throw (std::length_error("vector::reserve larger than max_size()"));
-				if (n > _size)
-				{
+				if (n > _size) {
 					pointer tmp = _alloc.allocate(n);
 					for (size_type i = 0; i < _size; i++)
 						_alloc.construct(&tmp[i], _vector[i]);
@@ -294,8 +295,9 @@ namespace ft {
 				std::swap(_vector, x._vector);
 			};
 			void clear() {
-				// TO DO
-				return;
+				for (size_type i = 0; i < _size; i++)
+					_alloc.destroy(&_vector[i]);
+				_size = 0;
 			};
 			/* End Modifiers */
 

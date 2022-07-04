@@ -285,4 +285,17 @@ int main(void)
 	j.swap(i);
 	verify(j, "SWAP 3");
 	verify(i, "SWAP 4");
+	j.assign(5, "coucou");
+	verify(j, "ASSIGN 3");
+	i.reserve(100);
+	i.assign(j.begin() + 2, j.end());
+	verify(i, "ASSIGN 4");
+	LOC::vector<std::string> k;
+	k.push_back("a");
+	k.push_back("b");
+	k.reserve(100);
+	LOC::vector<std::string> l(k);
+	k = l;
+	verify(l, "STRING TEST 1");
+	return (0);
 }
