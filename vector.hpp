@@ -41,7 +41,8 @@ namespace ft {
 			};
 			vector(const vector& x) 
 			: _alloc(x._alloc), _size(x._size), _capacity(x._size), _vector(_alloc.allocate(_capacity)) {
-				*this = x;
+				for (size_type i = 0; i < _size; i++)
+					_alloc.construct(&_vector[i], x._vector[i]);
 			};
 			/* End Constructors */
 
@@ -55,27 +56,8 @@ namespace ft {
 
 			/* Operator= */
 			vector& operator=(const vector& x) {
-				// if (_vector)
-				// 	clear();
-				// if (x._size > _capacity)
-				// 	reserve(x._size);
-				for (size_type i = 0; i < _size; i++)
-					_alloc.construct(&_vector[i], x._vector[i]);
-				if (x._size > _capacity) {
-					this->~vector();
-					_capacity = x._size;
-					_size = x._size;
-					_vector = _alloc.allocate(_capacity);
-					for (size_type i = 0; i < _size; i++)
-						_alloc.construct(&_vector[i], x._vector[i]);
-				}
-				else {
-					for (size_type i = 0; i < _size; i++)
-						_alloc.destroy(&_vector[i]);
-					for (size_type i = 0; i < x._size; i++)
-						_alloc.construct(&_vector[i], x._vector[i]);
-					_size = x._size;
-				}
+				if (x._vector)
+					assign(x.begin(), x.end());
 				return (*this);
 			};
 			/* End Operator= */
@@ -85,7 +67,7 @@ namespace ft {
 				return iterator(&_vector[0]);
 			};
 			const_iterator begin() const {
-				return iterator(&_vector[0]);
+				return const_iterator(&_vector[0]);
 			};
 			iterator end() {
 				return (iterator(&_vector[_size]));
@@ -181,38 +163,21 @@ namespace ft {
 			/* Modifiers */
 			template <class InputIterator>
 			void assign(InputIterator first, InputIterator last, typename ft::enable_if<!ft::is_integral<InputIterator>::value, InputIterator>::type* = 0) {
-				_size = ft::distance(first, last);
-				if (_size > _capacity) {
-					_capacity = _size;
-					pointer tmp = _alloc.allocate(_capacity);
-					for (size_type i = 0; i < _size; i++)
-						_alloc.construct(&tmp[i], first[i]);
-					this->~vector();
-					_vector = tmp;
-				}
-				else {
-					for (size_type i = 0; i < _size; i++) {
-						_alloc.destroy(&_vector[i]);
-						_alloc.construct(&_vector[i], first[i]);
-					}
-				}
+				size_type n = ft::distance(first, last);
+				if (n > _capacity)
+					reserve(n);
+				clear();
+				for (size_type i = 0; i < n; i++, first++)
+					_alloc.construct(&_vector[i], *first);
+				_size = n;
 			};
 			void assign(size_type n, const value_type& val) {
+				if (n > _capacity)
+					reserve(n);
+				clear();
+				for (size_type i = 0; i < n; i++)
+					_alloc.construct(&_vector[i], val);
 				_size = n;
-				if (_size > _capacity) {
-					_capacity = _size;
-					pointer tmp = _alloc.allocate(_capacity);
-					for (size_type i = 0; i < _size; i++)
-						_alloc.construct(&tmp[i], val);
-					this->~vector();
-					_vector = tmp;
-				}
-				else {
-					for (size_type i = 0; i < _size; i++) {
-						_alloc.destroy(&_vector[i]);
-						_alloc.construct(&_vector[i], val);
-					}
-				}
 			};
 			void push_back(const T& value) {
 				if (!_capacity || _size + 1 > _capacity) {
@@ -301,21 +266,46 @@ namespace ft {
 			};
 			/* End Modifiers */
 
+			/* Allocator */
+			allocator_type get_allocator() const {
+				return (_alloc);
+			};
+			/* End Allocator */
+
 		private:
 			Alloc		_alloc;
 			size_type	_size;
 			size_type	_capacity;
 			pointer		_vector;
 	};
-	// (1)	
-	// template <class T, class Alloc>
-	// bool operator== (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs);
-	// (2)	
-	// template <class T, class Alloc>
-	// bool operator!= (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs);
-	// (3)	
-	// template <class T, class Alloc>
-	// bool operator<  (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs);
+
+	/* Non-member function overloads */
+	template <class T, class Alloc>
+	bool operator==(const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs) {
+		if (lhs.size() == rhs.size()) {
+			for (size_t i = 0; i < lhs.size(); i++) {
+				if (lhs[i] != rhs[i])
+					return (false);
+			}
+			return (true);
+		}
+		return (false);
+	};
+	template <class T, class Alloc>
+	bool operator!=(const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs) {
+		if (ft::operator==<T, Alloc>(lhs, rhs) == true)
+			return (false);
+		else
+			return (true);
+	};
+	template <class T, class Alloc>
+	bool operator<(const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs) {
+		for (size_t i = 0; i < lhs.size(); i++) {
+			if (lhs[i] > rhs[i])
+				return (false);
+		}
+		return (true);
+	};
 	// (4)	
 	// template <class T, class Alloc>
 	// bool operator<= (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs);
@@ -325,5 +315,7 @@ namespace ft {
 	// (6)	
 	// template <class T, class Alloc>
 	// bool operator>= (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs);
+
+	/* End Non-member function overloads */
 }
 #endif

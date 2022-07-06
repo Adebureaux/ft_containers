@@ -5,14 +5,22 @@
 
 int main(void) {
 	ft::vector<int> myvector;
-	for (int i=0; i<=10; i++)
-		myvector.push_back(i);
-	ft::vector<int>::iterator it = myvector.erase(myvector.begin(), myvector.begin() + 2);
-	std::cout << *it << std::endl;
-	std::cout << myvector.size() << " " << myvector.capacity() << std::endl;
-	std::cout << "myvector contains:";
-	for (unsigned i=0; i<myvector.size(); ++i)
-		std::cout << ' ' << myvector[i];
-	std::cout << '\n';
+	int * p;
+	unsigned int i;
+
+	// allocate an array with space for 5 elements using vector's allocator:
+	p = myvector.get_allocator().allocate(5);
+
+	// construct values in-place on the array:
+	for (i=0; i<5; i++) myvector.get_allocator().construct(&p[i],i);
+
+	std::cout << "The allocated array contains:";
+	for (i=0; i<5; i++)
+		std::cout << ' ' << p[i];
+	std::cout << std::endl;
+
+	for (i = 0; i < 5; i++)
+		myvector.get_allocator().destroy(&p[i]);
+	myvector.get_allocator().deallocate(p, 5);
 	return (0);
 }

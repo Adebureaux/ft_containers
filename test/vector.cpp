@@ -297,5 +297,42 @@ int main(void)
 	LOC::vector<std::string> l(k);
 	k = l;
 	verify(l, "STRING TEST 1");
+	LOC::vector<std::string> m;
+	std::string *ptr;
+	ptr = m.get_allocator().allocate(5);
+	for (int i = 0; i < 5; i++)
+		m.get_allocator().construct(&ptr[i], "get_alloc");
+	std::cout << "VECTOR TEST " << "GET_ALLOCATOR 1" << " SIZE = " << m.size() << " CAPACITY = " << m.capacity() << std::endl;
+	for (size_t i = 0; i < 4; i++)
+		std::cout << ptr[i] << ' ';
+	std::cout << ptr[4] << std::endl;
+	for (int i = 0; i < 5; i++)
+		m.get_allocator().destroy(&ptr[i]);
+	m.get_allocator().deallocate(ptr, 5);
+	l.push_back("A");
+	bool boolean = k == l;
+	std::cout << "VECTOR TEST RELATIONAL OPERATOR 1 : " << boolean << std::endl;
+	LOC::vector<std::string> n;
+	LOC::vector<std::string> o;
+	boolean = o == n;
+	std::cout << "VECTOR TEST RELATIONAL OPERATOR 2 : " << boolean << std::endl;
+	boolean = k != l;
+	std::cout << "VECTOR TEST RELATIONAL OPERATOR 3 : " << boolean << std::endl;
+	boolean = o != n;
+	std::cout << "VECTOR TEST RELATIONAL OPERATOR 4 : " << boolean << std::endl;
+	std::vector<int>fou(3, 200);
+	std::vector<int>bou(3, 200);
+	if (fou == bou) 
+		std::cout << "fou and bou are equal" << std::endl;
+	if (fou != bou)
+		std::cout << "fou and bou are not equal" << std::endl;
+	if (fou < bou)
+		std::cout << "fou is less than bou" << std::endl;
+	// if (fou > bou)
+		// std::cout << "fou is greater than bou" << std::endl;
+	// if (fou <= bou)
+		// std::cout << "fou is less than or equal to bou" << std::endl;
+	// if (fou >= bou)
+		//std::cout << "fou is greater than or equal to bou" << std::endl;
 	return (0);
 }
