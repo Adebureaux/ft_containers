@@ -293,10 +293,7 @@ namespace ft {
 	};
 	template <class T, class Alloc>
 	bool operator!=(const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs) {
-		if (ft::operator==<T, Alloc>(lhs, rhs) == true)
-			return (false);
-		else
-			return (true);
+		return (ft::operator==(lhs, rhs) ? false : true);
 	};
 	template <class T, class Alloc>
 	bool operator<(const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs) {
@@ -306,15 +303,18 @@ namespace ft {
 		}
 		return (true);
 	};
-	// (4)	
-	// template <class T, class Alloc>
-	// bool operator<= (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs);
-	// (5)	
-	// template <class T, class Alloc>
-	// bool operator>  (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs);
-	// (6)	
-	// template <class T, class Alloc>
-	// bool operator>= (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs);
+	template <class T, class Alloc>
+	bool operator<=(const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs) {
+		return (ft::operator==(lhs, rhs) || ft::operator<(lhs, rhs));
+	};
+	template <class T, class Alloc>
+	bool operator>(const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs) {
+		return (ft::operator<(lhs, rhs) ? false : true);
+	};
+	template <class T, class Alloc>
+	bool operator>=(const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs) {
+		return (ft::operator==(lhs, rhs) || ft::operator>(lhs, rhs));
+	};
 
 	/* End Non-member function overloads */
 }

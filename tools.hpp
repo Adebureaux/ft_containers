@@ -77,7 +77,7 @@ namespace ft {
 		{
 			if (first2 == last2 || *first2 < *first1)
 				return (false);
-			else if (*first1<*first2)
+			else if (*first1 < *first2)
 				return (true);
 			++first1;
 			++first2;
@@ -88,7 +88,7 @@ namespace ft {
 	bool lexicographical_compare(InputIterator1 first1, InputIterator1 last1, InputIterator2 first2, InputIterator2 last2, Compare comp) {
 		while (first1 != last1)
 		{
-			if (!comp(first1, first2))
+			if (first2 == last2 || !comp(*first1, *first2))
 				return (false);
 			++first1;
 			++first2;

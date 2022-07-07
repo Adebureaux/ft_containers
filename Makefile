@@ -27,21 +27,30 @@ all: ${NAME}
 
 clean:
 	${RM} test/ft_vector.out test/std_vector.out test/ft_vector_err.log test/std_vector_err.log
+	${RM} test/ft_tools.out test/std_tools.out test/ft_tools_err.log test/std_tools_err.log
 	${RM} ${OBJS_DIR}
 
 fclean: clean
 	${RM} test/ft_vector test/std_vector
+	${RM} test/ft_tools test/std_tools
 	${RM} ${NAME}
 
 re: fclean all
 
-vector: fclean
+vector:
 	@echo "Compiling test with ft::vector"
 	${COMPILER} ${CFLAGS} test/vector.cpp -o test/ft_vector
 	@echo "Compiling test with std::vector"
 	${COMPILER} -DLOC=std ${CFLAGS} test/vector.cpp -o test/std_vector
 	@bash test/vector_test.sh
 
-test: vector
+tools:
+	@echo "Compiling test with ft::tools"
+	${COMPILER} ${CFLAGS} test/tools.cpp -o test/ft_tools
+	@echo "Compiling test with std::tools"
+	${COMPILER} -DLOC=std ${CFLAGS} test/tools.cpp -o test/std_tools
+	@bash test/tools_test.sh
+
+test: vector tools
 
 .PHONY: all clean fclean re vector test

@@ -1,26 +1,28 @@
 #include <string>
 #include <vector>
 #include <iostream>
+#include <algorithm>
+#include <cctype>
 #include "vector.hpp"
 
-int main(void) {
-	ft::vector<int> myvector;
-	int * p;
-	unsigned int i;
+bool mycomp(char c1, char c2)
+{ return std::tolower(c1)<std::tolower(c2); }
 
-	// allocate an array with space for 5 elements using vector's allocator:
-	p = myvector.get_allocator().allocate(5);
+int main () {
+  char foo[]="Apple";
+  char bar[]="apartment";
 
-	// construct values in-place on the array:
-	for (i=0; i<5; i++) myvector.get_allocator().construct(&p[i],i);
+  std::cout << std::boolalpha;
 
-	std::cout << "The allocated array contains:";
-	for (i=0; i<5; i++)
-		std::cout << ' ' << p[i];
-	std::cout << std::endl;
+  std::cout << "Comparing foo and bar lexicographically (foo<bar):\n";
 
-	for (i = 0; i < 5; i++)
-		myvector.get_allocator().destroy(&p[i]);
-	myvector.get_allocator().deallocate(p, 5);
-	return (0);
+  std::cout << "Using default comparison (operator<): ";
+  std::cout << ft::lexicographical_compare(foo,foo+5,bar,bar+9);
+  std::cout << '\n';
+
+  std::cout << "Using mycomp as comparison object: ";
+  std::cout << ft::lexicographical_compare(foo,foo+5,bar,bar+9,mycomp);
+  std::cout << '\n';
+
+  return 0;
 }

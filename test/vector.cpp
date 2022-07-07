@@ -7,8 +7,6 @@
 # define LOC ft
 #endif
 
-int i = 1;
-
 template <class T>
 void verify(LOC::vector<T>& vec, std::string what) {
 	std::cout << "VECTOR TEST " << what << " SIZE = " << vec.size() << " CAPACITY = " << vec.capacity() << std::endl;
@@ -311,28 +309,50 @@ int main(void)
 	m.get_allocator().deallocate(ptr, 5);
 	l.push_back("A");
 	bool boolean = k == l;
+	std::cout << std::boolalpha;
 	std::cout << "VECTOR TEST RELATIONAL OPERATOR 1 : " << boolean << std::endl;
 	LOC::vector<std::string> n;
-	LOC::vector<std::string> o;
+	LOC::vector<std::string> o = n;
 	boolean = o == n;
 	std::cout << "VECTOR TEST RELATIONAL OPERATOR 2 : " << boolean << std::endl;
 	boolean = k != l;
 	std::cout << "VECTOR TEST RELATIONAL OPERATOR 3 : " << boolean << std::endl;
 	boolean = o != n;
 	std::cout << "VECTOR TEST RELATIONAL OPERATOR 4 : " << boolean << std::endl;
-	std::vector<int>fou(3, 200);
-	std::vector<int>bou(3, 200);
-	if (fou == bou) 
-		std::cout << "fou and bou are equal" << std::endl;
-	if (fou != bou)
-		std::cout << "fou and bou are not equal" << std::endl;
-	if (fou < bou)
-		std::cout << "fou is less than bou" << std::endl;
-	// if (fou > bou)
-		// std::cout << "fou is greater than bou" << std::endl;
-	// if (fou <= bou)
-		// std::cout << "fou is less than or equal to bou" << std::endl;
-	// if (fou >= bou)
-		//std::cout << "fou is greater than or equal to bou" << std::endl;
+	boolean = o <= n;
+	std::cout << "VECTOR TEST RELATIONAL OPERATOR 4 : " << boolean << std::endl;
+	{
+		LOC::vector<int>fou(3, 200);
+		LOC::vector<int>bou(3, 300);
+		if (fou == bou) 
+			std::cout << "fou and bou are equal" << std::endl;
+		if (fou != bou)
+			std::cout << "fou and bou are not equal" << std::endl;
+		if (fou < bou)
+			std::cout << "fou is less than bou" << std::endl;
+		if (fou > bou)
+			std::cout << "fou is greater than bou" << std::endl;
+		if (fou <= bou)
+			std::cout << "fou is less than or equal to bou" << std::endl;
+		if (fou >= bou)
+			std::cout << "fou is greater than or equal to bou" << std::endl;
+	}
+	{
+		LOC::vector<int>fou(3, 300);
+		LOC::vector<int>bou(3, 300);
+		if (fou == bou) 
+			std::cout << "fou and bou are equal" << std::endl;
+		if (fou != bou)
+			std::cout << "fou and bou are not equal" << std::endl;
+		if (fou < bou)
+			std::cout << "fou is less than bou" << std::endl;
+		if (fou > bou)
+			std::cout << "fou is greater than bou" << std::endl;
+		if (fou <= bou)
+			std::cout << "fou is less than or equal to bou" << std::endl;
+		if (fou >= bou)
+			std::cout << "fou is greater than or equal to bou" << std::endl;
+	}
+
 	return (0);
 }
