@@ -321,38 +321,41 @@ int main(void)
 	std::cout << "VECTOR TEST RELATIONAL OPERATOR 4 : " << boolean << std::endl;
 	boolean = o <= n;
 	std::cout << "VECTOR TEST RELATIONAL OPERATOR 4 : " << boolean << std::endl;
-	{
-		LOC::vector<int>fou(3, 200);
-		LOC::vector<int>bou(3, 300);
-		if (fou == bou) 
-			std::cout << "fou and bou are equal" << std::endl;
-		if (fou != bou)
-			std::cout << "fou and bou are not equal" << std::endl;
-		if (fou < bou)
-			std::cout << "fou is less than bou" << std::endl;
-		if (fou > bou)
-			std::cout << "fou is greater than bou" << std::endl;
-		if (fou <= bou)
-			std::cout << "fou is less than or equal to bou" << std::endl;
-		if (fou >= bou)
-			std::cout << "fou is greater than or equal to bou" << std::endl;
-	}
-	{
-		LOC::vector<int>fou(3, 300);
-		LOC::vector<int>bou(3, 300);
-		if (fou == bou) 
-			std::cout << "fou and bou are equal" << std::endl;
-		if (fou != bou)
-			std::cout << "fou and bou are not equal" << std::endl;
-		if (fou < bou)
-			std::cout << "fou is less than bou" << std::endl;
-		if (fou > bou)
-			std::cout << "fou is greater than bou" << std::endl;
-		if (fou <= bou)
-			std::cout << "fou is less than or equal to bou" << std::endl;
-		if (fou >= bou)
-			std::cout << "fou is greater than or equal to bou" << std::endl;
-	}
-
+	LOC::vector<int>fou(3, 200);
+	LOC::vector<int>bou(3, 300);
+	boolean = fou < bou;
+	std::cout << "VECTOR TEST RELATIONAL OPERATOR 5 : " << boolean << std::endl;
+	boolean = fou > bou;
+	std::cout << "VECTOR TEST RELATIONAL OPERATOR 6 : " << boolean << std::endl;
+	LOC::vector<std::string> p;
+	for (std::string str = "a"; str <= "z"; str[0]++)
+		p.push_back(str);
+	LOC::vector<std::string> q(p);
+	boolean = p == q;
+	std::cout << "VECTOR TEST RELATIONAL OPERATOR 7 : " << boolean << std::endl;
+	boolean = p != q;
+	std::cout << "VECTOR TEST RELATIONAL OPERATOR 8 : " << boolean << std::endl;
+	boolean = p < q;
+	std::cout << "VECTOR TEST RELATIONAL OPERATOR 9 : " << boolean << std::endl;
+	boolean = p > q;
+	std::cout << "VECTOR TEST RELATIONAL OPERATOR 10 : " << boolean << std::endl;
+	boolean = p <= q;
+	std::cout << "VECTOR TEST RELATIONAL OPERATOR 11 : " << boolean << std::endl;
+	boolean = p >= q;
+	std::cout << "VECTOR TEST RELATIONAL OPERATOR 12 : " << boolean << std::endl;
+	p.push_back("p");
+	q.push_back("q");
+	boolean = p == q;
+	std::cout << "VECTOR TEST RELATIONAL OPERATOR 13 : " << boolean << std::endl;
+	boolean = p != q;
+	std::cout << "VECTOR TEST RELATIONAL OPERATOR 14 : " << boolean << std::endl;
+	boolean = p < q;
+	std::cout << "VECTOR TEST RELATIONAL OPERATOR 15 : " << boolean << std::endl;
+	boolean = p > q;
+	std::cout << "VECTOR TEST RELATIONAL OPERATOR 16 : " << boolean << std::endl;
+	boolean = p <= q;
+	std::cout << "VECTOR TEST RELATIONAL OPERATOR 17 : " << boolean << std::endl;
+	boolean = p >= q;
+	std::cout << "VECTOR TEST RELATIONAL OPERATOR 18 : " << boolean << std::endl;
 	return (0);
 }

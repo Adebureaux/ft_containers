@@ -5,24 +5,18 @@
 #include <cctype>
 #include "vector.hpp"
 
-bool mycomp(char c1, char c2)
-{ return std::tolower(c1)<std::tolower(c2); }
-
-int main () {
-  char foo[]="Apple";
-  char bar[]="apartment";
-
-  std::cout << std::boolalpha;
-
-  std::cout << "Comparing foo and bar lexicographically (foo<bar):\n";
-
-  std::cout << "Using default comparison (operator<): ";
-  std::cout << ft::lexicographical_compare(foo,foo+5,bar,bar+9);
-  std::cout << '\n';
-
-  std::cout << "Using mycomp as comparison object: ";
-  std::cout << ft::lexicographical_compare(foo,foo+5,bar,bar+9,mycomp);
-  std::cout << '\n';
-
-  return 0;
+int main (void) {
+	{
+		std::vector<std::string> a;
+		for (std::string i = "a"; i <= "z"; i[0]++)
+			a.push_back(i);
+		std::vector<std::string> b(a);
+		std::cout << std::boolalpha;
+		bool boolean = a == b;
+		std::cout << boolean << std::endl;
+		a.push_back("a");
+		b.push_back("b");
+		boolean = a == b;
+		std::cout << boolean << std::endl;
+	}
 }

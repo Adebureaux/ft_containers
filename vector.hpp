@@ -282,26 +282,17 @@ namespace ft {
 	/* Non-member function overloads */
 	template <class T, class Alloc>
 	bool operator==(const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs) {
-		if (lhs.size() == rhs.size()) {
-			for (size_t i = 0; i < lhs.size(); i++) {
-				if (lhs[i] != rhs[i])
-					return (false);
-			}
-			return (true);
-		}
-		return (false);
+		if (lhs.size() != rhs.size())
+			return (false);
+		return (ft::equal(lhs.begin(), lhs.end(), rhs.begin()));
 	};
 	template <class T, class Alloc>
 	bool operator!=(const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs) {
-		return (ft::operator==(lhs, rhs) ? false : true);
+		return (!ft::operator==(lhs, rhs));
 	};
 	template <class T, class Alloc>
 	bool operator<(const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs) {
-		for (size_t i = 0; i < lhs.size(); i++) {
-			if (lhs[i] > rhs[i])
-				return (false);
-		}
-		return (true);
+		return (ft::lexicographical_compare(lhs.begin(), lhs.end(), rhs.begin(), rhs.end()));
 	};
 	template <class T, class Alloc>
 	bool operator<=(const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs) {
@@ -309,13 +300,12 @@ namespace ft {
 	};
 	template <class T, class Alloc>
 	bool operator>(const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs) {
-		return (ft::operator<(lhs, rhs) ? false : true);
+		return (!ft::operator<(lhs, rhs));
 	};
 	template <class T, class Alloc>
 	bool operator>=(const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs) {
 		return (ft::operator==(lhs, rhs) || ft::operator>(lhs, rhs));
 	};
-
 	/* End Non-member function overloads */
 }
 #endif
