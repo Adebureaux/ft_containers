@@ -34,7 +34,7 @@ namespace ft {
 		public:
 			/* Typedefs */
 			typedef std::ptrdiff_t					difference_type;
-			typedef T								value_type;
+			typedef const T							value_type;
 			typedef const T*						pointer;
 			typedef const T&						reference;
 			typedef ft::random_access_iterator_tag	iterator_category;

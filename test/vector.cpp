@@ -119,16 +119,6 @@ int main(void)
 		std::cerr << e.what() << std::endl;
 	}
 	LOC::vector<int> b(a.rbegin(), a.rend());
-	iter_type start(b.begin());
-	while (start != b.end())
-		std::cout << *start++ << ' ';
-	std::cout << std::endl;
-	try {
-		LOC::vector<int> b(a.rend(), a.rbegin());
-	}
-	catch (const std::exception& e) {
-		std::cerr << e.what() << std::endl;
-	}
 	LOC::vector<int> baz(a.rend(), a.rend());
 	LOC::vector<int> doo(a.rbegin(), a.rbegin());
 	std::cout << baz.empty() << " " << doo.empty() << std::endl;
@@ -167,7 +157,7 @@ int main(void)
 	while (it != third.end())
 		std::cout << *it++ << ' ';
 	std::cout << std::endl;
-	start = a.begin();
+	iter_type start = a.begin();
 	while (start != a.end())
 		std::cout << *start++ << ' ';
 	std::cout << std::endl;
@@ -283,6 +273,9 @@ int main(void)
 	j.swap(i);
 	verify(j, "SWAP 3");
 	verify(i, "SWAP 4");
+	LOC::swap(i, j);
+	verify(i, "SWAP 5");
+	verify(j, "SWAP 6");
 	j.assign(5, "coucou");
 	verify(j, "ASSIGN 3");
 	i.reserve(100);

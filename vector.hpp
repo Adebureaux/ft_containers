@@ -15,7 +15,7 @@ namespace ft {
 			typedef T*												pointer;
 			typedef const T*										const_pointer;
 			typedef typename ft::vector_iterator<value_type>		iterator;
-			typedef typename ft::vector_iterator<const value_type>	const_iterator;
+			typedef typename ft::vector_iterator<value_type>		const_iterator;
 			typedef ft::reverse_iterator<iterator>					reverse_iterator;
 			typedef ft::reverse_iterator<const_iterator>			const_reverse_iterator;
 			typedef std::ptrdiff_t									difference_type;
@@ -36,8 +36,8 @@ namespace ft {
 			template <class InputIterator>
 			vector(InputIterator first, InputIterator last, const allocator_type& alloc = allocator_type(), typename ft::enable_if<!ft::is_integral<InputIterator>::value, InputIterator>::type* = 0)
 			: _alloc(alloc), _size(ft::distance(first, last)), _capacity(_size), _vector(_alloc.allocate(_capacity)) {
-				for (size_type i = 0; i < _size; i++)
-					_alloc.construct(&_vector[i], first[i]);
+				for (size_type i = 0; i < _size; i++, first++)
+					_alloc.construct(&_vector[i], *first);
 			};
 			vector(const vector& x) 
 			: _alloc(x._alloc), _size(x._size), _capacity(x._size), _vector(_alloc.allocate(_capacity)) {
@@ -164,6 +164,7 @@ namespace ft {
 			template <class InputIterator>
 			void assign(InputIterator first, InputIterator last, typename ft::enable_if<!ft::is_integral<InputIterator>::value, InputIterator>::type* = 0) {
 				size_type n = ft::distance(first, last);
+
 				if (n > _capacity)
 					reserve(n);
 				clear();
@@ -300,11 +301,15 @@ namespace ft {
 	};
 	template <class T, class Alloc>
 	bool operator>(const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs) {
-		return (!ft::operator<(lhs, rhs));
+		return (!ft::operator<=(lhs, rhs));
 	};
 	template <class T, class Alloc>
 	bool operator>=(const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs) {
 		return (ft::operator==(lhs, rhs) || ft::operator>(lhs, rhs));
+	};
+	template <class T, class Alloc>
+	void swap(vector<T,Alloc>& x, vector<T,Alloc>& y) {
+		x.swap(y);
 	};
 	/* End Non-member function overloads */
 }

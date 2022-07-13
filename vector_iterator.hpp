@@ -35,7 +35,7 @@ namespace ft {
 			/* Getter */
 			pointer getitr() const {
 				return (_itr);
-			}
+			};
 			/* End Getter */
 
 			/* Operator overload */
