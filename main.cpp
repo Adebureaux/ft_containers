@@ -3,46 +3,50 @@
 #include <iostream>
 #include <algorithm>
 #include <cctype>
-#include <list>
 #include "vector.hpp"
 
-#define TESTED_TYPE std::string
+#define TESTED_TYPE int
+#define TESTED_NAMESPACE std
 
-void    checkErase(ft::vector<TESTED_TYPE> const &vct,
-                                        ft::vector<TESTED_TYPE>::iterator const &it)
+int		main(void)
 {
-        static int i = 0;
-        std::cout << "[" << i++ << "] " << "erase: " << it - vct.begin() << std::endl;
-        std::cout << vct.size() << " " << vct.capacity() << std::endl;
-}
+	const int size = 5;
+	TESTED_NAMESPACE::vector<TESTED_TYPE> vct(size);
+	TESTED_NAMESPACE::vector<TESTED_TYPE>::iterator it(vct.begin());
+	TESTED_NAMESPACE::vector<TESTED_TYPE>::const_iterator ite(vct.end());
 
-int             main(void)
-{
-        ft::vector<TESTED_TYPE> vct(10);
-
-        for (unsigned long int i = 0; i < vct.size(); ++i)
-                vct[i] = std::string((vct.size() - i), i + 65);
+	for (int i = 1; it != ite; ++i)
+		*it++ = i;
         std::cout << vct.size() << " " << vct.capacity() << std::endl;
 
-        checkErase(vct, vct.erase(vct.begin() + 2));
+	it = vct.begin();
+	ite = vct.begin();
 
-        checkErase(vct, vct.erase(vct.begin()));
-        checkErase(vct, vct.erase(vct.end() - 1));
+	std::cout << *(++ite) << std::endl;
+	std::cout << *(ite++) << std::endl;
+	std::cout << *ite++ << std::endl;
+	std::cout << *++ite << std::endl;
 
-        checkErase(vct, vct.erase(vct.begin(), vct.begin() + 3));
-        checkErase(vct, vct.erase(vct.end() - 3, vct.end() - 1));
+	// it->m();
+	// ite->m();
 
-        vct.push_back("Hello");
-        vct.push_back("Hi there");
-        std::cout << vct.size() << " " << vct.capacity() << std::endl;
-        checkErase(vct, vct.erase(vct.end() - 3, vct.end()));
+	std::cout << *(++it) << std::endl;
+	std::cout << *(it++) << std::endl;
+	std::cout << *it++ << std::endl;
+	std::cout << *++it << std::endl;
 
-        vct.push_back("ONE");
-        vct.push_back("TWO");
-        vct.push_back("THREE");
-        vct.push_back("FOUR");
-        std::cout << vct.size() << " " << vct.capacity() << std::endl;
-        checkErase(vct, vct.erase(vct.begin(), vct.end()));
+	std::cout << *(--ite) << std::endl;
+	std::cout << *(ite--) << std::endl;
+	std::cout << *--ite << std::endl;
+	std::cout << *ite-- << std::endl;
 
-        return (0);
+	// (*it).m();
+	// (*ite).m();
+
+	std::cout << *(--it) << std::endl;
+	std::cout << *(it--) << std::endl;
+	std::cout << *it-- << std::endl;
+	std::cout << *--it << std::endl;
+
+	return (0);
 }
