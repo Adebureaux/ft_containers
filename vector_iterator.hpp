@@ -48,7 +48,7 @@ namespace ft {
 			reference operator*() const {
 				return (*_itr);
 			};
-			pointer operator->() const {
+			pointer operator->() {
 				return (_itr);
 			};
 			vector_iterator& operator++() {
