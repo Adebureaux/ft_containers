@@ -11,9 +11,7 @@ namespace ft {
 			typedef std::ptrdiff_t					difference_type;
 			typedef T								value_type;
 			typedef T*								pointer;
-			typedef const T*						const_pointer;
 			typedef T&								reference;
-			typedef const T&						const_reference;
 			typedef ft::random_access_iterator_tag	iterator_category;
 			/* End Typedefs */
 
@@ -21,7 +19,6 @@ namespace ft {
 			vector_iterator() : _itr(0) {};
 			vector_iterator(pointer itr) : _itr(itr) {};
 			vector_iterator(const vector_iterator& x) { *this = x; };
-			vector_iterator(vector_iterator& x) { *this = x; };
 			/* End Constructors */
 
 			/* Destructor */
@@ -48,16 +45,10 @@ namespace ft {
 			bool operator!=(const vector_iterator &rhs) const {
 				return (_itr != rhs._itr ? true : false);
 			};
-			reference operator*() {
+			reference operator*() const {
 				return (*_itr);
 			};
-			const_reference operator*() const {
-				return (*_itr);
-			};
-			pointer operator->() {
-				return (_itr);
-			};
-			const_pointer operator->() const { 
+			pointer operator->() const {
 				return (_itr);
 			};
 			vector_iterator& operator++() {

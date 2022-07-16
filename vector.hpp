@@ -15,7 +15,7 @@ namespace ft {
 			typedef T*												pointer;
 			typedef const T*										const_pointer;
 			typedef ft::vector_iterator<value_type>					iterator;
-			typedef ft::vector_iterator<value_type>					const_iterator;
+			typedef ft::vector_iterator<value_type>					const_iterator; // Gota create a real const Iterator here
 			typedef ft::reverse_iterator<iterator>					reverse_iterator;
 			typedef ft::reverse_iterator<const_iterator>			const_reverse_iterator;
 			typedef std::ptrdiff_t									difference_type;
