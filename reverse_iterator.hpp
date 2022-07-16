@@ -4,7 +4,7 @@
 #include "tools.hpp"
 
 namespace ft {
-	template <class Iterator>
+	template <typename Iterator>
 	class reverse_iterator {
 		public:
 			/* Typedefs */
@@ -20,7 +20,7 @@ namespace ft {
 			reverse_iterator() : _itr() {};
 			explicit reverse_iterator(iterator_type it) : _itr(it) {};
 			template <class Iter>
- 			reverse_iterator(const reverse_iterator<Iter>& rev_it) { *this = rev_it; };
+ 			reverse_iterator(const reverse_iterator<Iter>& rev_it) { _itr = rev_it.base(); };
 			/* End Constructors */
 
 			/* Destructor */
@@ -135,7 +135,7 @@ namespace ft {
 	/* Operator- */
 	template <class Iterator>
 	typename reverse_iterator<Iterator>::difference_type operator-(const reverse_iterator<Iterator>& lhs, const reverse_iterator<Iterator>& rhs) {
-		return (rhs.base().getitr() - lhs.base().getitr());
+		return (rhs.base() - lhs.base());
 	};
 	/* End Operator+ */
 }

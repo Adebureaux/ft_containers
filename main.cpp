@@ -6,24 +6,29 @@
 #include "vector.hpp"
 
 #define TESTED_TYPE int
-#define TESTED_NAMESPACE std
+#define TESTED_NAMESPACE ft
 
-int		main(void)
+int             main(void)
 {
-	const int size = 5;
-	TESTED_NAMESPACE::vector<TESTED_TYPE> vct(size);
-	TESTED_NAMESPACE::vector<TESTED_TYPE>::iterator it(vct.begin());
-	TESTED_NAMESPACE::vector<TESTED_TYPE>::const_iterator ite(vct.end());
+        TESTED_NAMESPACE::vector<TESTED_TYPE> vct;
+        TESTED_NAMESPACE::vector<TESTED_TYPE>::iterator it = vct.begin();
+        TESTED_NAMESPACE::vector<TESTED_TYPE>::const_iterator cit = vct.begin();
 
-	std::cout << *it << std::endl;
+        TESTED_NAMESPACE::vector<TESTED_TYPE>::const_reverse_iterator rit(cit);
+		(void)cit;
+		(void)it;
 
-	for (int i = 1; it != ite; ++i)
-		*it++ = i;
-        std::cout << vct.size() << " " << vct.capacity() << std::endl;
+        // TESTED_NAMESPACE::vector<TESTED_TYPE>::const_reverse_iterator crit(rit);
+        // TESTED_NAMESPACE::vector<TESTED_TYPE>::const_reverse_iterator crit_(it);
+        // TESTED_NAMESPACE::vector<TESTED_TYPE>::const_reverse_iterator crit_2(cit);
 
-	it = vct.begin();
-	ite = vct.begin();
+        /* error expected
+        TESTED_NAMESPACE::vector<TESTED_TYPE>::reverse_iterator rit_(crit);
+        TESTED_NAMESPACE::vector<TESTED_TYPE>::reverse_iterator rit2(cit);
+        TESTED_NAMESPACE::vector<TESTED_TYPE>::iterator it2(rit);
+        TESTED_NAMESPACE::vector<TESTED_TYPE>::const_iterator cit2(crit);
+        */
 
-
-	return (0);
+        std::cout << "OK" << std::endl;
+        return (0);
 }
