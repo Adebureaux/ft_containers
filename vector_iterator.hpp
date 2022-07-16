@@ -11,7 +11,9 @@ namespace ft {
 			typedef std::ptrdiff_t					difference_type;
 			typedef T								value_type;
 			typedef T*								pointer;
+			typedef const T*						const_pointer;
 			typedef T&								reference;
+			typedef const T&						const_reference;
 			typedef ft::random_access_iterator_tag	iterator_category;
 			/* End Typedefs */
 
@@ -19,6 +21,7 @@ namespace ft {
 			vector_iterator() : _itr(0) {};
 			vector_iterator(pointer itr) : _itr(itr) {};
 			vector_iterator(const vector_iterator& x) { *this = x; };
+			vector_iterator(vector_iterator& x) { *this = x; };
 			/* End Constructors */
 
 			/* Destructor */
@@ -45,10 +48,16 @@ namespace ft {
 			bool operator!=(const vector_iterator &rhs) const {
 				return (_itr != rhs._itr ? true : false);
 			};
-			reference operator*() const {
+			reference operator*() {
+				return (*_itr);
+			};
+			const_reference operator*() const {
 				return (*_itr);
 			};
 			pointer operator->() {
+				return (_itr);
+			};
+			const_pointer operator->() const { 
 				return (_itr);
 			};
 			vector_iterator& operator++() {
@@ -109,5 +118,18 @@ namespace ft {
 		private:
 			pointer _itr;
 	};
+	/* Operator+ */
+	template <class Iterator>
+	vector_iterator<Iterator> operator+(typename vector_iterator<Iterator>::difference_type n, const vector_iterator<Iterator>& rev_it) {
+		return (rev_it + n);
+	};
+	/* End Operator+ */
+
+	/* Operator- */
+	template <class Iterator>
+	typename vector_iterator<Iterator>::difference_type operator-(const vector_iterator<Iterator>& lhs, const vector_iterator<Iterator>& rhs) {
+		return (rhs.base().getitr() - lhs.base().getitr());
+	};
+	/* End Operator+ */
 }
 #endif
