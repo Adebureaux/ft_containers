@@ -2,12 +2,10 @@
 # define TOOLS_HPP
 
 #include <cstdio>
-#include <cstddef>
 #include <memory>
 #include <limits>
-#include "iterator_traits.hpp"
-#include "reverse_iterator.hpp"
-#include "vector_iterator.hpp"
+#include <cstddef>
+#include "iterator.hpp"
 
 namespace ft {
 	/* Enable_if */
