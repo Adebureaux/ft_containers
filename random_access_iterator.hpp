@@ -14,6 +14,7 @@ namespace ft {
 			typedef value_type&											reference;
 			typedef ft::random_access_iterator_tag						iterator_category;
 			/* End Typedefs */
+
 			/* Constructors */
 			random_access_iterator() : _itr(0) {};
 			random_access_iterator(pointer itr) : _itr(itr) {};
