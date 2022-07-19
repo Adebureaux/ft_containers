@@ -14,7 +14,6 @@ namespace ft {
 			typedef value_type&											reference;
 			typedef ft::random_access_iterator_tag						iterator_category;
 			/* End Typedefs */
-
 			/* Constructors */
 			random_access_iterator() : _itr(0) {};
 			random_access_iterator(pointer itr) : _itr(itr) {};
@@ -122,14 +121,14 @@ namespace ft {
 	};
 	/* Operator+ */
 	template <class Iterator, bool B>
-	random_access_iterator<Iterator> operator+(typename random_access_iterator<Iterator, B>::difference_type n, const random_access_iterator<Iterator, B>& rev_it) {
+	random_access_iterator<Iterator, B> operator+(typename random_access_iterator<Iterator, B>::difference_type n, const random_access_iterator<Iterator, B>& rev_it) {
 		return (rev_it + n);
 	};
 	/* End Operator+ */
 
 	/* Operator- */
 	template <class Iterator, bool B>
-	typename random_access_iterator<Iterator>::difference_type operator-(const random_access_iterator<Iterator, B>& lhs, const random_access_iterator<Iterator, B>& rhs) {
+	typename random_access_iterator<Iterator, B>::difference_type operator-(const random_access_iterator<Iterator, B>& lhs, const random_access_iterator<Iterator, B>& rhs) {
 		return (rhs.base() - lhs.base());
 	};
 	/* End Operator+ */
