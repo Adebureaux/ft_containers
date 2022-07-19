@@ -2,12 +2,137 @@
 # define VECTOR_HPP
 
 #include "tools.hpp"
-#include "random_access_iterator.hpp"
 
 namespace ft {
 	template <class T, class Alloc = std::allocator<T> >
 	class vector {
 		public:
+			/* Random_access_iterator */
+			template <bool Const>
+			class random_access_iterator : public ft::iterator<ft::random_access_iterator_tag, T> {
+				public:
+					/* Typedefs */
+					typedef std::ptrdiff_t										difference_type;
+					typedef typename ft::conditional<Const, const T, T>::type	value_type;
+					typedef value_type*											pointer;
+					typedef value_type&											reference;
+					typedef ft::random_access_iterator_tag						iterator_category;
+					/* End Typedefs */
+
+					/* Constructors */
+					random_access_iterator() : _itr(0) {};
+					random_access_iterator(pointer itr) : _itr(itr) {};
+					// random_access_iterator(const random_access_iterator& x) { *this = x; };
+					template <bool B>
+					random_access_iterator(const random_access_iterator<B> &x, typename ft::enable_if<!B>::type* = 0) {
+						_itr = x.getitr();
+					};
+					/* End Constructors */
+
+					/* Destructor */
+					~random_access_iterator() {};
+					/* End Destructor */
+					
+					/* Operator= */
+					random_access_iterator& operator=(const random_access_iterator& x) {
+						_itr = x._itr;
+						return (*this);
+					};
+					/* End Operator= */
+
+					/* Getter */
+					pointer getitr() const {
+						return (_itr);
+					};
+					/* End Getter */
+
+					/* Operator overload */
+					template <bool B>
+					bool operator==(const random_access_iterator<B> &rhs) const {
+						return (_itr == rhs.getitr() ? true : false);
+					};
+					template <bool B>
+					bool operator!=(const random_access_iterator<B> &rhs) const {
+						return (_itr != rhs.getitr() ? true : false);
+					};
+					reference operator*() const {
+						return (*_itr);
+					};
+					pointer operator->() const {
+						return (_itr);
+					};
+					random_access_iterator& operator++() {
+						_itr++;
+						return (*this);
+					};
+					random_access_iterator operator++(int) {
+						random_access_iterator tmp = *this;
+						++(*this);
+						return (tmp);
+					};
+					random_access_iterator& operator--() {
+						_itr--;
+						return (*this);
+					};
+					random_access_iterator operator--(int) {
+						random_access_iterator tmp = *this;
+						--(*this);
+						return (tmp);
+					};
+					random_access_iterator operator+(const int n) const {
+						return (random_access_iterator(_itr + n));
+					};
+					difference_type operator+(const random_access_iterator& rhs) const {
+						return (_itr + rhs.getitr());
+					};
+					random_access_iterator operator-(const int n) const {
+						return (random_access_iterator(_itr - n));
+					};
+					difference_type operator-(const random_access_iterator& rhs) const {
+						return (_itr - rhs.getitr());
+					};
+					template <bool B>
+					bool operator<(const random_access_iterator<B>& rhs) const {
+						return (_itr < rhs.getitr() ? true : false);
+					};
+					template <bool B>
+					bool operator>(const random_access_iterator<B>& rhs) const {
+						return (_itr > rhs.getitr() ? true : false);
+					};
+					template <bool B>
+					bool operator<=(const random_access_iterator<B>& rhs) const {
+						return (_itr <= rhs.getitr() ? true : false);
+					};
+					template <bool B>
+					bool operator>=(const random_access_iterator<B>& rhs) const {
+						return (_itr >= rhs.getitr() ? true : false);
+					};
+					random_access_iterator& operator+=(const difference_type n) {
+						_itr += n;
+						return (*this);
+					};
+					random_access_iterator& operator-=(const difference_type n) {
+						_itr -= n;
+						return (*this);
+					};
+					reference operator[](size_t n) const {
+						return (_itr[n]);
+					};
+					/* End Operator overload */
+
+					/* Operator+ */
+					friend random_access_iterator operator+(int n, const random_access_iterator& rhs) {
+						return (rhs.getitr() + n);
+					};
+					/* End Operator+ */
+
+				private:
+					pointer _itr;
+			};
+			/* End Random_access_iterator */
+
+			/* Vector */
+			public:
 			/* Typedefs */
 			typedef T													value_type;
 			typedef Alloc												allocator_type;
@@ -17,8 +142,8 @@ namespace ft {
 			typedef typename allocator_type::const_pointer				const_pointer;
 			// typedef value_type* 										iterator;
 			// typedef const value_type* 									const_iterator;
-			typedef typename ft::random_access_iterator<T>				iterator;
-			typedef typename ft::random_access_iterator<const T>		const_iterator;
+			typedef random_access_iterator<false>						iterator;
+			typedef random_access_iterator<true>						const_iterator;
 			typedef typename ft::reverse_iterator<iterator>				reverse_iterator;
 			typedef typename ft::reverse_iterator<const_iterator>		const_reverse_iterator;
 			typedef std::ptrdiff_t										difference_type;
@@ -67,10 +192,10 @@ namespace ft {
 
 			/* Iterators */
 			iterator begin() {
-				return iterator(&_vector[0]);
+				return (iterator(&_vector[0]));
 			};
 			const_iterator begin() const {
-				return const_iterator(&_vector[0]);
+				return (const_iterator(&_vector[0]));
 			};
 			iterator end() {
 				return (iterator(&_vector[_size]));
@@ -315,5 +440,7 @@ namespace ft {
 		x.swap(y);
 	};
 	/* End Non-member function overloads */
+
+	/* End Vector */
 }
 #endif

@@ -15,7 +15,7 @@ int             main(void)
         TESTED_NAMESPACE::vector<TESTED_TYPE>::iterator it = vct.begin();
         TESTED_NAMESPACE::vector<TESTED_TYPE>::const_iterator cit = vct.begin();
 
-        TESTED_NAMESPACE::vector<TESTED_TYPE>::const_reverse_iterator rit(cit);
+        // TESTED_NAMESPACE::vector<TESTED_TYPE>::const_reverse_iterator rit(cit);
 		(void)cit;
 		(void)it;
 

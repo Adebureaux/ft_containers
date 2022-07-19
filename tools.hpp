@@ -68,6 +68,17 @@ namespace ft {
 	};
 	/* End Is_integral */
 
+	/* Conditional */
+	template <bool B, class T = void, class U = void>
+	struct conditional {};
+
+	template <class T, class U>
+	struct conditional<true, T, U> { typedef T type; };
+
+	template <class T, class U>
+	struct conditional<false, T, U> { typedef U type; };
+	/*  End Conditional */
+
 	/* Lexicographical_compare */
 	template <class InputIterator1, class InputIterator2>
 	bool lexicographical_compare(InputIterator1 first1, InputIterator1 last1, InputIterator2 first2, InputIterator2 last2) {

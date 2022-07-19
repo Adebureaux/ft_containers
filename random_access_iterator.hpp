@@ -4,21 +4,25 @@
 #include "tools.hpp"
 
 namespace ft {
-	template <class T>
-	class random_access_iterator : public ft::iterator<ft::random_access_iterator_tag, int > {
+	template <class T, bool Const = false>
+	class random_access_iterator : public ft::iterator<ft::random_access_iterator_tag, T > {
 		public:
 			/* Typedefs */
-			typedef std::ptrdiff_t					difference_type;
-			typedef T								value_type;
-			typedef T*								pointer;
-			typedef T&								reference;
-			typedef ft::random_access_iterator_tag	iterator_category;
+			typedef std::ptrdiff_t										difference_type;
+			typedef typename ft::conditional<Const, const T, T>::type	value_type;
+			typedef value_type*											pointer;
+			typedef value_type&											reference;
+			typedef ft::random_access_iterator_tag						iterator_category;
 			/* End Typedefs */
 
 			/* Constructors */
 			random_access_iterator() : _itr(0) {};
 			random_access_iterator(pointer itr) : _itr(itr) {};
-			random_access_iterator(const random_access_iterator& x) { *this = x; };
+			// random_access_iterator(const random_access_iterator& x) { *this = x; };
+			template <bool B>
+			random_access_iterator(const random_access_iterator<T, B> &x, typename ft::enable_if<!B>::type* = 0) {
+				*this = x;
+			};
 			/* End Constructors */
 
 			/* Destructor */
@@ -39,10 +43,10 @@ namespace ft {
 			/* End Getter */
 
 			/* Operator overload */
-			bool operator==(const random_access_iterator &rhs) const {
+			bool operator==(const random_access_iterator<T, Const> &rhs) const {
 				return (_itr == rhs._itr ? true : false);
 			};
-			bool operator!=(const random_access_iterator &rhs) const {
+			bool operator!=(const random_access_iterator<T, Const> &rhs) const {
 				return (_itr != rhs._itr ? true : false);
 			};
 			reference operator*() const {
