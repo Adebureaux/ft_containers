@@ -4,7 +4,7 @@
 #include "tools.hpp"
 
 namespace ft {
-	template <class Iterator>
+	template <typename Iterator>
 	class reverse_iterator {
 		public:
 			/* Typedefs */
