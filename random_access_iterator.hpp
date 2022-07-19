@@ -122,15 +122,15 @@ namespace ft {
 	};
 	/* Operator+ */
 	template <class Iterator, bool B>
-	random_access_iterator<Iterator, B> operator+(typename random_access_iterator<Iterator, B>::difference_type n, const random_access_iterator<Iterator, B>& rev_it) {
-		return (rev_it + n);
+	random_access_iterator<Iterator, B> operator+(typename random_access_iterator<Iterator, B>::difference_type n, const random_access_iterator<Iterator, B>& rhs) {
+		return (rhs + n);
 	};
 	/* End Operator+ */
 
 	/* Operator- */
 	template <class Iterator, bool B>
 	typename random_access_iterator<Iterator, B>::difference_type operator-(const random_access_iterator<Iterator, B>& lhs, const random_access_iterator<Iterator, B>& rhs) {
-		return (rhs.base() - lhs.base());
+		return (rhs - lhs);
 	};
 	/* End Operator+ */
 }

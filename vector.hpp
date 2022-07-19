@@ -275,10 +275,10 @@ namespace ft {
 			/* End Allocator */
 
 		private:
-			Alloc		_alloc;
-			size_type	_size;
-			size_type	_capacity;
-			pointer		_vector;
+			allocator_type	_alloc;
+			size_type		_size;
+			size_type		_capacity;
+			pointer			_vector;
 	};
 
 	/* Non-member function overloads */
