@@ -44,11 +44,11 @@ namespace ft {
 			/* Operator overload */
 			template <bool B>
 			bool operator==(const random_access_iterator<T, B> &rhs) const {
-				return (_itr == rhs.base() ? true : false);
+				return (_itr == rhs.base());
 			};
 			template <bool B>
 			bool operator!=(const random_access_iterator<T, B> &rhs) const {
-				return (_itr != rhs.base() ? true : false);
+				return (_itr != rhs.base());
 			};
 			reference operator*() const {
 				return (*_itr);
@@ -90,19 +90,19 @@ namespace ft {
 			};
 			template <bool B>
 			bool operator<(const random_access_iterator<T, B>& rhs) const {
-				return (_itr < rhs.base() ? true : false);
+				return (_itr < rhs.base());
 			};
 			template <bool B>
 			bool operator>(const random_access_iterator<T, B>& rhs) const {
-				return (_itr > rhs.base() ? true : false);
+				return (_itr > rhs.base());
 			};
 			template <bool B>
 			bool operator<=(const random_access_iterator<T, B>& rhs) const {
-				return (_itr <= rhs.base() ? true : false);
+				return (_itr <= rhs.base());
 			};
 			template <bool B>
 			bool operator>=(const random_access_iterator<T, B>& rhs) const {
-				return (_itr >= rhs.base() ? true : false);
+				return (_itr >= rhs.base());
 			};
 			random_access_iterator& operator+=(const difference_type n) {
 				_itr += n;
