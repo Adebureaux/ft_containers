@@ -1,6 +1,9 @@
 #ifndef MAP_HPP
 # define MAP_HPP
 
+#define BLACK 0
+#define RED 1
+
 #include "tools.hpp"
 #include "bidirectional_iterator.hpp"
 
@@ -8,20 +11,27 @@
 namespace ft {
 	template <class Key, class T, class Compare = std::less<Key>, class Alloc = std::allocator<std::pair<const Key, T> > >
 	class map {
-		struct Node {
-			T data; // holds the key
-			Node *parent; // pointer to the parent
-			Node *left; // pointer to left child
-			Node *right; // pointer to right child
-			bool color; // 1 -> Red, 0 -> Black
-		};
+		private:
+			class _node {
+				public :
+					_node(std::pair<const Key, T>& val) : data(val) {};
+					_node(const std::pair<const Key, T>& val) : data(val) {};
+
+				public:
+					std::pair<const Key, T>	data; // holds the key/value
+					_node					*parent; // pointer to the parent
+					_node					*left; // pointer to left child
+					_node					*right; // pointer to right child
+					bool					color; // 1 -> Red, 0 -> Black
+			};
+
 		public:
 			/* Typedefs */
 			typedef Key												key_type;
 			typedef T												mapped_type;
 			typedef std::pair<const key_type, mapped_type>			value_type;
 			typedef	Compare											key_compare;
-			typedef Alloc											allocator_type;
+			typedef typename Alloc::template rebind<_node>::other	allocator_type;
 			typedef typename allocator_type::reference				reference;
 			typedef typename allocator_type::const_reference		const_reference;
 			typedef typename allocator_type::pointer				pointer;
@@ -32,7 +42,7 @@ namespace ft {
 			typedef ft::reverse_iterator<const_iterator>			const_reverse_iterator;
 			typedef std::ptrdiff_t									difference_type;
 			typedef	size_t											size_type;
-			typedef Node											*nodeptr;
+			typedef _node											*nodeptr;
 			/* End Typedefs */
 
 			/* Value_compare */
@@ -47,8 +57,8 @@ namespace ft {
 			/* Constructors */
 			explicit map(const key_compare& comp = key_compare(), const allocator_type& alloc = allocator_type())
 			: _alloc(alloc), _key_comp(comp), _value_comp(value_compare()) {
-				_null = new Node;
-				_null->color = 0;
+				_null = _alloc.allocate(1);
+				_null->color = BLACK;
 				_null->left = NULL;
 				_null->right = NULL;
 				_root = _null;
@@ -63,21 +73,21 @@ namespace ft {
 
 			~map() {
 				deleteHelper(this->_root);
-				delete _null;
+				_alloc.deallocate(_null, 1);
 			};
 
 
 		private:
 			void initializeNULLNode(nodeptr node, nodeptr parent) {
-				node->data = 0;
+				node->data.first = 0;
 				node->parent = parent;
 				node->left = NULL;
 				node->right = NULL;
-				node->color = 0;
+				node->color = BLACK;
 			};
 			void preOrderHelper(nodeptr node) {
 				if (node != _null) {
-					std::cout<<node->data<<" ";
+					std::cout<<node->data.first<<" ";
 					preOrderHelper(node->left);
 					preOrderHelper(node->right);
 				}
@@ -86,7 +96,7 @@ namespace ft {
 			void inOrderHelper(nodeptr node) {
 				if (node != _null) {
 					inOrderHelper(node->left);
-					std::cout<<node->data<<" ";
+					std::cout<<node->data.first<<" ";
 					inOrderHelper(node->right);
 				}
 			}
@@ -95,16 +105,16 @@ namespace ft {
 				if (node != _null) {
 					postOrderHelper(node->left);
 					postOrderHelper(node->right);
-					std::cout<<node->data<<" ";
+					std::cout<<node->data.first<<" ";
 				} 
 			}
 
-			nodeptr searchTreeHelper(nodeptr node, int key) {
-				if (node == _null || key == node->data) {
+			nodeptr searchTreeHelper(nodeptr node, key_type key) {
+				if (node == _null || key == node->data.first) {
 					return node;
 				}
 
-				if (key < node->data) {
+				if (key < node->data.first) {
 					return searchTreeHelper(node->left, key);
 				}
 				return searchTreeHelper(node->right, key);
@@ -113,34 +123,34 @@ namespace ft {
 			// fix the rb tree modified by the delete operation
 			void fixDelete(nodeptr x) {
 				nodeptr s;
-				while (x != _root && x->color == 0) {
+				while (x != _root && x->color == BLACK) {
 					if (x == x->parent->left) {
 						s = x->parent->right;
 						if (s->color == 1) {
 							// case 3.1
-							s->color = 0;
-							x->parent->color = 1;
+							s->color = BLACK;
+							x->parent->color = RED;
 							leftRotate(x->parent);
 							s = x->parent->right;
 						}
 
-						if (s->left->color == 0 && s->right->color == 0) {
+						if (s->left->color == BLACK && s->right->color == BLACK) {
 							// case 3.2
-							s->color = 1;
+							s->color = RED;
 							x = x->parent;
 						} else {
-							if (s->right->color == 0) {
+							if (s->right->color == BLACK) {
 								// case 3.3
-								s->left->color = 0;
-								s->color = 1;
+								s->left->color = BLACK;
+								s->color = RED;
 								rightRotate(s);
 								s = x->parent->right;
 							} 
 
 							// case 3.4
 							s->color = x->parent->color;
-							x->parent->color = 0;
-							s->right->color = 0;
+							x->parent->color = BLACK;
+							s->right->color = BLACK;
 							leftRotate(x->parent);
 							x = _root;
 						}
@@ -148,35 +158,35 @@ namespace ft {
 						s = x->parent->left;
 						if (s->color == 1) {
 							// case 3.1
-							s->color = 0;
-							x->parent->color = 1;
+							s->color = BLACK;
+							x->parent->color = RED;
 							rightRotate(x->parent);
 							s = x->parent->left;
 						}
 
 						if (s->right->color == 0 && s->right->color == 0) {
 							// case 3.2
-							s->color = 1;
+							s->color = RED;
 							x = x->parent;
 						} else {
 							if (s->left->color == 0) {
 								// case 3.3
-								s->right->color = 0;
-								s->color = 1;
+								s->right->color = BLACK;
+								s->color = RED;
 								leftRotate(s);
 								s = x->parent->left;
 							}
 
 							// case 3.4
 							s->color = x->parent->color;
-							x->parent->color = 0;
-							s->left->color = 0;
+							x->parent->color = BLACK;
+							s->left->color = BLACK;
 							rightRotate(x->parent);
 							x = _root;
 						}
 					} 
 				}
-				x->color = 0;
+				x->color = BLACK;
 			}
 
 
@@ -191,16 +201,37 @@ namespace ft {
 				v->parent = u->parent;
 			}
 
-			void deleteNodeHelper(nodeptr node, int key) {
+			// nodeptr findNode(key_type key) {
+			// 	nodeptr z = _null;
+			// 	nodeptr x, y;
+			// 	while (node != _null){
+			// 		if (node->data.first == key) {
+			// 			z = node;
+			// 		}
+
+			// 		if (node->data.first <= key) {
+			// 			node = node->right;
+			// 		} else {
+			// 			node = node->left;
+			// 		}
+			// 	}
+
+			// 	if (z == _null) {
+			// 		std::cout<<"Couldn't find key in the tree"<<std::endl;
+			// 		return;
+			// 	} 
+			// };
+
+			void deleteNodeHelper(nodeptr node, key_type key) {
 				// find the node containing key
 				nodeptr z = _null;
 				nodeptr x, y;
 				while (node != _null){
-					if (node->data == key) {
+					if (node->data.first == key) {
 						z = node;
 					}
 
-					if (node->data <= key) {
+					if (node->data.first <= key) {
 						node = node->right;
 					} else {
 						node = node->left;
@@ -251,9 +282,9 @@ namespace ft {
 						u = k->parent->parent->left; // uncle
 						if (u->color == 1) {
 							// case 3.1
-							u->color = 0;
-							k->parent->color = 0;
-							k->parent->parent->color = 1;
+							u->color = BLACK;
+							k->parent->color = BLACK;
+							k->parent->parent->color = RED;
 							k = k->parent->parent;
 						} else {
 							if (k == k->parent->left) {
@@ -262,8 +293,8 @@ namespace ft {
 								rightRotate(k);
 							}
 							// case 3.2.1
-							k->parent->color = 0;
-							k->parent->parent->color = 1;
+							k->parent->color = BLACK;
+							k->parent->parent->color = RED;
 							leftRotate(k->parent->parent);
 						}
 					} else {
@@ -271,9 +302,9 @@ namespace ft {
 
 						if (u->color == 1) {
 							// mirror case 3.1
-							u->color = 0;
-							k->parent->color = 0;
-							k->parent->parent->color = 1;
+							u->color = BLACK;
+							k->parent->color = BLACK;
+							k->parent->parent->color = RED;
 							k = k->parent->parent;
 						} else {
 							if (k == k->parent->right) {
@@ -282,8 +313,8 @@ namespace ft {
 								leftRotate(k);
 							}
 							// mirror case 3.2.1
-							k->parent->color = 0;
-							k->parent->parent->color = 1;
+							k->parent->color = BLACK;
+							k->parent->parent->color = RED;
 							rightRotate(k->parent->parent);
 						}
 					}
@@ -291,7 +322,7 @@ namespace ft {
 						break;
 					}
 				}
-				_root->color = 0;
+				_root->color = BLACK;
 			}
 
 			void printHelper(nodeptr _root, std::string indent, bool last) {
@@ -307,7 +338,7 @@ namespace ft {
 					}
 						
 					std::string sColor = _root->color?"RED":"BLACK";
-					std::cout<<_root->data<<"("<<sColor<<")"<<std::endl;
+					std::cout<<_root->data.first<<"("<<sColor<<")"<<std::endl;
 					printHelper(_root->left, indent, false);
 					printHelper(_root->right, indent, true);
 				}
@@ -318,7 +349,7 @@ namespace ft {
 				if (_root != _null) {
 					deleteHelper(_root->left);
 					deleteHelper(_root->right);
-					delete _root;
+					_alloc.deallocate(_root, 1);
 				}
 			}
 
@@ -440,22 +471,27 @@ namespace ft {
 
 			// insert the key to the tree in its appropriate position
 			// and fix the tree
-			void insert(T key) {
-				deleteNode(key);
+			void insert(const value_type& val) {
+				deleteNode(val.first); // delete node if the key is already existing (TO REMOVE ?)
 				// Ordinary Binary Search Insertion
-				nodeptr node = new Node;
+				nodeptr node = _alloc.allocate(1);
 				node->parent = NULL;
-				node->data = key;
+
+				_alloc.construct(node, _node(val));
+	
+				//_alloc.construct(node, Node(key_value));
+
+				// node->data = std::make_pair(val.first, val.second);
 				node->left = _null;
 				node->right = _null;
-				node->color = 1; // new node must be red
+				node->color = RED; // new node must be red
 
 				nodeptr y = NULL;
 				nodeptr x = this->_root;
 
 				while (x != _null) {
 					y = x;
-					if (node->data < x->data) {
+					if (node->data.first < x->data.first) {
 						x = x->left;
 					} else {
 						x = x->right;
@@ -466,7 +502,7 @@ namespace ft {
 				node->parent = y;
 				if (y == NULL) {
 					_root = node;
-				} else if (node->data < y->data) {
+				} else if (node->data.first < y->data.first) {
 					y->left = node;
 				} else {
 					y->right = node;
@@ -474,7 +510,7 @@ namespace ft {
 
 				// if new node is a _root node, simply return
 				if (node->parent == NULL){
-					node->color = 0;
+					node->color = BLACK;
 					return;
 				}
 
@@ -492,8 +528,8 @@ namespace ft {
 			}
 
 			// delete the node from the tree
-			void deleteNode(int data) {
-				deleteNodeHelper(this->_root, data);
+			void deleteNode(key_type key) {
+				deleteNodeHelper(this->_root, key);
 			}
 
 			// print the tree structure on the screen
