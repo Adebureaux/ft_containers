@@ -82,6 +82,17 @@ namespace ft {
 	};
 	/* End Conditional */
 
+	/* Iterator */
+	template <class Category, class T, class Distance = ptrdiff_t, class Pointer = T*, class Reference = T&>
+	struct iterator {
+		typedef T			value_type;
+		typedef Distance	difference_type;
+		typedef Pointer		pointer;
+		typedef Reference	reference;
+		typedef Category	iterator_category;
+	};
+	/* End Iterator */
+
 	/* Lexicographical_compare */
 	template <class InputIterator1, class InputIterator2>
 	bool lexicographical_compare(InputIterator1 first1, InputIterator1 last1, InputIterator2 first2, InputIterator2 last2) {
@@ -142,5 +153,32 @@ namespace ft {
 		return (distance);
 	};
 	/* End Distance */
+
+	/* Pair */
+	template <class T1, class T2, bool Const = false>
+	struct pair {
+		typedef ft::conditional<Const, const T1, T1> first_type;
+		typedef ft::conditional<Const, const T2, T2> second_type;
+		first_type first;
+		second_type second;
+		pair() {
+			first = first_type();
+			second = second_type();
+		};
+		template <class U, class V>
+		pair(const pair<U, V>& pr) {
+			first = pr.first;
+			second = pr.second;
+		};
+		template <class U, class V>
+		pair(const pair<U, V>& pr) {
+			first = pr.first;
+			second = pr.second;
+		};
+		pair(const first_type& a, const second_type& b) {
+			first = a;
+			second = b;
+		};
+	};
 }
 #endif

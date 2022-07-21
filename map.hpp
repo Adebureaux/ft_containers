@@ -9,27 +9,27 @@
 
 
 namespace ft {
-	template <class Key, class T, class Compare = std::less<Key>, class Alloc = std::allocator<std::pair<const Key, T> > >
+	template <class Key, class T, class Compare = std::less<Key>, class Alloc = std::allocator<ft::pair<const Key, T> > >
 	class map {
 		private:
 			class _node {
-				public :
-					_node(std::pair<const Key, T>& val) : data(val) {};
-					_node(const std::pair<const Key, T>& val) : data(val) {};
+				public:
+					_node(ft::pair<const Key, T>& val) : data(val) {};
+					_node(const ft::pair<const Key, T>& val) : data(val) {};
 
 				public:
-					std::pair<const Key, T>	data; // holds the key/value
-					_node					*parent; // pointer to the parent
-					_node					*left; // pointer to left child
-					_node					*right; // pointer to right child
-					bool					color; // 1 -> Red, 0 -> Black
+					ft::pair<const Key, T>	data;
+					_node					*parent;
+					_node					*left;
+					_node					*right;
+					bool					color;
 			};
 
 		public:
 			/* Typedefs */
 			typedef Key												key_type;
 			typedef T												mapped_type;
-			typedef std::pair<const key_type, mapped_type>			value_type;
+			typedef ft::pair<const key_type, mapped_type>			value_type;
 			typedef	Compare											key_compare;
 			typedef typename Alloc::template rebind<_node>::other	allocator_type;
 			typedef typename allocator_type::reference				reference;
@@ -71,11 +71,69 @@ namespace ft {
 			// };
 			/* End Constructors */
 
+			/* Destructor */
 			~map() {
-				deleteHelper(this->_root);
+				clear();
 				_alloc.deallocate(_null, 1);
 			};
 
+			/* ft::pair<iterator, bool>*/
+			void insert(const value_type& val) {
+				nodeptr node;
+
+				if ((node = _find_node(val.first))) {
+					node->data.second = val.second;
+					return;
+				}
+				node = _alloc.allocate(1);
+				_alloc.construct(node, _node(val));
+				node->parent = NULL;
+				node->left = _null;
+				node->right = _null;
+				node->color = RED;
+
+				nodeptr y = NULL;
+				nodeptr x = _root;
+
+				while (x != _null) {
+					y = x;
+					if (node->data.first < x->data.first)
+						x = x->left;
+					else
+						x = x->right;
+				}
+
+				// y is parent of x
+				node->parent = y;
+				if (y == NULL) {
+					_root = node;
+				} else if (node->data.first < y->data.first) {
+					y->left = node;
+				} else {
+					y->right = node;
+				}
+
+				// if new node is a _root node, simply return
+				if (node->parent == NULL){
+					node->color = BLACK;
+					return;
+				}
+
+				// if the grandparent is null, simply return
+				if (node->parent->parent == NULL) {
+					return;
+				}
+				_fix_insert(node);
+				return;
+			};
+			/* End Destructor */
+
+			/* Modifiers */
+			void clear() {
+				_recursive_clear(_root);
+			};
+
+			/* End Modifiers */
 
 		private:
 			void initializeNULLNode(nodeptr node, nodeptr parent) {
@@ -190,7 +248,7 @@ namespace ft {
 			}
 
 
-			void rbTransplant(nodeptr u, nodeptr v){
+			void rbTransplant(nodeptr u, nodeptr v) {
 				if (u->parent == NULL) {
 					_root = v;
 				} else if (u == u->parent->left){
@@ -201,39 +259,20 @@ namespace ft {
 				v->parent = u->parent;
 			}
 
-			// nodeptr findNode(key_type key) {
-			// 	nodeptr z = _null;
-			// 	nodeptr x, y;
-			// 	while (node != _null){
-			// 		if (node->data.first == key) {
-			// 			z = node;
-			// 		}
-
-			// 		if (node->data.first <= key) {
-			// 			node = node->right;
-			// 		} else {
-			// 			node = node->left;
-			// 		}
-			// 	}
-
-			// 	if (z == _null) {
-			// 		std::cout<<"Couldn't find key in the tree"<<std::endl;
-			// 		return;
-			// 	} 
-			// };
 
 			void deleteNodeHelper(nodeptr node, key_type key) {
 				// find the node containing key
 				nodeptr z = _null;
 				nodeptr x, y;
-				while (node != _null){
+				while (node != _null) {
 					if (node->data.first == key) {
 						z = node;
 					}
 
 					if (node->data.first <= key) {
 						node = node->right;
-					} else {
+					}
+					else {
 						node = node->left;
 					}
 				}
@@ -275,55 +314,6 @@ namespace ft {
 			}
 			
 			// fix the red-black tree
-			void fixInsert(nodeptr k){
-				nodeptr u;
-				while (k->parent->color == 1) {
-					if (k->parent == k->parent->parent->right) {
-						u = k->parent->parent->left; // uncle
-						if (u->color == 1) {
-							// case 3.1
-							u->color = BLACK;
-							k->parent->color = BLACK;
-							k->parent->parent->color = RED;
-							k = k->parent->parent;
-						} else {
-							if (k == k->parent->left) {
-								// case 3.2.2
-								k = k->parent;
-								rightRotate(k);
-							}
-							// case 3.2.1
-							k->parent->color = BLACK;
-							k->parent->parent->color = RED;
-							leftRotate(k->parent->parent);
-						}
-					} else {
-						u = k->parent->parent->right; // uncle
-
-						if (u->color == 1) {
-							// mirror case 3.1
-							u->color = BLACK;
-							k->parent->color = BLACK;
-							k->parent->parent->color = RED;
-							k = k->parent->parent;
-						} else {
-							if (k == k->parent->right) {
-								// mirror case 3.2.2
-								k = k->parent;
-								leftRotate(k);
-							}
-							// mirror case 3.2.1
-							k->parent->color = BLACK;
-							k->parent->parent->color = RED;
-							rightRotate(k->parent->parent);
-						}
-					}
-					if (k == _root) {
-						break;
-					}
-				}
-				_root->color = BLACK;
-			}
 
 			void printHelper(nodeptr _root, std::string indent, bool last) {
 				// print the tree structure on the screen
@@ -338,20 +328,15 @@ namespace ft {
 					}
 						
 					std::string sColor = _root->color?"RED":"BLACK";
-					std::cout<<_root->data.first<<"("<<sColor<<")"<<std::endl;
+					std::cout << _root->data.first << " " << _root->data.second << "("<<sColor<<")"<<std::endl;
 					printHelper(_root->left, indent, false);
 					printHelper(_root->right, indent, true);
 				}
 				// cout<<_root->left->data<<endl;
 			}
 
-			void deleteHelper(nodeptr _root) {
-				if (_root != _null) {
-					deleteHelper(_root->left);
-					deleteHelper(_root->right);
-					_alloc.deallocate(_root, 1);
-				}
-			}
+			
+
 
 		public:
 			// Pre-Order traversal
@@ -469,60 +454,6 @@ namespace ft {
 				x->parent = y;
 			}
 
-			// insert the key to the tree in its appropriate position
-			// and fix the tree
-			void insert(const value_type& val) {
-				deleteNode(val.first); // delete node if the key is already existing (TO REMOVE ?)
-				// Ordinary Binary Search Insertion
-				nodeptr node = _alloc.allocate(1);
-				node->parent = NULL;
-
-				_alloc.construct(node, _node(val));
-	
-				//_alloc.construct(node, Node(key_value));
-
-				// node->data = std::make_pair(val.first, val.second);
-				node->left = _null;
-				node->right = _null;
-				node->color = RED; // new node must be red
-
-				nodeptr y = NULL;
-				nodeptr x = this->_root;
-
-				while (x != _null) {
-					y = x;
-					if (node->data.first < x->data.first) {
-						x = x->left;
-					} else {
-						x = x->right;
-					}
-				}
-
-				// y is parent of x
-				node->parent = y;
-				if (y == NULL) {
-					_root = node;
-				} else if (node->data.first < y->data.first) {
-					y->left = node;
-				} else {
-					y->right = node;
-				}
-
-				// if new node is a _root node, simply return
-				if (node->parent == NULL){
-					node->color = BLACK;
-					return;
-				}
-
-				// if the grandparent is null, simply return
-				if (node->parent->parent == NULL) {
-					return;
-				}
-
-				// Fix the tree
-				fixInsert(node);
-			}
-
 			nodeptr get_root(){
 				return this->_root;
 			}
@@ -538,6 +469,78 @@ namespace ft {
 					printHelper(this->_root, "", true);
 				}
 			}
+
+		private:
+			/* Help functions */
+			nodeptr _find_node(const key_type& key) {
+				nodeptr node = _root;
+				nodeptr z = _null;
+
+				while (node != _null) {
+					if (node->data.first == key)
+						z = node;
+					if (node->data.first <= key)
+						node = node->right;
+					else
+						node = node->left;
+				}
+				if (z == _null)
+					return (NULL);
+				return (z);
+			};
+			void _recursive_clear(nodeptr root) {
+				if (root != _null) {
+					_recursive_clear(root->left);
+					_recursive_clear(root->right);
+					_alloc.deallocate(root, 1);
+				}
+			};
+			void _fix_insert(nodeptr k) {
+				nodeptr u;
+
+				while (k->parent->color == 1) {
+					if (k->parent == k->parent->parent->right) {
+						u = k->parent->parent->left;
+						if (u->color == 1) {
+							u->color = BLACK;
+							k->parent->color = BLACK;
+							k->parent->parent->color = RED;
+							k = k->parent->parent;
+						}
+						else {
+							if (k == k->parent->left) {
+								k = k->parent;
+								rightRotate(k);
+							}
+							k->parent->color = BLACK;
+							k->parent->parent->color = RED;
+							leftRotate(k->parent->parent);
+						}
+					}
+					else {
+						u = k->parent->parent->right;
+						if (u->color == 1) {
+							u->color = BLACK;
+							k->parent->color = BLACK;
+							k->parent->parent->color = RED;
+							k = k->parent->parent;
+						}
+						else {
+							if (k == k->parent->right) {
+								k = k->parent;
+								leftRotate(k);
+							}
+							k->parent->color = BLACK;
+							k->parent->parent->color = RED;
+							rightRotate(k->parent->parent);
+						}
+					}
+					if (k == _root)
+						break;
+				}
+				_root->color = BLACK;
+			};
+			/* End Help functions */
 
 		private:
 			allocator_type	_alloc;

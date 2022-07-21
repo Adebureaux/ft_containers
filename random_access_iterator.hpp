@@ -5,7 +5,7 @@
 
 namespace ft {
 	template <class T, bool Const>
-	class random_access_iterator {
+	class random_access_iterator : ft::iterator<ft::random_access_iterator_tag, T> {
 		public:
 			/* Typedefs */
 			typedef std::ptrdiff_t										difference_type;
