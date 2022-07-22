@@ -5,25 +5,19 @@
 #include <algorithm>
 #include <cctype>
 #include "vector.hpp"
+#include "tools.hpp"
 #include "map.hpp"
 
 #define LOC ft
 
-class test {
-	private:
-		int x;
-		int y;
-};
 
 int main(void)
 {
-	LOC::pair <std::string,double> pair("salut", 2.99);
-	std::cout << pair.first << std::endl;
-	LOC::map<int, int*> bst;
-	int* tab = new int[1000];
-	for (int i = 0; i < 1000; i++)
-		bst.insert(std::pair<int, int*>(i % 10, tab));
-	delete[] tab;
+	LOC::pair<std::string, double> pr("PI", 3.14);
+	LOC::map<std::string, double> bst;
+	bst.insert(pr);
+	// LOC::map<std::string, double>::iterator it(bst.begin());
+	// std::cout << *it << std::endl;
 	bst.prettyPrint();
 	return (0);
 }

@@ -11,7 +11,7 @@
 namespace ft {
 	template <class Key, class T, class Compare = std::less<Key>, class Alloc = std::allocator<ft::pair<const Key, T> > >
 	class map {
-		private:
+		public:
 			class _node {
 				public:
 					_node(ft::pair<const Key, T>& val) : data(val) {};
@@ -36,8 +36,8 @@ namespace ft {
 			typedef typename allocator_type::const_reference		const_reference;
 			typedef typename allocator_type::pointer				pointer;
 			typedef typename allocator_type::const_pointer			const_pointer;
-			typedef ft::bidirectional_iterator<T, false>			iterator;
-			typedef ft::bidirectional_iterator<T, true> 			const_iterator;
+			typedef ft::bidirectional_iterator<value_type, false>	iterator;
+			typedef ft::bidirectional_iterator<value_type, true> 	const_iterator;
 			typedef ft::reverse_iterator<iterator>					reverse_iterator;
 			typedef ft::reverse_iterator<const_iterator>			const_reverse_iterator;
 			typedef std::ptrdiff_t									difference_type;
@@ -76,6 +76,14 @@ namespace ft {
 				clear();
 				_alloc.deallocate(_null, 1);
 			};
+			/* End Destructor */
+
+			/* Iterators */
+			iterator begin() {
+				return (iterator(_root));
+			};
+
+			/* End Iterators */
 
 			/* ft::pair<iterator, bool>*/
 			void insert(const value_type& val) {

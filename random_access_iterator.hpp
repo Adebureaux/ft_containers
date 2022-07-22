@@ -2,13 +2,14 @@
 # define RANDOM_ACCESS_ITERATOR_HPP
 
 #include "tools.hpp"
+#include "iterator_traits.hpp"
 
 namespace ft {
 	template <class T, bool Const>
 	class random_access_iterator : ft::iterator<ft::random_access_iterator_tag, T> {
 		public:
 			/* Typedefs */
-			typedef std::ptrdiff_t										difference_type;
+			typedef typename ft::iterator_traits<T*>::difference_type	difference_type;
 			typedef typename ft::conditional<Const, const T, T>::type	value_type;
 			typedef value_type*											pointer;
 			typedef value_type&											reference;
