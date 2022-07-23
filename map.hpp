@@ -5,13 +5,11 @@
 #define RED 1
 
 #include "tools.hpp"
-#include "bidirectional_iterator.hpp"
-
 
 namespace ft {
 	template <class Key, class T, class Compare = std::less<Key>, class Alloc = std::allocator<ft::pair<const Key, T> > >
 	class map {
-		public:
+		private:
 			class _node {
 				public:
 					_node(ft::pair<const Key, T>& val) : data(val) {};
@@ -23,6 +21,85 @@ namespace ft {
 					_node					*left;
 					_node					*right;
 					bool					color;
+			};
+		
+		public:
+			template <bool Const>
+			class bidirectional_iterator : ft::iterator<ft::bidirectional_iterator_tag, T>{
+				public:
+					/* Typedefs */
+					typedef typename ft::iterator_traits<T*>::difference_type					difference_type;
+					typedef ft::pair<const Key, T>												pair_type;
+					typedef typename ft::conditional<Const, const pair_type, pair_type>::type	value_type;
+					typedef typename ft::conditional<Const, const _node, _node>::type			*nodeptr;
+					typedef value_type*															pointer;
+					typedef value_type&															reference;
+					typedef ft::bidirectional_iterator_tag										iterator_category;
+					/* End Typedefs */
+
+					/* Constructors */
+					bidirectional_iterator() : _itr(0) {};
+					bidirectional_iterator(nodeptr itr) : _itr(itr) {};
+					template <bool B>
+					bidirectional_iterator(const bidirectional_iterator<B> &x, typename ft::enable_if<!B>::type* = 0) {
+						_itr = x.base();
+					};
+					/* End Constructors */
+
+					/* Destructor */
+					~bidirectional_iterator() {};
+					/* End Destructor */
+					
+					/* Operator= */
+					bidirectional_iterator& operator=(const bidirectional_iterator& x) {
+						_itr = x.base();
+						return (*this);
+					};
+					/* End Operator= */
+
+					/* Getter */
+					nodeptr base() const {
+						return (_itr);
+					};
+					/* End Getter */
+
+					/* Operator overload */
+					template <bool B>
+					bool operator==(const bidirectional_iterator<B> &rhs) const {
+						return (_itr == rhs.base());
+					};
+					template <bool B>
+					bool operator!=(const bidirectional_iterator<B> &rhs) const {
+						return (_itr != rhs.base());
+					};
+					reference operator*() const {
+						return (_itr->data);
+					};
+					pointer operator->() const {
+						return (&_itr->data);
+					};
+					bidirectional_iterator& operator++() {
+						_itr++;
+						return (*this);
+					};
+					bidirectional_iterator operator++(int) {
+						bidirectional_iterator tmp = *this;
+						++(*this);
+						return (tmp);
+					};
+					bidirectional_iterator& operator--() {
+						_itr--;
+						return (*this);
+					};
+					bidirectional_iterator operator--(int) {
+						bidirectional_iterator tmp = *this;
+						--(*this);
+						return (tmp);
+					};
+					/* End Operator overload */
+
+				private:
+					nodeptr _itr;
 			};
 
 		public:
@@ -36,8 +113,8 @@ namespace ft {
 			typedef typename allocator_type::const_reference		const_reference;
 			typedef typename allocator_type::pointer				pointer;
 			typedef typename allocator_type::const_pointer			const_pointer;
-			typedef ft::bidirectional_iterator<value_type, false>	iterator;
-			typedef ft::bidirectional_iterator<value_type, true> 	const_iterator;
+			typedef bidirectional_iterator<false>					iterator;
+			typedef bidirectional_iterator<true> 					const_iterator;
 			typedef ft::reverse_iterator<iterator>					reverse_iterator;
 			typedef ft::reverse_iterator<const_iterator>			const_reverse_iterator;
 			typedef std::ptrdiff_t									difference_type;
