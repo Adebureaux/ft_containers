@@ -28,7 +28,7 @@ namespace ft {
 					/* End Constructors */
 
 					/* Destructor */
-					~random_access_iterator() {};
+					virtual ~random_access_iterator() {};
 					/* End Destructor */
 					
 					/* Operator= */

@@ -26,8 +26,8 @@ int main(void)
 	for (int i = 0; i < 10; i++)
 		a.push_back(i);
 	typedef LOC::vector<int>::iterator iter_type;
-	iter_type from (a.begin());
-	iter_type until (a.end());
+	iter_type from(a.begin());
+	iter_type until(a.end());
 	LOC::reverse_iterator<iter_type> rev_until(from);
 	LOC::reverse_iterator<iter_type> rev_from(until);
 	while (rev_from != rev_until)

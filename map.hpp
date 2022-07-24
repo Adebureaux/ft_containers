@@ -25,7 +25,7 @@ namespace ft {
 		
 		public:
 			template <bool Const>
-			class bidirectional_iterator : ft::iterator<ft::bidirectional_iterator_tag, T>{
+			class bidirectional_iterator : ft::iterator<ft::bidirectional_iterator_tag, T> {
 				public:
 					/* Typedefs */
 					typedef typename ft::iterator_traits<T*>::difference_type					difference_type;
@@ -47,7 +47,7 @@ namespace ft {
 					/* End Constructors */
 
 					/* Destructor */
-					~bidirectional_iterator() {};
+					virtual ~bidirectional_iterator() {};
 					/* End Destructor */
 					
 					/* Operator= */
@@ -79,7 +79,7 @@ namespace ft {
 						return (&_itr->data);
 					};
 					bidirectional_iterator& operator++() {
-						_itr++;
+
 						return (*this);
 					};
 					bidirectional_iterator operator++(int) {
@@ -133,7 +133,7 @@ namespace ft {
 
 			/* Constructors */
 			explicit map(const key_compare& comp = key_compare(), const allocator_type& alloc = allocator_type())
-			: _alloc(alloc), _key_comp(comp), _value_comp(value_compare()) {
+			: _alloc(alloc), _key_comp(comp), _value_comp(value_compare()), _size(0) {
 				_null = _alloc.allocate(1);
 				_null->color = BLACK;
 				_null->left = NULL;
@@ -157,11 +157,27 @@ namespace ft {
 
 			/* Iterators */
 			iterator begin() {
-				return (iterator(_root));
+				return (iterator(_minimum(_root)));
 			};
-
+			const_iterator begin() const {
+				return (const_iterator(_minimum(_root)));
+			};
+			iterator end() {
+				return (iterator(_null));
+			};
+			const_iterator end() const {
+				return (const_iterator(_null));
+			};
 			/* End Iterators */
 
+			/* Capacity */
+			size_type size() const {
+				return (_size);
+			};
+
+			/* End Capacity */
+
+			/* Modifiers */
 			/* ft::pair<iterator, bool>*/
 			void insert(const value_type& val) {
 				nodeptr node;
@@ -172,6 +188,7 @@ namespace ft {
 				}
 				node = _alloc.allocate(1);
 				_alloc.construct(node, _node(val));
+				_size++;
 				node->parent = NULL;
 				node->left = _null;
 				node->right = _null;
@@ -211,9 +228,7 @@ namespace ft {
 				_fix_insert(node);
 				return;
 			};
-			/* End Destructor */
 
-			/* Modifiers */
 			void clear() {
 				_recursive_clear(_root);
 			};
@@ -273,7 +288,7 @@ namespace ft {
 							// case 3.1
 							s->color = BLACK;
 							x->parent->color = RED;
-							leftRotate(x->parent);
+							_left_rotate(x->parent);
 							s = x->parent->right;
 						}
 
@@ -286,7 +301,7 @@ namespace ft {
 								// case 3.3
 								s->left->color = BLACK;
 								s->color = RED;
-								rightRotate(s);
+								_right_rotate(s);
 								s = x->parent->right;
 							} 
 
@@ -294,7 +309,7 @@ namespace ft {
 							s->color = x->parent->color;
 							x->parent->color = BLACK;
 							s->right->color = BLACK;
-							leftRotate(x->parent);
+							_left_rotate(x->parent);
 							x = _root;
 						}
 					} else {
@@ -303,7 +318,7 @@ namespace ft {
 							// case 3.1
 							s->color = BLACK;
 							x->parent->color = RED;
-							rightRotate(x->parent);
+							_right_rotate(x->parent);
 							s = x->parent->left;
 						}
 
@@ -316,7 +331,7 @@ namespace ft {
 								// case 3.3
 								s->right->color = BLACK;
 								s->color = RED;
-								leftRotate(s);
+								_left_rotate(s);
 								s = x->parent->left;
 							}
 
@@ -324,14 +339,13 @@ namespace ft {
 							s->color = x->parent->color;
 							x->parent->color = BLACK;
 							s->left->color = BLACK;
-							rightRotate(x->parent);
+							_right_rotate(x->parent);
 							x = _root;
 						}
 					} 
 				}
 				x->color = BLACK;
 			}
-
 
 			void rbTransplant(nodeptr u, nodeptr v) {
 				if (u->parent == NULL) {
@@ -376,7 +390,7 @@ namespace ft {
 					x = z->left;
 					rbTransplant(z, z->left);
 				} else {
-					y = minimum(z->right);
+					y = _minimum(z->right);
 					y_original_color = y->color;
 					x = y->right;
 					if (y->parent == z) {
@@ -448,29 +462,14 @@ namespace ft {
 				return searchTreeHelper(this->_root, k);
 			}
 
-			// find the node with the minimum key
-			nodeptr minimum(nodeptr node) {
-				while (node->left != _null) {
-					node = node->left;
-				}
-				return node;
-			}
-
-			// find the node with the maximum key
-			nodeptr maximum(nodeptr node) {
-				while (node->right != _null) {
-					node = node->right;
-				}
-				return node;
-			}
 
 			// find the successor of a given node
-			nodeptr successor(nodeptr x) {
+			 nodeptr successor(nodeptr x) {
 				// if the right subtree is not null,
 				// the successor is the leftmost node in the
 				// right subtree
 				if (x->right != _null) {
-					return minimum(x->right);
+					return _minimum(x->right);
 				}
 
 				// else it is the lowest ancestor of x whose
@@ -489,7 +488,7 @@ namespace ft {
 				// the predecessor is the rightmost node in the 
 				// left subtree
 				if (x->left != _null) {
-					return maximum(x->left);
+					return _maximum(x->left);
 				}
 
 				nodeptr y = x->parent;
@@ -499,44 +498,6 @@ namespace ft {
 				}
 
 				return y;
-			}
-
-			// rotate left at node x
-			void leftRotate(nodeptr x) {
-				nodeptr y = x->right;
-				x->right = y->left;
-				if (y->left != _null) {
-					y->left->parent = x;
-				}
-				y->parent = x->parent;
-				if (x->parent == NULL) {
-					this->_root = y;
-				} else if (x == x->parent->left) {
-					x->parent->left = y;
-				} else {
-					x->parent->right = y;
-				}
-				y->left = x;
-				x->parent = y;
-			}
-
-			// rotate right at node x
-			void rightRotate(nodeptr x) {
-				nodeptr y = x->left;
-				x->left = y->right;
-				if (y->right != _null) {
-					y->right->parent = x;
-				}
-				y->parent = x->parent;
-				if (x->parent == NULL) {
-					this->_root = y;
-				} else if (x == x->parent->right) {
-					x->parent->right = y;
-				} else {
-					x->parent->left = y;
-				}
-				y->right = x;
-				x->parent = y;
 			}
 
 			nodeptr get_root(){
@@ -583,10 +544,10 @@ namespace ft {
 			void _fix_insert(nodeptr k) {
 				nodeptr u;
 
-				while (k->parent->color == 1) {
+				while (k->parent->color == RED) {
 					if (k->parent == k->parent->parent->right) {
 						u = k->parent->parent->left;
-						if (u->color == 1) {
+						if (u->color == RED) {
 							u->color = BLACK;
 							k->parent->color = BLACK;
 							k->parent->parent->color = RED;
@@ -595,16 +556,16 @@ namespace ft {
 						else {
 							if (k == k->parent->left) {
 								k = k->parent;
-								rightRotate(k);
+								_right_rotate(k);
 							}
 							k->parent->color = BLACK;
 							k->parent->parent->color = RED;
-							leftRotate(k->parent->parent);
+							_left_rotate(k->parent->parent);
 						}
 					}
 					else {
 						u = k->parent->parent->right;
-						if (u->color == 1) {
+						if (u->color == RED) {
 							u->color = BLACK;
 							k->parent->color = BLACK;
 							k->parent->parent->color = RED;
@@ -613,11 +574,11 @@ namespace ft {
 						else {
 							if (k == k->parent->right) {
 								k = k->parent;
-								leftRotate(k);
+								_left_rotate(k);
 							}
 							k->parent->color = BLACK;
 							k->parent->parent->color = RED;
-							rightRotate(k->parent->parent);
+							_right_rotate(k->parent->parent);
 						}
 					}
 					if (k == _root)
@@ -625,12 +586,55 @@ namespace ft {
 				}
 				_root->color = BLACK;
 			};
+			void _right_rotate(nodeptr x) {
+				nodeptr y = x->left;
+
+				x->left = y->right;
+				if (y->right != _null)
+					y->right->parent = x;
+				y->parent = x->parent;
+				if (!x->parent)
+					_root = y;
+				else if (x == x->parent->right)
+					x->parent->right = y;
+				else
+					x->parent->left = y;
+				y->right = x;
+				x->parent = y;
+			};
+			void _left_rotate(nodeptr x) {
+				nodeptr y = x->right;
+
+				x->right = y->left;
+				if (y->left != _null)
+					y->left->parent = x;
+				y->parent = x->parent;
+				if (!x->parent)
+					_root = y;
+				else if (x == x->parent->left)
+					x->parent->left = y;
+				else
+					x->parent->right = y;
+				y->left = x;
+				x->parent = y;
+			};
+			nodeptr _minimum(nodeptr node) {
+				while (node->left != _null)
+					node = node->left;
+				return (node);
+			};
+			nodeptr _maximum(nodeptr node) {
+				while (node->right != _null)
+					node = node->right;
+				return (node);
+			}
 			/* End Help functions */
 
 		private:
 			allocator_type	_alloc;
 			key_compare		_key_comp;
 			value_compare	_value_comp;
+			size_type		_size;
 			nodeptr			_root;
 			nodeptr			_null;
 	};
