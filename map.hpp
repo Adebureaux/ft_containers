@@ -85,6 +85,10 @@ namespace ft {
 						return (*this);
 					};
 					bidirectional_iterator operator--(int) {
+						// Here we give _itr is provided form end() and point on NULL, in this case I should try to retrieve the node before the NULL pointer.
+						std::cout << _itr << std::endl;
+						/* if (!_itr)
+							retrieve the before last node to perform -- operator on it */
 						bidirectional_iterator tmp = *this;
 						_itr = _map->_predecessor(_itr);
 						return (tmp);
@@ -163,10 +167,10 @@ namespace ft {
 				return (const_iterator(_minimum(_root), this));
 			};
 			iterator end() {
-				return (iterator(_maximum(_root)->right, this));
+				return (iterator(NULL, this));
 			};
 			const_iterator end() const {
-				return (const_iterator(_maximum(_root), this));
+				return (const_iterator(NULL, this));
 			};
 			/* End Iterators */
 
@@ -182,10 +186,8 @@ namespace ft {
 			void insert(const value_type& val) {
 				nodeptr node;
 
-				if ((node = _find_node(val.first))) {
-					node->data.second = val.second;
+				if (_find_node(val.first))
 					return;
-				}
 				node = _alloc.allocate(1);
 				_alloc.construct(node, _node(val));
 				_size++;
@@ -237,7 +239,6 @@ namespace ft {
 
 		private:
 			void initializeNULLNode(nodeptr node, nodeptr parent) {
-				node->data.first = 0;
 				node->parent = parent;
 				node->left = NULL;
 				node->right = NULL;
@@ -583,12 +584,20 @@ namespace ft {
 			nodeptr _successor(nodeptr x) {
 				nodeptr y;
 
+				if (x == _null || x == NULL)
+				{
+					std::cout << "ici\n";
+					return (NULL);
+				}
+
 				if (x->right != _null)
 					return (_minimum(x->right));
 				y = x->parent;
 				while (y != _null && x == y->right) {
 					x = y;
 					y = y->parent;
+					if (!y)
+						break;
 				}
 				return (y);
 			};
