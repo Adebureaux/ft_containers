@@ -3,12 +3,12 @@
 cd test
 
 start=`date +%s%N`
-./ft_tools > ft_tools.out 2> ft_tools_err.log
+valgrind ./ft_tools > ft_tools.out 2> ft_tools_err.log
 end=`date +%s%N`
 ft_execution=`expr $end - $start`
 
 start=`date +%s%N`
-./std_tools > std_tools.out 2> std_tools_err.log
+valgrind ./std_tools > std_tools.out 2> std_tools_err.log
 end=`date +%s%N`
 std_execution=`expr $end - $start`
 

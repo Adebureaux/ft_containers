@@ -22,13 +22,11 @@ namespace ft {
 					random_access_iterator() : _itr(0) {};
 					random_access_iterator(pointer itr) : _itr(itr) {};
 					template <bool B>
-					random_access_iterator(const random_access_iterator<B> &x, typename ft::enable_if<!B>::type* = 0) {
-						_itr = x.base();
-					};
+					random_access_iterator(const random_access_iterator<B> &x, typename ft::enable_if<!B>::type* = 0) : _itr(x.base()) {};
 					/* End Constructors */
 
 					/* Destructor */
-					virtual ~random_access_iterator() {};
+					~random_access_iterator() {};
 					/* End Destructor */
 					
 					/* Operator= */
@@ -37,12 +35,6 @@ namespace ft {
 						return (*this);
 					};
 					/* End Operator= */
-
-					/* Getter */
-					pointer base() const {
-						return (_itr);
-					};
-					/* End Getter */
 
 					/* Operator overload */
 					template <bool B>
@@ -121,11 +113,16 @@ namespace ft {
 					/* End Operator overload */
 
 					/* Operator+ friend*/
-					template <bool B>
-					friend random_access_iterator<B> operator+(typename random_access_iterator<B>::difference_type n, const random_access_iterator<B>& rhs) {
-						return (rhs + n);
+					friend random_access_iterator operator+(int n, const random_access_iterator& x) {
+						return (x.base() + n);
 					};
 					/* End Operator+ */
+
+					/* Getter */
+					pointer base() const {
+						return (_itr);
+					};
+					/* End Getter */
 
 				private:
 					pointer _itr;
@@ -138,8 +135,8 @@ namespace ft {
 			typedef typename allocator_type::const_reference		const_reference;
 			typedef typename allocator_type::pointer				pointer;
 			typedef typename allocator_type::const_pointer			const_pointer;
-			typedef random_access_iterator<false>			iterator;
-			typedef random_access_iterator<true> 			const_iterator;
+			typedef random_access_iterator<false>					iterator;
+			typedef random_access_iterator<true> 					const_iterator;
 			typedef ft::reverse_iterator<iterator>					reverse_iterator;
 			typedef ft::reverse_iterator<const_iterator>			const_reverse_iterator;
 			typedef std::ptrdiff_t									difference_type;
@@ -403,6 +400,8 @@ namespace ft {
 			size_type		_capacity;
 			pointer			_vector;
 	};
+
+
 
 	/* Non-member function overloads */
 	template <class T, class Alloc>

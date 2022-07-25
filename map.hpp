@@ -38,30 +38,23 @@ namespace ft {
 					/* End Typedefs */
 
 					/* Constructors */
-					bidirectional_iterator() : _itr(0) {};
-					bidirectional_iterator(nodeptr itr) : _itr(itr) {};
+					bidirectional_iterator() : _itr(0), _map(NULL) {};
+					bidirectional_iterator(nodeptr itr, map* map) : _itr(itr), _map(map) {};
 					template <bool B>
-					bidirectional_iterator(const bidirectional_iterator<B> &x, typename ft::enable_if<!B>::type* = 0) {
-						_itr = x.base();
-					};
+					bidirectional_iterator(const bidirectional_iterator<B> &x, map* map, typename ft::enable_if<!B>::type* = 0) : _itr(x.base(), map) {};
 					/* End Constructors */
 
 					/* Destructor */
-					virtual ~bidirectional_iterator() {};
+					~bidirectional_iterator() {};
 					/* End Destructor */
 					
 					/* Operator= */
 					bidirectional_iterator& operator=(const bidirectional_iterator& x) {
+						_map = x._map;
 						_itr = x.base();
 						return (*this);
 					};
 					/* End Operator= */
-
-					/* Getter */
-					nodeptr base() const {
-						return (_itr);
-					};
-					/* End Getter */
 
 					/* Operator overload */
 					template <bool B>
@@ -79,27 +72,34 @@ namespace ft {
 						return (&_itr->data);
 					};
 					bidirectional_iterator& operator++() {
-
+						_itr = _map->_successor(_itr);
 						return (*this);
 					};
 					bidirectional_iterator operator++(int) {
 						bidirectional_iterator tmp = *this;
-						++(*this);
+						_itr = _map->_successor(_itr);
 						return (tmp);
 					};
 					bidirectional_iterator& operator--() {
-						_itr--;
+						_itr = _map->_predecessor(_itr);
 						return (*this);
 					};
 					bidirectional_iterator operator--(int) {
 						bidirectional_iterator tmp = *this;
-						--(*this);
+						_itr = _map->_predecessor(_itr);
 						return (tmp);
 					};
 					/* End Operator overload */
 
+					/* Getter */
+					nodeptr base() const {
+						return (_itr);
+					};
+					/* End Getter */
+
 				private:
 					nodeptr _itr;
+					map* 	_map;
 			};
 
 		public:
@@ -157,16 +157,16 @@ namespace ft {
 
 			/* Iterators */
 			iterator begin() {
-				return (iterator(_minimum(_root)));
+				return (iterator(_minimum(_root), this));
 			};
 			const_iterator begin() const {
-				return (const_iterator(_minimum(_root)));
+				return (const_iterator(_minimum(_root), this));
 			};
 			iterator end() {
-				return (iterator(_null));
+				return (iterator(_maximum(_root)->right, this));
 			};
 			const_iterator end() const {
-				return (const_iterator(_null));
+				return (const_iterator(_maximum(_root), this));
 			};
 			/* End Iterators */
 
@@ -462,44 +462,6 @@ namespace ft {
 				return searchTreeHelper(this->_root, k);
 			}
 
-
-			// find the successor of a given node
-			 nodeptr successor(nodeptr x) {
-				// if the right subtree is not null,
-				// the successor is the leftmost node in the
-				// right subtree
-				if (x->right != _null) {
-					return _minimum(x->right);
-				}
-
-				// else it is the lowest ancestor of x whose
-				// left child is also an ancestor of x.
-				nodeptr y = x->parent;
-				while (y != _null && x == y->right) {
-					x = y;
-					y = y->parent;
-				}
-				return y;
-			}
-
-			// find the predecessor of a given node
-			nodeptr predecessor(nodeptr x) {
-				// if the left subtree is not null,
-				// the predecessor is the rightmost node in the 
-				// left subtree
-				if (x->left != _null) {
-					return _maximum(x->left);
-				}
-
-				nodeptr y = x->parent;
-				while (y != _null && x == y->left) {
-					x = y;
-					y = y->parent;
-				}
-
-				return y;
-			}
-
 			nodeptr get_root(){
 				return this->_root;
 			}
@@ -618,6 +580,30 @@ namespace ft {
 				y->left = x;
 				x->parent = y;
 			};
+			nodeptr _successor(nodeptr x) {
+				nodeptr y;
+
+				if (x->right != _null)
+					return (_minimum(x->right));
+				y = x->parent;
+				while (y != _null && x == y->right) {
+					x = y;
+					y = y->parent;
+				}
+				return (y);
+			};
+			nodeptr _predecessor(nodeptr x) {
+				nodeptr y;
+
+				if (x->left != _null)
+					return (_maximum(x->left));
+				y = x->parent;
+				while (y != _null && x == y->left) {
+					x = y;
+					y = y->parent;
+				}
+				return (y);
+			}
 			nodeptr _minimum(nodeptr node) {
 				while (node->left != _null)
 					node = node->left;

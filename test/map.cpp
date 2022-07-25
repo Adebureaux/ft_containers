@@ -8,17 +8,17 @@
 #endif
 
 template <class Key, class T>
-void verify(LOC::map<Key, T>& vec, std::string what) {
-	std::cout << "MAP TEST " << what << " SIZE = " << vec.size() << std::endl;
-	typename LOC::map<Key, T>::iterator it = vec.begin();
-	while (it != vec.end())
+void verify(LOC::map<Key, T>& map, std::string what) {
+	std::cout << "MAP TEST " << what << " SIZE = " << map.size() << std::endl;
+	typename LOC::map<Key, T>::iterator it;
+
+	for (it = map.begin(); it != map.end(); it++)
 	{
-		it++;
-		std::cout << it->first;
-		if (it != vec.end())
-			std::cout << ' ';
+		std::cout << it->first
+				<< ':'
+				<< it->second
+				<< std::endl;
 	}
-	std::cout << std::endl;
 }
 
 int main(void)

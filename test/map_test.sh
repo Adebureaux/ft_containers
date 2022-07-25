@@ -3,12 +3,12 @@
 cd test
 
 start=`date +%s%N`
-./ft_map > ft_map.out 2> ft_map_err.log
+valgrind ./ft_map > ft_map.out 2> ft_map_err.log
 end=`date +%s%N`
 ft_execution=`expr $end - $start`
 
 start=`date +%s%N`
-./std_map > std_map.out 2> std_map_err.log
+valgrind ./std_map > std_map.out 2> std_map_err.log
 end=`date +%s%N`
 std_execution=`expr $end - $start`
 
