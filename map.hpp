@@ -639,7 +639,7 @@ namespace ft {
 				while (node->right != _null)
 					node = node->right;
 				return (node);
-			}
+			};
 			bool _equal(const key_type& lhs, const key_type& rhs) const {
 				return (_key_comp(lhs, rhs) == false && _key_comp(rhs, lhs) == false);
 			};
