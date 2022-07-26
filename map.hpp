@@ -51,8 +51,8 @@ namespace ft {
 					
 					/* Operator= */
 					bidirectional_iterator& operator=(const bidirectional_iterator& x) {
-						_map = x._map;
 						_itr = x.base();
+						_map = x._map;
 						return (*this);
 					};
 					/* End Operator= */
@@ -73,16 +73,16 @@ namespace ft {
 						return (&_itr->data);
 					};
 					bidirectional_iterator& operator++() {
-						_itr = _map->_successor(_itr);
+						_itr = _successor(_itr);
 						return (*this);
 					};
 					bidirectional_iterator operator++(int) {
 						bidirectional_iterator tmp = *this;
-						_itr = _map->_successor(_itr);
+						_itr = _successor(_itr);
 						return (tmp);
 					};
 					bidirectional_iterator& operator--() {
-						_itr = _map->_predecessor(_itr);
+						_itr = _predecessor(_itr);
 						return (*this);
 					};
 					bidirectional_iterator operator--(int) {
@@ -94,7 +94,7 @@ namespace ft {
 						// 	_itr = _itr->right;
 						// }
 						bidirectional_iterator tmp = *this;
-						_itr = _map->_predecessor(_itr);
+						_itr = _predecessor(_itr);
 						return (tmp);
 					};
 					/* End Operator overload */
@@ -104,6 +104,40 @@ namespace ft {
 						return (_itr);
 					};
 					/* End Getter */
+
+				private:
+				nodeptr _successor(nodeptr x) const {
+					nodeptr y;
+
+					// this !x case is only when we are trying to increment end() _itr pointer
+					if (!x && _map->_root != _map->_null)
+						return (_map->_maximum(_map->_root));
+					//
+					if (x->right != _map->_null)
+						return (_map->_minimum(x->right));
+					y = x->parent;
+					while (y && y != _map->_null && x == y->right) {
+						x = y;
+						y = y->parent;
+					}
+					return (y);
+				};
+				nodeptr _predecessor(nodeptr x) const {
+					nodeptr y;
+
+					// this !x case is only when we are trying to decrement end() _itr pointer
+					if (!x && _map->_root != _map->_null)
+						return (_map->_maximum(_map->_root));
+					//
+					if (x->left != _map->_null)
+						return (_map->_maximum(x->left));
+					y = x->parent;
+					while (y && y != _map->_null && x == y->left) {
+						x = y;
+						y = y->parent;
+					}
+					return (y);
+				};
 
 				private:
 					nodeptr _itr;
@@ -598,38 +632,6 @@ namespace ft {
 				y->left = x;
 				x->parent = y;
 			};
-			nodeptr _successor(nodeptr x) const {
-				nodeptr y;
-
-				// this !x case is only when we are trying to increment end() _itr pointer
-				if (!x && _root != _null)
-					return (_maximum(_root));
-				//
-				if (x->right != _null)
-					return (_minimum(x->right));
-				y = x->parent;
-				while (y && y != _null && x == y->right) {
-					x = y;
-					y = y->parent;
-				}
-				return (y);
-			};
-			nodeptr _predecessor(nodeptr x) const {
-				nodeptr y;
-
-				// this !x case is only when we are trying to decrement end() _itr pointer
-				if (!x && _root != _null)
-					return (_maximum(_root));
-				//
-				if (x->left != _null)
-					return (_maximum(x->left));
-				y = x->parent;
-				while (y && y != _null && x == y->left) {
-					x = y;
-					y = y->parent;
-				}
-				return (y);
-			}
 			nodeptr _minimum(nodeptr node) const {
 				while (node->left != _null)
 					node = node->left;
