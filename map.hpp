@@ -41,7 +41,8 @@ namespace ft {
 					bidirectional_iterator() : _itr(0), _map(NULL) {};
 					bidirectional_iterator(nodeptr itr, map* map) : _itr(itr), _map(map) {};
 					template <bool B>
-					bidirectional_iterator(const bidirectional_iterator<B> &x, map* map, typename ft::enable_if<!B>::type* = 0) : _itr(x.base(), map) {};
+					// Test this
+					bidirectional_iterator(const bidirectional_iterator<B>& x, map* map, typename ft::enable_if<!B>::type* = 0) : _itr(x.base(), map) {};
 					/* End Constructors */
 
 					/* Destructor */
@@ -583,12 +584,6 @@ namespace ft {
 			};
 			nodeptr _successor(nodeptr x) {
 				nodeptr y;
-
-				if (x == _null || x == NULL)
-				{
-					std::cout << "ici\n";
-					return (NULL);
-				}
 
 				if (x->right != _null)
 					return (_minimum(x->right));

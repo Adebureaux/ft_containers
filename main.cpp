@@ -25,14 +25,14 @@ int main(void)
 	LOC::map<std::string, double>::iterator ite(bst.end()); // should create a node past the end of the leftmost node
 	// bst.prettyPrint();
 	ite--;
-	std::cout << ite->first << std::endl; // Not the last element
-	for (it = bst.begin(); it != bst.end(); it++)
-	{
-		std::cout << &(it->first) << std::endl;
-		std::cout << it->first
-				<< ':'
-				<< it->second
-				<< std::endl;
-	}
+	// std::cout << ite->first << std::endl; // Not the last element
+	// for (it = bst.begin(); it != bst.end(); it++)
+	// {
+	// 	std::cout << &(it->first) << std::endl;
+	// 	std::cout << it->first
+	// 			<< ':'
+	// 			<< it->second
+	// 			<< std::endl;
+	// }
 	return (0);
 }
