@@ -15,10 +15,10 @@ std_execution=`expr $end - $start`
 diff=`expr $ft_execution / $std_execution`
 diff=`expr $diff + 1`
 echo -n "Checking time execution : "
-if [[ "$diff" > "20" ]]
+if [[ $diff > "20" ]]
 then
 	echo -e "\033[1;31mFailed ! The execution is more than $diff times slower.\033[m"
-elif [[ "$diff == 1" ]]
+elif [[ $diff == "1" ]]
 then
 	echo -e "\033[1;32mSuccess ! ft::vector and std::vector has the same execution time\033[m"
 else
@@ -28,7 +28,7 @@ fi
 echo -n "Checking outfile diff   : "
 diff ft_vector.out std_vector.out
 
-if [[ "$?" == "1" ]]
+if [[ $? == "1" ]]
 then
 	echo -e "\033[1;31mFailed ! ft_vector.out and std_vector.out are different.\033[m"
 else

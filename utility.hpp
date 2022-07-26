@@ -1,5 +1,5 @@
-#ifndef TOOLS_HPP
-# define TOOLS_HPP
+#ifndef UTILITY_HPP
+# define UTILITY_HPP
 
 #include <cstdio>
 #include <cstddef>

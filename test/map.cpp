@@ -34,7 +34,7 @@ int main(void)
 	bst.insert(LOC::pair<std::string, double>("K", 5));
 	bst.insert(LOC::pair<std::string, double>("A", 5));
 	bst.insert(LOC::pair<std::string, double>("P", 5));
-	bst.insert(LOC::pair<std::string, double>("*", 42));
+	LOC::map<std::string, double>::iterator it = bst.insert(bst.begin(), LOC::pair<std::string, double>("*", 42));
 	verify<std::string, double>(bst, "INSERT 1");
 	LOC::map<std::string, double>::iterator ite(bst.end());
 	std::cout << (--ite)->first << ":" << ite->second << std::endl;
@@ -44,5 +44,27 @@ int main(void)
 	ite++;
 	ite++;
 	std::cout << ite->first << ":" << ite->second << std::endl;
+	it =  bst.begin();
+  	bst.insert(it, LOC::pair<std::string, double>("+", 300));
+  	bst.insert(it, LOC::pair<std::string, double>("-", 400));
+	verify(bst, "INSERT 2");
+	LOC::map<std::string, double> map;
+	map.insert(bst.begin(), bst.find("-"));
+	verify(map, "CONSTRUCTOR 1");
+	LOC::map<std::string, double> map_copy(map.begin(), map.end());
+	verify(map_copy, "CONSTRUCTOR 2");
+	LOC::map<std::string, double>::const_iterator tmp;
+	tmp = map.insert(map.begin(), LOC::pair<std::string, double>("P", 558));
+	std::cout << tmp->first << ":" << tmp->second << std::endl;
+	tmp = map.insert(map.begin(), LOC::pair<std::string, double>("X", 91));
+	std::cout << tmp->first << ":" << tmp->second << std::endl;
+	LOC::map<std::string, double>::const_iterator it1 = map.begin(), it2 = map.end();
+	std::cout << it1->first << ":" << it1->second << std::endl;
+	it2--;
+	std::cout << it2->first << ":" << it2->second << std::endl;
+	tmp = map.insert(map.begin(), LOC::pair<std::string, double>("P", 558));
+	std::cout << tmp->first << ":" << tmp->second << std::endl;
+	tmp = map.insert(map.begin(), LOC::pair<std::string, double>("X", 91));
+	std::cout << tmp->first << ":" << tmp->second << std::endl;
 	return (0);
 }
