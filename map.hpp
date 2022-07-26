@@ -26,6 +26,7 @@ namespace ft {
 		public:
 			template <bool Const>
 			class bidirectional_iterator : ft::iterator<ft::bidirectional_iterator_tag, T> {
+				friend class map;
 				public:
 					/* Typedefs */
 					typedef typename ft::iterator_traits<T*>::difference_type					difference_type;
@@ -41,8 +42,7 @@ namespace ft {
 					bidirectional_iterator() : _itr(0), _map(NULL) {};
 					bidirectional_iterator(nodeptr itr, map* map) : _itr(itr), _map(map) {};
 					template <bool B>
-					// Test this
-					bidirectional_iterator(const bidirectional_iterator<B>& x, map* map, typename ft::enable_if<!B>::type* = 0) : _itr(x.base(), map) {};
+					bidirectional_iterator(const bidirectional_iterator<B>& x, typename ft::enable_if<!B>::type* = 0) : _itr(x.base()), _map(x._map) {};
 					/* End Constructors */
 
 					/* Destructor */
@@ -59,11 +59,11 @@ namespace ft {
 
 					/* Operator overload */
 					template <bool B>
-					bool operator==(const bidirectional_iterator<B> &rhs) const {
+					bool operator==(const bidirectional_iterator<B>& rhs) const {
 						return (_itr == rhs.base());
 					};
 					template <bool B>
-					bool operator!=(const bidirectional_iterator<B> &rhs) const {
+					bool operator!=(const bidirectional_iterator<B>& rhs) const {
 						return (_itr != rhs.base());
 					};
 					reference operator*() const {
@@ -87,9 +87,12 @@ namespace ft {
 					};
 					bidirectional_iterator operator--(int) {
 						// Here we give _itr is provided form end() and point on NULL, in this case I should try to retrieve the node before the NULL pointer.
-						std::cout << _itr << std::endl;
-						/* if (!_itr)
-							retrieve the before last node to perform -- operator on it */
+						// std::cout << _itr << std::endl;
+						// if (!_itr) {
+						// 	const Key k = "Q";
+						// 	_itr = _map->_find_node(k);
+						// 	_itr = _itr->right;
+						// }
 						bidirectional_iterator tmp = *this;
 						_itr = _map->_predecessor(_itr);
 						return (tmp);
@@ -108,11 +111,13 @@ namespace ft {
 			};
 
 		public:
+			class		value_comp;
 			/* Typedefs */
 			typedef Key												key_type;
 			typedef T												mapped_type;
 			typedef ft::pair<const key_type, mapped_type>			value_type;
 			typedef	Compare											key_compare;
+			typedef	value_comp										value_compare;
 			typedef typename Alloc::template rebind<_node>::other	allocator_type;
 			typedef typename allocator_type::reference				reference;
 			typedef typename allocator_type::const_reference		const_reference;
@@ -128,17 +133,21 @@ namespace ft {
 			/* End Typedefs */
 
 			/* Value_compare */
-			class value_compare {
+			class value_comp : std::binary_function<value_type, value_type, bool> {
+				friend class map;
 				public:
-					bool operator()(const value_type& x, const value_type& y) const {
-						return (key_compare(x.first, y.first));
-					};
+				bool operator()(const value_type& x, const value_type& y) const {
+					return (comp(x.first, y.first));
+				};
+				protected:
+				key_compare comp;
+				value_comp(key_compare c) : comp(c) {};
 			};
 			/* End Value_compare */
 
 			/* Constructors */
 			explicit map(const key_compare& comp = key_compare(), const allocator_type& alloc = allocator_type())
-			: _alloc(alloc), _key_comp(comp), _value_comp(value_compare()), _size(0) {
+			: _alloc(alloc), _key_comp(comp), _size(0) {
 				_null = _alloc.allocate(1);
 				_null->color = BLACK;
 				_null->left = NULL;
@@ -183,12 +192,13 @@ namespace ft {
 			/* End Capacity */
 
 			/* Modifiers */
-			/* ft::pair<iterator, bool>*/
-			void insert(const value_type& val) {
+			ft::pair<iterator, bool>insert(const value_type& val) {
 				nodeptr node;
+				nodeptr y;
+				nodeptr x;
 
 				if (_find_node(val.first))
-					return;
+					return (make_pair(iterator(), false));
 				node = _alloc.allocate(1);
 				_alloc.construct(node, _node(val));
 				_size++;
@@ -196,40 +206,34 @@ namespace ft {
 				node->left = _null;
 				node->right = _null;
 				node->color = RED;
-
-				nodeptr y = NULL;
-				nodeptr x = _root;
-
+				y = NULL;
+				x = _root;
 				while (x != _null) {
 					y = x;
-					if (node->data.first < x->data.first)
+					//if (node->data.first < x->data.first)
+					if (_key_comp(node->data.first, x->data.first))
 						x = x->left;
 					else
 						x = x->right;
 				}
-
-				// y is parent of x
 				node->parent = y;
-				if (y == NULL) {
+				if (!y)
 					_root = node;
-				} else if (node->data.first < y->data.first) {
+				// else if (node->data.first < y->data.first)
+				else if (_key_comp(node->data.first, y->data.first))
 					y->left = node;
-				} else {
+				else
 					y->right = node;
-				}
-
 				// if new node is a _root node, simply return
-				if (node->parent == NULL){
+				if (!node->parent) {
 					node->color = BLACK;
-					return;
+					return (make_pair(iterator(node, this), true));
 				}
-
 				// if the grandparent is null, simply return
-				if (node->parent->parent == NULL) {
-					return;
-				}
+				if (!node->parent->parent)
+					return (make_pair(iterator(node, this), true));
 				_fix_insert(node);
-				return;
+				return (make_pair(iterator(node, this), true));
 			};
 
 			void clear() {
@@ -237,6 +241,15 @@ namespace ft {
 			};
 
 			/* End Modifiers */
+
+			/* Observers */
+			key_compare key_comp(void) const {
+				return (key_compare());
+			};
+			value_compare value_comp(void) const {
+				return (value_compare(_key_comp));
+			};
+			/* End Observers */
 
 		private:
 			void initializeNULLNode(nodeptr node, nodeptr parent) {
@@ -274,7 +287,8 @@ namespace ft {
 					return node;
 				}
 
-				if (key < node->data.first) {
+				//if (key < node->data.first) 
+				if (_key_comp(key, node->data.first)) {
 					return searchTreeHelper(node->left, key);
 				}
 				return searchTreeHelper(node->right, key);
@@ -487,9 +501,11 @@ namespace ft {
 				nodeptr z = _null;
 
 				while (node != _null) {
-					if (node->data.first == key)
+					//if (node->data.first == key)
+					if (_equal(node->data.first, key))
 						z = node;
-					if (node->data.first <= key)
+					//if (node->data.first <= key)
+					if (!_key_comp(key, node->data.first))
 						node = node->right;
 					else
 						node = node->left;
@@ -582,48 +598,56 @@ namespace ft {
 				y->left = x;
 				x->parent = y;
 			};
-			nodeptr _successor(nodeptr x) {
+			nodeptr _successor(nodeptr x) const {
 				nodeptr y;
 
+				// this !x case is only when we are trying to increment end() _itr pointer
+				if (!x && _root != _null)
+					return (_maximum(_root));
+				//
 				if (x->right != _null)
 					return (_minimum(x->right));
 				y = x->parent;
-				while (y != _null && x == y->right) {
+				while (y && y != _null && x == y->right) {
 					x = y;
 					y = y->parent;
-					if (!y)
-						break;
 				}
 				return (y);
 			};
-			nodeptr _predecessor(nodeptr x) {
+			nodeptr _predecessor(nodeptr x) const {
 				nodeptr y;
 
+				// this !x case is only when we are trying to decrement end() _itr pointer
+				if (!x && _root != _null)
+					return (_maximum(_root));
+				//
 				if (x->left != _null)
 					return (_maximum(x->left));
 				y = x->parent;
-				while (y != _null && x == y->left) {
+				while (y && y != _null && x == y->left) {
 					x = y;
 					y = y->parent;
 				}
 				return (y);
 			}
-			nodeptr _minimum(nodeptr node) {
+			nodeptr _minimum(nodeptr node) const {
 				while (node->left != _null)
 					node = node->left;
 				return (node);
 			};
-			nodeptr _maximum(nodeptr node) {
+			nodeptr _maximum(nodeptr node) const {
 				while (node->right != _null)
 					node = node->right;
 				return (node);
 			}
+			bool _equal(const key_type& lhs, const key_type& rhs) const {
+				return (_key_comp(lhs, rhs) == false && _key_comp(rhs, lhs) == false);
+			};
 			/* End Help functions */
 
 		private:
 			allocator_type	_alloc;
 			key_compare		_key_comp;
-			value_compare	_value_comp;
 			size_type		_size;
 			nodeptr			_root;
 			nodeptr			_null;

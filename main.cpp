@@ -21,18 +21,15 @@ int main(void)
 	bst.insert(LOC::pair<std::string, double>("K", 5));
 	bst.insert(LOC::pair<std::string, double>("A", 5));
 	bst.insert(LOC::pair<std::string, double>("P", 5));
-	LOC::map<std::string, double>::iterator it;
-	LOC::map<std::string, double>::iterator ite(bst.end()); // should create a node past the end of the leftmost node
-	// bst.prettyPrint();
-	ite--;
-	// std::cout << ite->first << std::endl; // Not the last element
-	// for (it = bst.begin(); it != bst.end(); it++)
-	// {
-	// 	std::cout << &(it->first) << std::endl;
-	// 	std::cout << it->first
-	// 			<< ':'
-	// 			<< it->second
-	// 			<< std::endl;
-	// }
+	LOC::map<std::string, double>::iterator ite(bst.end());
+	for (LOC::map<std::string, double>::iterator it = bst.begin(); it != ite; it++)
+	{
+		std::cout << it->first
+				<< ':'
+				<< it->second
+				<< std::endl;
+	}
+	LOC::map<std::string, double>::const_iterator itr(bst.end());
+	LOC::map<std::string, double>::iterator it(bst.begin());
 	return (0);
 }

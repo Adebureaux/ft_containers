@@ -34,6 +34,15 @@ int main(void)
 	bst.insert(LOC::pair<std::string, double>("K", 5));
 	bst.insert(LOC::pair<std::string, double>("A", 5));
 	bst.insert(LOC::pair<std::string, double>("P", 5));
+	bst.insert(LOC::pair<std::string, double>("*", 42));
 	verify<std::string, double>(bst, "INSERT 1");
+	LOC::map<std::string, double>::iterator ite(bst.end());
+	std::cout << (--ite)->first << ":" << ite->second << std::endl;
+	ite--;
+	std::cout << ite->first << ":" << ite->second << std::endl;
+	ite++;
+	ite++;
+	ite++;
+	std::cout << ite->first << ":" << ite->second << std::endl;
 	return (0);
 }
