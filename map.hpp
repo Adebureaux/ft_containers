@@ -40,7 +40,11 @@ namespace ft {
 
 					/* Constructors */
 					bidirectional_iterator() : _itr(0), _map(NULL) {};
-					// bidirectional_iterator(nodeptr itr) : _itr(itr), _map(NULL) { std::cout << "ERROR HERE\n"; }
+					
+					// To delete
+					bidirectional_iterator(nodeptr itr) : _itr(itr), _map(NULL) { std::cout << "ERROR HERE\n"; }
+					// End To delete
+
 					bidirectional_iterator(nodeptr itr, map* map) : _itr(itr), _map(map) {};
 					template <bool B>
 					bidirectional_iterator(const bidirectional_iterator<B>& x, typename ft::enable_if<!B>::type* = 0) : _itr(x.base()), _map(x._map) {};
@@ -207,7 +211,7 @@ namespace ft {
 				return (iterator(_minimum(_root), this));
 			};
 			const_iterator begin() const {
-				return (const_iterator(_minimum(_root)));
+				return (const_iterator(_minimum(_root), this));
 			};
 			iterator end() {
 				return (iterator(NULL, this));
@@ -221,31 +225,32 @@ namespace ft {
 			size_type size() const {
 				return (_size);
 			};
+			size_type max_size() const {
+				return (_alloc.max_size());
+			};
 
 			/* End Capacity */
 
 			/* Modifiers */
 			ft::pair<iterator, bool> insert(const value_type& val) {
-				nodeptr node = _insert(val);
+				nodeptr node = _find_node(_root, val.first);
 
-				if (node == _null)
-					return (make_pair(iterator(), false));
-				return (make_pair(iterator(node, this), true));
+				if (node != _null)
+					return (make_pair(iterator(node, this), false));
+				return (make_pair(iterator(_insert(val), this), true));
 			};
 			iterator insert(iterator position, const value_type& val) {
-				nodeptr node = _insert(val);
+				nodeptr node = _find_node(_root, val.first);
 
-				if (node == _null || !node)
-					return (position);
+				(void)position;
+				if (node == _null)
+					node = _insert(val);
 				return (iterator(node, this));
 			};
-
 			template <class InputIterator>
 			void insert(InputIterator first, InputIterator last, typename ft::enable_if<!ft::is_integral<InputIterator>::value, InputIterator>::type* = 0) {
-				while (first != last) {
-					_insert(first.base()->data);
-					first++;
-				}
+				while (first != last)
+					_insert(*(first++));
 			};
 			void clear() {
 				_recursive_clear(_root);
@@ -431,9 +436,8 @@ namespace ft {
 					y->color = z->color;
 				}
 				delete z;
-				if (y_original_color == 0){
+				if (y_original_color == 0)
 					fixDelete(x);
-				}
 			}
 			
 
@@ -501,24 +505,8 @@ namespace ft {
 				if (node == _null || _equal(key, node->data.first))
 					return (node);
 				if (_key_comp(key, node->data.first))
-					return _find_node(node->left, key);
-				return _find_node(node->right, key);
-				// nodeptr node = _root;
-				// nodeptr z = _null;
-
-				// while (node != _null) {
-				// 	//if (node->data.first == key)
-				// 	if (_equal(node->data.first, key))
-				// 		z = node;
-				// 	//if (node->data.first <= key)
-				// 	if (!_key_comp(node->data.first, key))
-				// 		node = node->right;
-				// 	else
-				// 		node = node->left;
-				// }
-				// if (z == _null)
-				// 	return (NULL);
-				// return (z);
+					return (_find_node(node->left, key));
+				return (_find_node(node->right, key));
 			};
 			void _recursive_clear(nodeptr root) {
 				if (root != _null) {
@@ -532,8 +520,6 @@ namespace ft {
 				nodeptr y;
 				nodeptr x;
 
-				if (_find_node(_root, val.first) != _null)
-					return (_null);
 				node = _alloc.allocate(1);
 				_alloc.construct(node, _node(val));
 				_size++;

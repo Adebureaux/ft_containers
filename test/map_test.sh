@@ -13,22 +13,21 @@ end=`date +%s%N`
 std_execution=`expr $end - $start`
 
 diff=`expr $ft_execution / $std_execution`
-diff=`expr $diff + 1`
 echo -n "Checking time execution : "
-if [[ $diff > "20" ]]
+if (( $diff > 20 ))
 then
 	echo -e "\033[1;31mFailed ! The execution is more than $diff times slower.\033[m"
-elif [[ $diff == "1" ]]
+elif (( $diff == 0 || $diff == 1 ))
 then
 	echo -e "\033[1;32mSuccess ! ft::map and std::map has the same execution time\033[m"
 else
-	echo -e "\033[1;32mSuccess ! The execution is $diff times slower.\033[m"
+	echo -e "\033[1;32mSuccess ! The execution is $diff time slower.\033[m"
 fi
 
 echo -n "Checking outfile diff   : "
 diff ft_map.out std_map.out
 
-if [[ $? == "1" ]]
+if (( $? == 1 ))
 then
 	echo -e "\033[1;31mFailed ! ft_map.out and std_map.out are different.\033[m"
 else
