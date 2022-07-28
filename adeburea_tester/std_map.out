@@ -1,0 +1,55 @@
+MAP TEST INSERT 1 SIZE = 9
+*:42
+A:5
+C:4
+D:2
+K:5
+N:5
+P:1
+PI:3.14
+Q:3
+Q:3
+PI:3.14
+Q:3
+MAP TEST INSERT 2 SIZE = 11
+*:42
++:300
+-:400
+A:5
+C:4
+D:2
+K:5
+N:5
+P:1
+PI:3.14
+Q:3
+MAP TEST CONSTRUCTOR 1 SIZE = 2
+*:42
++:300
+MAP TEST CONSTRUCTOR 2 SIZE = 2
+*:42
++:300
+P:558
+X:91
+*:42
+X:91
+P:558
+X:91
+12 42
+MAP TEST CONSTRUCTOR 3 SIZE = 7
+21:fizz
+35:funny
+38:buzz
+42:lol
+45:bunny
+50:mdr
+55:fuzzy
+0
+1
+foo['a'] is an element
+foo['b'] is another element
+foo['c'] is another element
+foo['d'] is 
+foo now contains 4 elements.
+Size of first : 0
+Size of second : 3

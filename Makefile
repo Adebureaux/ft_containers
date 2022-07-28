@@ -40,25 +40,25 @@ fclean: clean
 re: fclean all
 
 vector:
-	@echo "Compiling test with ft::vector"
-	${COMPILER} ${CFLAGS} test/vector.cpp -o test/ft_vector
+	@echo "Compiling adeburea_tester with ft::vector"
+	${COMPILER} ${CFLAGS} adeburea_tester/vector.cpp -o adeburea_tester/ft_vector
 	@echo "Compiling test with std::vector"
-	${COMPILER} -DLOC=std ${CFLAGS} test/vector.cpp -o test/std_vector
-	@bash test/vector_test.sh
+	${COMPILER} -DLOC=std ${CFLAGS} adeburea_tester/vector.cpp -o adeburea_tester/std_vector
+	@bash adeburea_tester/vector_test.sh
 
 map:
 	@echo "Compiling test with ft::map"
-	${COMPILER} ${CFLAGS} test/map.cpp -o test/ft_map
+	${COMPILER} ${CFLAGS} adeburea_tester/map.cpp -o adeburea_tester/ft_map
 	@echo "Compiling test with std::map"
-	${COMPILER} -DLOC=std ${CFLAGS} test/map.cpp -o test/std_map
-	@bash test/map_test.sh
+	${COMPILER} -DLOC=std ${CFLAGS} adeburea_tester/map.cpp -o adeburea_tester/std_map
+	@bash adeburea_tester/map_test.sh
 
 utility:
 	@echo "Compiling test with ft::utility"
-	${COMPILER} ${CFLAGS} test/utility.cpp -o test/utility
+	${COMPILER} ${CFLAGS} adeburea_tester/utility.cpp -o adeburea_tester/utility
 	@echo "Compiling test with std::utility"
-	${COMPILER} -DLOC=std ${CFLAGS} test/utility.cpp -o test/utility
-	@bash test/utility_test.sh
+	${COMPILER} -DLOC=std ${CFLAGS} adeburea_tester/utility.cpp -o adeburea_tester/utility
+	@bash adeburea_tester/utility_test.sh
 
 test: vector map utility
 

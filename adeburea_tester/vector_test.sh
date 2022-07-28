@@ -1,6 +1,6 @@
 #!/bin/sh
 
-cd test
+cd adeburea_tester
 
 start=`date +%s%N`
 valgrind ./ft_vector > ft_vector.out 2> ft_vector_err.log
