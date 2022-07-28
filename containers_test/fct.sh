@@ -13,8 +13,8 @@ DGREY="\e[1;90m"
 include_path="../"
 srcs="srcs"
 
-CC="clang++"
-CFLAGS="-Wall -Wextra -Werror -std=c++98"
+CC="c++"
+CFLAGS="-Wall -Wextra -Werror -std=c++98 -g"
 # CFLAGS+=" -fsanitize=address -g3"
 
 ft_compile_output="/dev/null"

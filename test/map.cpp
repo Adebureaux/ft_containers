@@ -1,4 +1,5 @@
 #include <map>
+#include <list>
 #include <string>
 #include <iostream>
 #include "../map.hpp"
@@ -71,5 +72,23 @@ int main(void)
 	LOC::map<int, int>::iterator int_itr(int_map.end());
 	int_itr--;
 	std::cout << int_itr->first << " " << int_itr->second << std::endl;
+	typedef LOC::map<int, std::string>::value_type VAL;
+	std::list<VAL> lst;
+	LOC::map<int, std::string>::iterator mpit;
+	lst.push_back(VAL(42, "lol"));
+	// lst.push_back(VAL(50, "mdr"));
+	// lst.push_back(VAL(35, "funny"));
+	// lst.push_back(VAL(45, "bunny"));
+	// lst.push_back(VAL(21, "fizz"));
+	// lst.push_back(VAL(35, "this key is already inside"));
+	// lst.push_back(VAL(55, "fuzzy"));
+	// lst.push_back(VAL(38, "buzz"));
+	// lst.push_back(VAL(55, "inside too"));
+	LOC::map<int, std::string> mp(lst.begin(), lst.end());
+	verify(mp, "CONSTRUCTOR 3");
+	std::cout << mp.empty() << std::endl;
+	mp.clear();
+	// std::cout << mp.empty() << std::endl;
+	// mp.clear();
 	return (0);
 }

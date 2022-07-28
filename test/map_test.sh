@@ -3,7 +3,7 @@
 cd test
 
 start=`date +%s%N`
-valgrind ./ft_map > ft_map.out 2> ft_map_err.log
+valgrind ./ft_map > ft_map.out #2> ft_map_err.log
 end=`date +%s%N`
 ft_execution=`expr $end - $start`
 

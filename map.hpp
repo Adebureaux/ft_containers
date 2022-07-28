@@ -41,9 +41,6 @@ namespace ft {
 
 					/* Constructors */
 					bidirectional_iterator() : _itr(0), _map(NULL) {};
-					// To delete
-					bidirectional_iterator(nodeptr itr) : _itr(itr), _map(NULL) { std::cout << "ERROR HERE iterator nodeptr constructor\n"; };
-					// End To delete
 					bidirectional_iterator(nodeptr itr, map* map) : _itr(itr), _map(map) {};
 					template <bool B>
 					bidirectional_iterator(const bidirectional_iterator<B>& x, typename ft::enable_if<!B>::type* = 0) : _itr(x.base()), _map(x._map) {};
@@ -110,12 +107,12 @@ namespace ft {
 					nodeptr _successor(nodeptr x) const {
 						nodeptr y;
 
+						if (!_map)
+							return (NULL);
 						// this !x case is only when we are trying to increment end() _itr pointer
 						if (!x && _map->_root != _map->_null)
 							return (_map->_maximum(_map->_root));
 						//
-
-
 						if (x->right != _map->_null)
 							return (_map->_minimum(x->right));
 						y = x->parent;
@@ -128,6 +125,8 @@ namespace ft {
 					nodeptr _predecessor(nodeptr x) const {
 						nodeptr y;
 
+						if (!_map)
+							return (NULL);
 						// this !x case is only when we are trying to decrement end() _itr pointer
 						if (!x && _map->_root != _map->_null)
 							return (_map->_maximum(_map->_root));
@@ -192,7 +191,7 @@ namespace ft {
 				_null->right = NULL;
 				_root = _null;
 			};
-			template <class InputIterator> map(InputIterator first, InputIterator last, const key_compare& comp = key_compare(), const allocator_type& alloc = allocator_type()) 
+			template <class InputIterator> map(InputIterator first, InputIterator last, const key_compare& comp = key_compare(), const allocator_type& alloc = allocator_type(), typename ft::enable_if<!ft::is_integral<InputIterator>::value, InputIterator>::type* = 0)
 			: _alloc(alloc), _key_comp(comp), _size(0) {
 				_null = _alloc.allocate(1);
 				_alloc.construct(_null, _node());
@@ -202,16 +201,34 @@ namespace ft {
 				_root = _null;
 				insert(first, last);
 			};
-			map(const map& x)
-			: _alloc(x.alloc), _key_comp(x._key_comp), _size(x._size), _root(x._root), _null(x._null) {};
+			map(const map& x) : _alloc(x.alloc), _key_comp(x._key_comp), _size(0) {
+				_null = _alloc.allocate(1);
+				_alloc.construct(_null, _node());
+				_null->color = BLACK;
+				_null->left = NULL;
+				_null->right = NULL;
+				_root = _null;
+				insert(x.begin(), x.end());
+			};
 			/* End Constructors */
 
 			/* Destructor */
 			~map() {
 				clear();
+				_alloc.destroy(_null);
 				_alloc.deallocate(_null, 1);
 			};
 			/* End Destructor */
+
+			/* Operator= */
+			map& operator=(const map& x) {
+				if (_size)
+					clear();
+				_root = _null;
+				insert(x.begin(), x.end());
+				return (*this);
+			};
+			/* End Operator= */
 
 			/* Iterators */
 			iterator begin() {
@@ -226,28 +243,49 @@ namespace ft {
 			const_iterator end() const {
 				return (const_iterator(NULL, const_cast<map*>(this)));
 			};
+			reverse_iterator rbegin() {
+				return (reverse_iterator(end()));
+			};
+			const_reverse_iterator rbegin() const {
+				return (const_reverse_iterator(end()));
+			};
+			reverse_iterator rend() {
+				return (reverse_iterator(begin()));
+			};
+			const_iterator rend() const {
+				return (const_reverse_iterator(begin()));
+			};
 			/* End Iterators */
 
 			/* Capacity */
+			bool empty() const {
+				return (!_size);
+			};
 			size_type size() const {
 				return (_size);
 			};
 			size_type max_size() const {
 				return (_alloc.max_size());
 			};
-
 			/* End Capacity */
+
+
+			/* Element access */
+			// mapped_type& operator[] (const key_type& k) {
+
+			// };
+			/* End Element access */
 
 			/* Modifiers */
 			ft::pair<iterator, bool> insert(const value_type& val) {
-				nodeptr node = _find_node(_root, val.first);
+				nodeptr node = _recursive_find(_root, val.first);
 
 				if (node != _null)
 					return (make_pair(iterator(node, this), false));
 				return (make_pair(iterator(_insert(val), this), true));
 			};
 			iterator insert(iterator position, const value_type& val) {
-				nodeptr node = _find_node(_root, val.first);
+				nodeptr node = _recursive_find(_root, val.first);
 
 				(void)position;
 				if (node == _null)
@@ -257,7 +295,7 @@ namespace ft {
 			template <class InputIterator>
 			void insert(InputIterator first, InputIterator last, typename ft::enable_if<!ft::is_integral<InputIterator>::value, InputIterator>::type* = 0) {
 				while (first != last)
-					_insert(*(first++));
+					insert(*(first++));
 			};
 			void clear() {
 				_recursive_clear(_root);
@@ -276,10 +314,10 @@ namespace ft {
 
 			/* Operations */
 			iterator find(const key_type& k) {
-				return (iterator(_find_node(_root, k), this));
+				return (iterator(_recursive_find(_root, k), this));
 			};
 			const_iterator find(const key_type& k) const {
-				return (const_iterator(_find_node(_root, k), this));
+				return (const_iterator(_recursive_find(_root, k), this));
 			};
 			/* End Operations */
 
@@ -507,18 +545,20 @@ namespace ft {
 
 		private:
 			/* Help functions */
-			nodeptr _find_node(nodeptr node, const key_type& key) {
+			nodeptr _recursive_find(nodeptr node, const key_type& key) {
 				if (node == _null || _equal(key, node->data.first))
 					return (node);
 				if (_key_comp(key, node->data.first))
-					return (_find_node(node->left, key));
-				return (_find_node(node->right, key));
+					return (_recursive_find(node->left, key));
+				return (_recursive_find(node->right, key));
 			};
-			void _recursive_clear(nodeptr root) {
-				if (root != _null) {
-					_recursive_clear(root->left);
-					_recursive_clear(root->right);
-					_alloc.deallocate(root, 1);
+			void _recursive_clear(nodeptr node) {
+				if (node != _null) {
+					_recursive_clear(node->left);
+					_recursive_clear(node->right);
+					_alloc.destroy(node);
+					_alloc.deallocate(node, 1);
+					_size--;
 				}
 			};
 			nodeptr _insert(const value_type& val) {
@@ -640,12 +680,12 @@ namespace ft {
 				x->parent = y;
 			};
 			nodeptr _minimum(nodeptr node) const {
-				while (node->left != _null)
+				while (node && node->left != _null)
 					node = node->left;
 				return (node);
 			};
 			nodeptr _maximum(nodeptr node) const {
-				while (node->right != _null)
+				while (node && node->right != _null)
 					node = node->right;
 				return (node);
 			};
@@ -660,7 +700,6 @@ namespace ft {
 			size_type		_size;
 			nodeptr			_root;
 			nodeptr			_null;
-			nodeptr			_end;
 	};
 }
 #endif
