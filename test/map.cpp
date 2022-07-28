@@ -67,8 +67,9 @@ int main(void)
 	tmp = map.insert(map.end(), LOC::pair<std::string, double>("X", 91));
 	std::cout << tmp->first << ":" << tmp->second << std::endl;
 	LOC::map<int, int> int_map;
-	int_map.insert(LOC::pair<int, int>(1, 1));
+	int_map.insert(LOC::pair<int, int>(12, 42));
 	LOC::map<int, int>::iterator int_itr(int_map.end());
+	int_itr--;
 	std::cout << int_itr->first << " " << int_itr->second << std::endl;
 	return (0);
 }

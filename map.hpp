@@ -12,6 +12,7 @@ namespace ft {
 		private:
 			class _node {
 				public:
+					_node() : data(pair<Key, T>()) {};
 					_node(ft::pair<const Key, T>& val) : data(val) {};
 					_node(const ft::pair<const Key, T>& val) : data(val) {};
 
@@ -40,11 +41,9 @@ namespace ft {
 
 					/* Constructors */
 					bidirectional_iterator() : _itr(0), _map(NULL) {};
-					
 					// To delete
-					bidirectional_iterator(nodeptr itr) : _itr(itr), _map(NULL) { std::cout << "ERROR HERE\n"; }
+					bidirectional_iterator(nodeptr itr) : _itr(itr), _map(NULL) { std::cout << "ERROR HERE iterator nodeptr constructor\n"; };
 					// End To delete
-
 					bidirectional_iterator(nodeptr itr, map* map) : _itr(itr), _map(map) {};
 					template <bool B>
 					bidirectional_iterator(const bidirectional_iterator<B>& x, typename ft::enable_if<!B>::type* = 0) : _itr(x.base()), _map(x._map) {};
@@ -72,9 +71,13 @@ namespace ft {
 						return (_itr != rhs.base());
 					};
 					reference operator*() const {
+						if (!_itr)
+							return (_map->_null->data);
 						return (_itr->data);
 					};
 					pointer operator->() const {
+						if (!_itr)
+							return (&_map->_null->data);
 						return (&_itr->data);
 					};
 					bidirectional_iterator& operator++() {
@@ -111,6 +114,8 @@ namespace ft {
 						if (!x && _map->_root != _map->_null)
 							return (_map->_maximum(_map->_root));
 						//
+
+
 						if (x->right != _map->_null)
 							return (_map->_minimum(x->right));
 						y = x->parent;
@@ -181,6 +186,7 @@ namespace ft {
 			explicit map(const key_compare& comp = key_compare(), const allocator_type& alloc = allocator_type())
 			: _alloc(alloc), _key_comp(comp), _size(0) {
 				_null = _alloc.allocate(1);
+				_alloc.construct(_null, _node());
 				_null->color = BLACK;
 				_null->left = NULL;
 				_null->right = NULL;
@@ -189,6 +195,7 @@ namespace ft {
 			template <class InputIterator> map(InputIterator first, InputIterator last, const key_compare& comp = key_compare(), const allocator_type& alloc = allocator_type()) 
 			: _alloc(alloc), _key_comp(comp), _size(0) {
 				_null = _alloc.allocate(1);
+				_alloc.construct(_null, _node());
 				_null->color = BLACK;
 				_null->left = NULL;
 				_null->right = NULL;
@@ -211,13 +218,13 @@ namespace ft {
 				return (iterator(_minimum(_root), this));
 			};
 			const_iterator begin() const {
-				return (const_iterator(_minimum(_root), this));
+				return (const_iterator(_minimum(_root), const_cast<map*>(this)));
 			};
 			iterator end() {
 				return (iterator(NULL, this));
 			};
 			const_iterator end() const {
-				return (const_iterator(NULL, this));
+				return (const_iterator(NULL, const_cast<map*>(this)));
 			};
 			/* End Iterators */
 
@@ -396,7 +403,6 @@ namespace ft {
 					if (node->data.first == key) {
 						z = node;
 					}
-
 					if (node->data.first <= key) {
 						node = node->right;
 					}
@@ -654,6 +660,7 @@ namespace ft {
 			size_type		_size;
 			nodeptr			_root;
 			nodeptr			_null;
+			nodeptr			_end;
 	};
 }
 #endif

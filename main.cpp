@@ -21,11 +21,10 @@ int main(void)
 	bst.insert(LOC::pair<std::string, double>("K", 5));
 	bst.insert(LOC::pair<std::string, double>("A", 5));
 	bst.insert(LOC::pair<std::string, double>("P", 5));
-	LOC::map<std::string, double>::const_iterator ite = bst.end();
+	LOC::map<std::string, double>::iterator ite = bst.end();
 	for (LOC::map<std::string, double>::iterator it = bst.begin(); it != ite; it++)
 	{
-		std::cout << it->first
-				<< ':'
+		std::cout << it->first << ':'
 				<< it->second
 				<< std::endl;
 	}
@@ -41,10 +40,11 @@ int main(void)
 	// std::cout << pair.first->first << ":" << pair.second << std::endl;
 	// pair = map.insert(LOC::pair<std::string, double>("ABC", 12));
 	// std::cout << pair.first->first << ":" << pair.second << std::endl;
-	// LOC::map<int, int> int_map;
-	// int_map.insert(LOC::pair<int, int>(1, 1));
-	// LOC::map<int, int>::iterator int_itr(int_map.end());
-	// std::cout << int_itr->first << " " << int_itr->second << std::endl;
 	// bst.prettyPrint();
+	LOC::map<double, int> int_map;
+	int_map.insert(LOC::pair<int, int>(10, 12));
+	LOC::map<double, int>::iterator int_itr(int_map.end());
+	int_itr--;
+	std::cout << int_itr->first << " " << int_itr->second << std::endl;
 	return (0);
 }
