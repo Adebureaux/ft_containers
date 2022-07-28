@@ -22,7 +22,7 @@ namespace ft {
 					random_access_iterator() : _itr(0) {};
 					random_access_iterator(pointer itr) : _itr(itr) {};
 					template <bool B>
-					random_access_iterator(const random_access_iterator<B>& x, typename ft::enable_if<!B>::type* = 0) : _itr(x.base()) {};
+					random_access_iterator(const random_access_iterator<B>& x, typename ft::enable_if<!B>::type* = 0) : _itr(x.operator->()) {};
 					/* End Constructors */
 
 					/* Destructor */
@@ -31,7 +31,7 @@ namespace ft {
 					
 					/* Operator= */
 					random_access_iterator& operator=(const random_access_iterator& x) {
-						_itr = x.base();
+						_itr = x.operator->();
 						return (*this);
 					};
 					/* End Operator= */
@@ -39,11 +39,11 @@ namespace ft {
 					/* Operator overload */
 					template <bool B>
 					bool operator==(const random_access_iterator<B>& rhs) const {
-						return (_itr == rhs.base());
+						return (_itr == rhs.operator->());
 					};
 					template <bool B>
 					bool operator!=(const random_access_iterator<B>& rhs) const {
-						return (_itr != rhs.base());
+						return (_itr != rhs.operator->());
 					};
 					reference operator*() const {
 						return (*_itr);
@@ -74,30 +74,30 @@ namespace ft {
 					};
 					template <bool B>
 					difference_type operator+(const random_access_iterator<B>& rhs) const {
-						return (_itr + rhs.base());
+						return (_itr + rhs.operator->());
 					};
 					random_access_iterator operator-(const int n) const {
 						return (random_access_iterator(_itr - n));
 					};
 					template <bool B>
 					difference_type operator-(const random_access_iterator<B>& rhs) const {
-						return (_itr - rhs.base());
+						return (_itr - rhs.operator->());
 					};
 					template <bool B>
 					bool operator<(const random_access_iterator<B>& rhs) const {
-						return (_itr < rhs.base());
+						return (_itr < rhs.operator->());
 					};
 					template <bool B>
 					bool operator>(const random_access_iterator<B>& rhs) const {
-						return (_itr > rhs.base());
+						return (_itr > rhs.operator->());
 					};
 					template <bool B>
 					bool operator<=(const random_access_iterator<B>& rhs) const {
-						return (_itr <= rhs.base());
+						return (_itr <= rhs.operator->());
 					};
 					template <bool B>
 					bool operator>=(const random_access_iterator<B>& rhs) const {
-						return (_itr >= rhs.base());
+						return (_itr >= rhs.operator->());
 					};
 					random_access_iterator& operator+=(const difference_type n) {
 						_itr += n;
@@ -114,15 +114,9 @@ namespace ft {
 
 					/* Operator+ friend */
 					friend random_access_iterator operator+(int n, const random_access_iterator& x) {
-						return (x.base() + n);
+						return (x.operator->() + n);
 					};
 					/* End Operator+ friend */
-
-					/* Getter */
-					pointer base() const {
-						return (_itr);
-					};
-					/* End Getter */
 
 				private:
 					pointer _itr;

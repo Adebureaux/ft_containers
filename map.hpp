@@ -43,7 +43,7 @@ namespace ft {
 					bidirectional_iterator() : _itr(0), _map(NULL) {};
 					bidirectional_iterator(nodeptr itr, map* map) : _itr(itr), _map(map) {};
 					template <bool B>
-					bidirectional_iterator(const bidirectional_iterator<B>& x, typename ft::enable_if<!B>::type* = 0) : _itr(x.base()), _map(x._map) {};
+					bidirectional_iterator(const bidirectional_iterator<B>& x, typename ft::enable_if<!B>::type* = 0) : _itr(x._itr), _map(x._map) {};
 					/* End Constructors */
 
 					/* Destructor */
@@ -52,7 +52,7 @@ namespace ft {
 					
 					/* Operator= */
 					bidirectional_iterator& operator=(const bidirectional_iterator& x) {
-						_itr = x.base();
+						_itr = x._itr;
 						_map = x._map;
 						return (*this);
 					};
@@ -61,11 +61,11 @@ namespace ft {
 					/* Operator overload */
 					template <bool B>
 					bool operator==(const bidirectional_iterator<B>& rhs) const {
-						return (_itr == rhs.base());
+						return (_itr == rhs._itr);
 					};
 					template <bool B>
 					bool operator!=(const bidirectional_iterator<B>& rhs) const {
-						return (_itr != rhs.base());
+						return (_itr != rhs._itr);
 					};
 					reference operator*() const {
 						if (!_itr)
@@ -97,22 +97,14 @@ namespace ft {
 					};
 					/* End Operator overload */
 
-					/* Getter */
-					nodeptr base() const {
-						return (_itr);
-					};
-					/* End Getter */
-
 				private:
 					nodeptr _successor(nodeptr x) const {
 						nodeptr y;
 
 						if (!_map)
 							return (NULL);
-						// this !x case is only when we are trying to increment end() _itr pointer
 						if (!x && _map->_root != _map->_null)
 							return (_map->_maximum(_map->_root));
-						//
 						if (x->right != _map->_null)
 							return (_map->_minimum(x->right));
 						y = x->parent;
@@ -127,10 +119,8 @@ namespace ft {
 
 						if (!_map)
 							return (NULL);
-						// this !x case is only when we are trying to decrement end() _itr pointer
 						if (!x && _map->_root != _map->_null)
 							return (_map->_maximum(_map->_root));
-						//
 						if (x->left != _map->_null)
 							return (_map->_maximum(x->left));
 						y = x->parent;
@@ -201,7 +191,7 @@ namespace ft {
 				_root = _null;
 				insert(first, last);
 			};
-			map(const map& x) : _alloc(x.alloc), _key_comp(x._key_comp), _size(0) {
+			map(const map& x) : _alloc(x._alloc), _key_comp(x._key_comp), _size(0) {
 				_null = _alloc.allocate(1);
 				_alloc.construct(_null, _node());
 				_null->color = BLACK;
@@ -222,8 +212,7 @@ namespace ft {
 
 			/* Operator= */
 			map& operator=(const map& x) {
-				if (_size)
-					clear();
+				clear();
 				_root = _null;
 				insert(x.begin(), x.end());
 				return (*this);
@@ -271,9 +260,9 @@ namespace ft {
 
 
 			/* Element access */
-			// mapped_type& operator[] (const key_type& k) {
-
-			// };
+			mapped_type& operator[](const key_type& k) {
+				return ((*((insert(ft::make_pair(k, mapped_type()))).first)).second);
+			};
 			/* End Element access */
 
 			/* Modifiers */
@@ -299,8 +288,18 @@ namespace ft {
 			};
 			void clear() {
 				_recursive_clear(_root);
+				_root = _null;
 			};
-
+			void erase(iterator position) {
+				_erase(position->first);
+			};
+			size_type erase(const key_type& k) {
+				return (_erase(k));
+			};
+			void erase(iterator first, iterator last) {
+				while (first != last)
+					erase(first++);
+			};
 			/* End Modifiers */
 
 			/* Observers */
@@ -352,139 +351,6 @@ namespace ft {
 				} 
 			}
 
-			// fix the rb tree modified by the delete operation
-			void fixDelete(nodeptr x) {
-				nodeptr s;
-				while (x != _root && x->color == BLACK) {
-					if (x == x->parent->left) {
-						s = x->parent->right;
-						if (s->color == 1) {
-							// case 3.1
-							s->color = BLACK;
-							x->parent->color = RED;
-							_left_rotate(x->parent);
-							s = x->parent->right;
-						}
-
-						if (s->left->color == BLACK && s->right->color == BLACK) {
-							// case 3.2
-							s->color = RED;
-							x = x->parent;
-						} else {
-							if (s->right->color == BLACK) {
-								// case 3.3
-								s->left->color = BLACK;
-								s->color = RED;
-								_right_rotate(s);
-								s = x->parent->right;
-							} 
-
-							// case 3.4
-							s->color = x->parent->color;
-							x->parent->color = BLACK;
-							s->right->color = BLACK;
-							_left_rotate(x->parent);
-							x = _root;
-						}
-					} else {
-						s = x->parent->left;
-						if (s->color == 1) {
-							// case 3.1
-							s->color = BLACK;
-							x->parent->color = RED;
-							_right_rotate(x->parent);
-							s = x->parent->left;
-						}
-
-						if (s->right->color == 0 && s->right->color == 0) {
-							// case 3.2
-							s->color = RED;
-							x = x->parent;
-						} else {
-							if (s->left->color == 0) {
-								// case 3.3
-								s->right->color = BLACK;
-								s->color = RED;
-								_left_rotate(s);
-								s = x->parent->left;
-							}
-
-							// case 3.4
-							s->color = x->parent->color;
-							x->parent->color = BLACK;
-							s->left->color = BLACK;
-							_right_rotate(x->parent);
-							x = _root;
-						}
-					} 
-				}
-				x->color = BLACK;
-			}
-
-			void rbTransplant(nodeptr u, nodeptr v) {
-				if (u->parent == NULL) {
-					_root = v;
-				} else if (u == u->parent->left){
-					u->parent->left = v;
-				} else {
-					u->parent->right = v;
-				}
-				v->parent = u->parent;
-			}
-
-
-			void deleteNodeHelper(nodeptr node, key_type key) {
-				// find the node containing key
-				nodeptr z = _null;
-				nodeptr x, y;
-				while (node != _null) {
-					if (node->data.first == key) {
-						z = node;
-					}
-					if (node->data.first <= key) {
-						node = node->right;
-					}
-					else {
-						node = node->left;
-					}
-				}
-
-				if (z == _null) {
-					std::cout<<"Couldn't find key in the tree"<<std::endl;
-					return;
-				} 
-
-				y = z;
-				int y_original_color = y->color;
-				if (z->left == _null) {
-					x = z->right;
-					rbTransplant(z, z->right);
-				} else if (z->right == _null) {
-					x = z->left;
-					rbTransplant(z, z->left);
-				} else {
-					y = _minimum(z->right);
-					y_original_color = y->color;
-					x = y->right;
-					if (y->parent == z) {
-						x->parent = y;
-					} else {
-						rbTransplant(y, y->right);
-						y->right = z->right;
-						y->right->parent = y;
-					}
-
-					rbTransplant(z, y);
-					y->left = z->left;
-					y->left->parent = y;
-					y->color = z->color;
-				}
-				delete z;
-				if (y_original_color == 0)
-					fixDelete(x);
-			}
-			
-
 			void printHelper(nodeptr _root, std::string indent, bool last) {
 				// print the tree structure on the screen
 				if (_root != _null) {
@@ -504,11 +370,6 @@ namespace ft {
 				}
 				// cout<<_root->left->data<<endl;
 			}
-
-			
-
-
-		public:
 			// Pre-Order traversal
 			// Node->Left Subtree->Right Subtree
 			void preorder() {
@@ -577,7 +438,6 @@ namespace ft {
 				x = _root;
 				while (x != _null) {
 					y = x;
-					//if (node->data.first < x->data.first)
 					if (_key_comp(node->data.first, x->data.first))
 						x = x->left;
 					else
@@ -586,17 +446,14 @@ namespace ft {
 				node->parent = y;
 				if (!y)
 					_root = node;
-				// else if (node->data.first < y->data.first)
 				else if (_key_comp(node->data.first, y->data.first))
 					y->left = node;
 				else
 					y->right = node;
-				// if new node is a _root node, simply return
 				if (!node->parent) {
 					node->color = BLACK;
 					return (node);
 				}
-				// if the grandparent is null, simply return
 				if (!node->parent->parent)
 					return (node);
 				_fix_insert(node);
@@ -646,6 +503,122 @@ namespace ft {
 						break;
 				}
 				_root->color = BLACK;
+			};
+			size_type _erase(const key_type& key) {
+				bool y_original_color;
+				nodeptr node = _root;
+				nodeptr z = _null;
+				nodeptr x;
+				nodeptr y;
+	
+				while (node != _null) {
+					if (_equal(node->data.first, key))
+						z = node;
+					if (_key_comp(node->data.first, key) || _equal(node->data.first, key))
+						node = node->right;
+					else
+						node = node->left;
+				}
+				if (z == _null)
+					return (0);
+				y = z;
+				y_original_color = y->color;
+				if (z->left == _null) {
+					x = z->right;
+					_transplant(z, z->right);
+				} else if (z->right == _null) {
+					x = z->left;
+					_transplant(z, z->left);
+				}
+				else {
+					y = _minimum(z->right);
+					y_original_color = y->color;
+					x = y->right;
+					if (y->parent == z)
+						x->parent = y;
+					else {
+						_transplant(y, y->right);
+						y->right = z->right;
+						y->right->parent = y;
+					}
+					_transplant(z, y);
+					y->left = z->left;
+					y->left->parent = y;
+					y->color = z->color;
+				}
+				_alloc.destroy(z);
+				_alloc.deallocate(z, 1);
+				_size--;
+				if (y_original_color == BLACK)
+					_fix_erase(x);
+				return (1);
+			};
+			void _fix_erase(nodeptr x) {
+				nodeptr s;
+	
+				while (x != _root && x->color == BLACK) {
+					if (x == x->parent->left) {
+						s = x->parent->right;
+						if (s->color == RED) {
+							s->color = BLACK;
+							x->parent->color = RED;
+							_left_rotate(x->parent);
+							s = x->parent->right;
+						}
+						if (s->left->color == BLACK && s->right->color == BLACK) {
+							s->color = RED;
+							x = x->parent;
+						}
+						else {
+							if (s->right->color == BLACK) {
+								s->left->color = BLACK;
+								s->color = RED;
+								_right_rotate(s);
+								s = x->parent->right;
+							} 
+							s->color = x->parent->color;
+							x->parent->color = BLACK;
+							s->right->color = BLACK;
+							_left_rotate(x->parent);
+							x = _root;
+						}
+					}
+					else {
+						s = x->parent->left;
+						if (s->color == RED) {
+							s->color = BLACK;
+							x->parent->color = RED;
+							_right_rotate(x->parent);
+							s = x->parent->left;
+						}
+						if (s->right->color == BLACK && s->right->color == BLACK) {
+							s->color = RED;
+							x = x->parent;
+						} else {
+							if (s->left->color == BLACK) {
+								s->right->color = BLACK;
+								s->color = RED;
+								_left_rotate(s);
+								s = x->parent->left;
+							}
+							s->color = x->parent->color;
+							x->parent->color = BLACK;
+							s->left->color = BLACK;
+							_right_rotate(x->parent);
+							x = _root;
+						}
+					} 
+				}
+				x->color = BLACK;
+			};
+			void _transplant(nodeptr u, nodeptr v) {
+				if (!u->parent)
+					_root = v;
+				else if (u == u->parent->left)
+					u->parent->left = v;
+				else
+					u->parent->right = v;
+				v->parent = u->parent;
 			};
 			void _right_rotate(nodeptr x) {
 				nodeptr y = x->left;
