@@ -55,9 +55,9 @@ map:
 
 utility:
 	@echo "Compiling test with ft::utility"
-	${COMPILER} ${CFLAGS} adeburea_tester/utility.cpp -o adeburea_tester/utility
+	${COMPILER} ${CFLAGS} adeburea_tester/utility.cpp -o adeburea_tester/ft_utility
 	@echo "Compiling test with std::utility"
-	${COMPILER} -DLOC=std ${CFLAGS} adeburea_tester/utility.cpp -o adeburea_tester/utility
+	${COMPILER} -DLOC=std ${CFLAGS} adeburea_tester/utility.cpp -o adeburea_tester/std_utility
 	@bash adeburea_tester/utility_test.sh
 
 test: vector map utility

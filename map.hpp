@@ -323,7 +323,7 @@ namespace ft {
 				return (iterator(_recursive_find(_root, k), this));
 			};
 			const_iterator find(const key_type& k) const {
-				return (const_iterator(_recursive_find(_root, k), this));
+				return (const_iterator(_recursive_find(_root, k), const_cast<map*>(this)));
 			};
 			size_type count(const key_type& k) const {
 				if (_recursive_find(_root, k))
@@ -333,37 +333,46 @@ namespace ft {
 			iterator lower_bound(const key_type& k) {
 				iterator itr = begin();
 
-				while (_key_comp(itr->first, k)) {
-					if (++itr == end())
+				while (itr != end()) {
+					if (!_key_comp(itr->first, k))
 						break;
+					itr++;
 				}
 				return (itr);
 			};
 			const_iterator lower_bound(const key_type& k) const {
 				const_iterator itr = begin();
 
-				while (_key_comp(itr->first, k)) {
-					if (++itr == end())
+				while (itr != end()) {
+					if (!_key_comp(itr->first, k))
 						break;
+					itr++;
 				}
 				return (itr);
 			};
 			iterator upper_bound(const key_type& k) {
 				iterator itr = begin();
 
-				while (!_key_comp(itr->first, k)) {
-					if (++itr == end())
+				while (itr != end()) {
+					if (!_key_comp(itr->first, k))
 						break;
+					itr++;
 				}
-				return (++itr);
+				if (itr != end() && _equal(itr->first, k))
+					itr++;
+				return (itr);
 			};
 			const_iterator upper_bound(const key_type& k) const {
 				const_iterator itr = begin();
 
-				while (!_key_comp(itr->first, k) && itr != end())
-					if (++itr == end())
+				while (itr != end()) {
+					if (!_key_comp(itr->first, k))
 						break;
-				return (++itr);
+					itr++;
+				}
+				if (itr != end() && _equal(itr->first, k))
+					itr++;
+				return (itr);
 			};
 			ft::pair<const_iterator, const_iterator> equal_range(const key_type& k) const {
 				return (make_pair(lower_bound(k), upper_bound(k)));
@@ -459,7 +468,7 @@ namespace ft {
 
 		private:
 			/* Help functions */
-			nodeptr _recursive_find(nodeptr node, const key_type& key) {
+			nodeptr _recursive_find(nodeptr node, const key_type& key) const {
 				if (node == _null || _equal(key, node->data.first))
 					return (node);
 				if (_key_comp(key, node->data.first))
