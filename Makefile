@@ -26,15 +26,15 @@ ${OBJS_DIR}%.o: %.cpp
 all: ${NAME}
 
 clean:
-	${RM} test/ft_vector.out test/std_vector.out test/ft_vector_err.log test/std_vector_err.log
-	${RM} test/ft_map.out test/std_map.out test/ft_map_err.log test/std_map_err.log
-	${RM} test/ft_utility.out test/std_utility.out test/ft_utility_err.log test/std_utility_err.log
+	${RM} adeburea_tester/ft_vector.out adeburea_tester/std_vector.out adeburea_tester/ft_vector_err.log adeburea_tester/std_vector_err.log
+	${RM} adeburea_tester/ft_map.out adeburea_tester/std_map.out adeburea_tester/ft_map_err.log adeburea_tester/std_map_err.log
+	${RM} adeburea_tester/ft_utility.out adeburea_tester/std_utility.out adeburea_tester/ft_utility_err.log adeburea_tester/std_utility_err.log
 	${RM} ${OBJS_DIR}
 
 fclean: clean
-	${RM} test/ft_vector test/std_vector
-	${RM} test/ft_map test/std_map
-	${RM} test/ft_utility test/std_utility
+	${RM} adeburea_tester/ft_vector adeburea_tester/std_vector
+	${RM} adeburea_tester/ft_map adeburea_tester/std_map
+	${RM} adeburea_tester/ft_utility adeburea_tester/std_utility
 	${RM} ${NAME}
 
 re: fclean all

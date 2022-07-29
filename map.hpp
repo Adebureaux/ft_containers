@@ -68,12 +68,12 @@ namespace ft {
 						return (_itr != rhs._itr);
 					};
 					reference operator*() const {
-						if (!_itr)
+						if (!_itr && _map)
 							return (_map->_null->data);
 						return (_itr->data);
 					};
 					pointer operator->() const {
-						if (!_itr)
+						if (!_itr && _map)
 							return (&_map->_null->data);
 						return (&_itr->data);
 					};
@@ -286,10 +286,6 @@ namespace ft {
 				while (first != last)
 					insert(*(first++));
 			};
-			void clear() {
-				_recursive_clear(_root);
-				_root = _null;
-			};
 			void erase(iterator position) {
 				_erase(position->first);
 			};
@@ -299,6 +295,17 @@ namespace ft {
 			void erase(iterator first, iterator last) {
 				while (first != last)
 					erase(first++);
+			};
+			void swap(map& x) {
+				std::swap(_alloc, x._alloc);
+				std::swap(_key_comp, x._key_comp);
+				std::swap(_size, x._size);
+				std::swap(_root, x._root);
+				std::swap(_null, x._null);
+			};
+			void clear() {
+				_recursive_clear(_root);
+				_root = _null;
 			};
 			/* End Modifiers */
 
@@ -317,6 +324,52 @@ namespace ft {
 			};
 			const_iterator find(const key_type& k) const {
 				return (const_iterator(_recursive_find(_root, k), this));
+			};
+			size_type count(const key_type& k) const {
+				if (_recursive_find(_root, k))
+					return (1);
+				return (0);
+			};
+			iterator lower_bound(const key_type& k) {
+				iterator itr = begin();
+
+				while (_key_comp(itr->first, k)) {
+					if (++itr == end())
+						break;
+				}
+				return (itr);
+			};
+			const_iterator lower_bound(const key_type& k) const {
+				const_iterator itr = begin();
+
+				while (_key_comp(itr->first, k)) {
+					if (++itr == end())
+						break;
+				}
+				return (itr);
+			};
+			iterator upper_bound(const key_type& k) {
+				iterator itr = begin();
+
+				while (!_key_comp(itr->first, k)) {
+					if (++itr == end())
+						break;
+				}
+				return (++itr);
+			};
+			const_iterator upper_bound(const key_type& k) const {
+				const_iterator itr = begin();
+
+				while (!_key_comp(itr->first, k) && itr != end())
+					if (++itr == end())
+						break;
+				return (++itr);
+			};
+			ft::pair<const_iterator, const_iterator> equal_range(const key_type& k) const {
+				return (make_pair(lower_bound(k), upper_bound(k)));
+			};
+			ft::pair<iterator, iterator> equal_range(const key_type& k) {
+				return (make_pair(lower_bound(k), upper_bound(k)));
 			};
 			/* End Operations */
 

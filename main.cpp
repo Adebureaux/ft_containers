@@ -12,17 +12,27 @@
 
 int main(void)
 {
-	LOC::map<char, int> first;
-	LOC::map<char,int> second;
+	LOC::map<char,int> mymap;
+	LOC::map<char,int>::iterator itlow,itup;
 
-	first['x']=8;
-	first['y']=16;
-	first['z']=32;
+	mymap['a']=20;
+	mymap['b']=40;
+	mymap['c']=60;
+	mymap['d']=80;
+	mymap['e']=100;
 
-	second = first;
-	first = LOC::map<char,int>();
+	itlow=mymap.lower_bound ('b');  // itlow points to b
+	itup=mymap.upper_bound ('d');   // itup points to e (not d!)
 
-	std::cout << "Size of first : " << first.size() << std::endl;
-	std::cout << "Size of second : " << second.size() << std::endl;
+	std::cout << itlow->first << std::endl;
+	std::cout << itup->first << std::endl;
+
+
+	mymap.erase(itlow,itup);        // erases [itlow,itup)
+
+	// print content:
+	for (LOC::map<char,int>::iterator it=mymap.begin(); it!=mymap.end(); ++it)
+		std::cout << it->first << " => " << it->second << '\n';
+
 	return (0);
 }
