@@ -181,7 +181,8 @@ namespace ft {
 				_null->right = NULL;
 				_root = _null;
 			};
-			template <class InputIterator> map(InputIterator first, InputIterator last, const key_compare& comp = key_compare(), const allocator_type& alloc = allocator_type(), typename ft::enable_if<!ft::is_integral<InputIterator>::value, InputIterator>::type* = 0)
+			template <class InputIterator>
+			map(InputIterator first, InputIterator last, const key_compare& comp = key_compare(), const allocator_type& alloc = allocator_type(), typename ft::enable_if<!ft::is_integral<InputIterator>::value, InputIterator>::type* = 0)
 			: _alloc(alloc), _key_comp(comp), _size(0) {
 				_null = _alloc.allocate(1);
 				_alloc.construct(_null, _node());
@@ -320,13 +321,21 @@ namespace ft {
 
 			/* Operations */
 			iterator find(const key_type& k) {
-				return (iterator(_recursive_find(_root, k), this));
+				nodeptr node = _recursive_find(_root, k);
+
+				if (node == _null)
+					return (end());
+				return (iterator(node, this));
 			};
 			const_iterator find(const key_type& k) const {
-				return (const_iterator(_recursive_find(_root, k), const_cast<map*>(this)));
+				nodeptr node = _recursive_find(_root, k);
+
+				if (node == _null)
+					return (end());
+				return (const_iterator(node, const_cast<map*>(this)));
 			};
 			size_type count(const key_type& k) const {
-				if (_recursive_find(_root, k))
+				if (_recursive_find(_root, k) != _null)
 					return (1);
 				return (0);
 			};
@@ -471,7 +480,7 @@ namespace ft {
 			nodeptr _recursive_find(nodeptr node, const key_type& key) const {
 				if (node == _null || _equal(key, node->data.first))
 					return (node);
-				if (_key_comp(key, node->data.first))
+				if (!_key_comp(node->data.first, key))
 					return (_recursive_find(node->left, key));
 				return (_recursive_find(node->right, key));
 			};
@@ -576,7 +585,7 @@ namespace ft {
 				while (node != _null) {
 					if (_equal(node->data.first, key))
 						z = node;
-					if (_key_comp(node->data.first, key) || _equal(node->data.first, key))
+					if (_key_comp(node->data.first, key))
 						node = node->right;
 					else
 						node = node->left;
@@ -736,5 +745,37 @@ namespace ft {
 			nodeptr			_root;
 			nodeptr			_null;
 	};
+
+	template <class Key, class T, class Compare, class Alloc>
+	bool operator==(const map<Key, T, Compare, Alloc>& lhs,const map<Key, T, Compare, Alloc>& rhs) {
+		if (lhs.size() != rhs.size())
+			return (false);
+		return (ft::equal(lhs.begin(), lhs.end(), rhs.begin()));
+	};
+	template <class Key, class T, class Compare, class Alloc>
+	bool operator!=(const map<Key, T, Compare, Alloc>& lhs,const map<Key, T, Compare, Alloc>& rhs) {
+		return (!ft::operator==(lhs, rhs));
+	};
+	template <class Key, class T, class Compare, class Alloc>
+	bool operator<(const map<Key, T, Compare, Alloc>& lhs,const map<Key, T, Compare, Alloc>& rhs) {
+		return (ft::lexicographical_compare(lhs.begin(), lhs.end(), rhs.begin(), rhs.end()));
+	};
+	template <class Key, class T, class Compare, class Alloc>
+	bool operator<=(const map<Key, T, Compare, Alloc>& lhs,const map<Key, T, Compare, Alloc>& rhs) {
+		return (ft::operator==(lhs, rhs) || ft::operator<(lhs, rhs));
+	};
+	template <class Key, class T, class Compare, class Alloc>
+	bool operator>(const map<Key, T, Compare, Alloc>& lhs,const map<Key, T, Compare, Alloc>& rhs) {
+		return (!ft::operator<=(lhs, rhs));
+	};
+	template <class Key, class T, class Compare, class Alloc>
+	bool operator>=(const map<Key, T, Compare, Alloc>& lhs,const map<Key, T, Compare, Alloc>& rhs) {
+		return (ft::operator==(lhs, rhs) || ft::operator>(lhs, rhs));
+	};
+	template <class Key, class T, class Compare, class Alloc>
+	void swap(map<Key, T, Compare, Alloc>& x, map<Key, T, Compare, Alloc>& y) {
+		x.swap(y);
+	};
+  	/* End Non-member function overloads */
 }
 #endif
