@@ -746,6 +746,7 @@ namespace ft {
 			nodeptr			_null;
 	};
 
+	/* Non-member function overloads */
 	template <class Key, class T, class Compare, class Alloc>
 	bool operator==(const map<Key, T, Compare, Alloc>& lhs,const map<Key, T, Compare, Alloc>& rhs) {
 		if (lhs.size() != rhs.size())
