@@ -154,10 +154,13 @@ namespace ft {
 				for (size_type i = 0; i < _size; i++, first++)
 					_alloc.construct(&_vector[i], *first);
 			};
-			vector(const vector& x) 
-			: _alloc(x._alloc), _size(x._size), _capacity(x._size), _vector(_alloc.allocate(_capacity)) {
-				for (size_type i = 0; i < _size; i++)
-					_alloc.construct(&_vector[i], x._vector[i]);
+			vector(const vector& x) {
+				_alloc = x._alloc;
+				_size = x._size;
+				_capacity = x._size;
+				_vector = _alloc.allocate(_capacity);
+				for (size_type i = 0 ; i < _size ; i++)
+					_alloc.construct(_vector + i, x[i]);
 			};
 			/* End Constructors */
 
@@ -171,8 +174,18 @@ namespace ft {
 
 			/* Operator= */
 			vector& operator=(const vector& x) {
-				if (x._vector)
-					assign(x.begin(), x.end());
+				if (this == &x)
+					return (*this);
+				for (size_type i = 0 ; i < _size ; i++)
+					_alloc.destroy(_vector + i);
+				if (x._size > _capacity) {
+					_alloc.deallocate(_vector, _capacity);
+					_capacity = x._size;
+					_vector = _alloc.allocate(_capacity);
+				}
+				for (size_type i = 0 ; i < x._size ; i++)
+					_alloc.construct(&_vector[i], x[i]);
+				_size = x._size;
 				return (*this);
 			};
 			/* End Operator= */
@@ -212,17 +225,23 @@ namespace ft {
 				return (_alloc.max_size());
 			};
 			void resize(size_type n, value_type val = value_type()) {
-				if (n < _size) {
-					for (size_type i = 0; i < n; i++)
-						_alloc.destroy(&_vector[i]);
-					_size = n;
+				if (n > _size) {
+					if (n > _capacity) {
+						if (n > std::max(_size, _capacity) * 2)
+							reserve(n);
+						else if (std::max(_size, _capacity) > 0)
+							reserve(std::max(_size, _capacity) * 2);
+						else
+							reserve(1);
+					}
+					for (size_type i = _size ; i < n ; i++)
+						_alloc.construct(_vector + i, val);
 				}
-				else if (n > _size) {
-					if (n > _capacity)
-						reserve(n);
-					for (size_type i = _size; i < n; i++)
-						_alloc.construct(&_vector[_size++], val);
+				else {
+					for (size_type i = n ; i < _size ; i++)
+						_alloc.destroy(_vector + i);
 				}
+				_size = n;
 			};
 			size_type capacity() const {
 				return (_capacity);
@@ -232,8 +251,8 @@ namespace ft {
 			};
 			void reserve(size_type n) {
 				if (n > max_size())
-					throw (std::length_error("vector::reserve larger than max_size()"));
-				if (n > _size) {
+					throw (std::length_error("vector::reserve"));
+				if (n > _capacity) {
 					pointer tmp = _alloc.allocate(n);
 					for (size_type i = 0; i < _size; i++)
 						_alloc.construct(&tmp[i], _vector[i]);
