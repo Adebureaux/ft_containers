@@ -6,6 +6,10 @@
 
 #include "utility.hpp"
 
+// Red Black Tree implementation in C++
+// Author: Algorithm Tutor
+// Tutorial URL: https://algorithmtutor.com/Data-Structures/Tree/Red-Black-Trees/
+
 namespace ft {
 	template <class Key, class T, class Compare = std::less<Key>, class Alloc = std::allocator<ft::pair<const Key, T> > >
 	class map {
@@ -213,6 +217,8 @@ namespace ft {
 
 			/* Operator= */
 			map& operator=(const map& x) {
+				if (this == &x)
+					return (*this);
 				clear();
 				_root = _null;
 				insert(x.begin(), x.end());
@@ -298,6 +304,8 @@ namespace ft {
 					erase(first++);
 			};
 			void swap(map& x) {
+				if (this == &x)
+					return;
 				std::swap(_alloc, x._alloc);
 				std::swap(_key_comp, x._key_comp);
 				std::swap(_size, x._size);
@@ -390,90 +398,6 @@ namespace ft {
 				return (make_pair(lower_bound(k), upper_bound(k)));
 			};
 			/* End Operations */
-
-		private:
-			void initializeNULLNode(nodeptr node, nodeptr parent) {
-				node->parent = parent;
-				node->left = NULL;
-				node->right = NULL;
-				node->color = BLACK;
-			};
-			void preOrderHelper(nodeptr node) {
-				if (node != _null) {
-					std::cout<<node->data.first<<" ";
-					preOrderHelper(node->left);
-					preOrderHelper(node->right);
-				}
-			}
-
-			void inOrderHelper(nodeptr node) {
-				if (node != _null) {
-					inOrderHelper(node->left);
-					std::cout<<node->data.first<<" ";
-					inOrderHelper(node->right);
-				}
-			}
-
-			void postOrderHelper(nodeptr node) {
-				if (node != _null) {
-					postOrderHelper(node->left);
-					postOrderHelper(node->right);
-					std::cout<<node->data.first<<" ";
-				} 
-			}
-
-			void printHelper(nodeptr _root, std::string indent, bool last) {
-				// print the tree structure on the screen
-				if (_root != _null) {
-					std::cout<<indent;
-					if (last) {
-						std::cout<<"R----";
-						indent += "     ";
-					} else {
-						std::cout<<"L----";
-						indent += "|    ";
-					}
-						
-					std::string sColor = _root->color?"RED":"BLACK";
-					std::cout << _root->data.first << " " << _root->data.second << "("<<sColor<<")"<<std::endl;
-					printHelper(_root->left, indent, false);
-					printHelper(_root->right, indent, true);
-				}
-				// cout<<_root->left->data<<endl;
-			}
-			// Pre-Order traversal
-			// Node->Left Subtree->Right Subtree
-			void preorder() {
-				preOrderHelper(this->_root);
-			}
-
-			// In-Order traversal
-			// Left Subtree -> Node -> Right Subtree
-			void inorder() {
-				inOrderHelper(this->_root);
-			}
-
-			// Post-Order traversal
-			// Left Subtree -> Right Subtree -> Node
-			void postorder() {
-				postOrderHelper(this->_root);
-			}
-
-			nodeptr get_root(){
-				return this->_root;
-			}
-
-			// delete the node from the tree
-			void deleteNode(key_type key) {
-				deleteNodeHelper(this->_root, key);
-			}
-
-			// print the tree structure on the screen
-			void prettyPrint() {
-				if (_root) {
-					printHelper(this->_root, "", true);
-				}
-			}
 
 		private:
 			/* Help functions */

@@ -247,7 +247,7 @@ namespace ft {
 				return (_capacity);
 			};
 			bool empty() const {
-				return (!_size ? true : false);
+				return (!_size);
 			};
 			void reserve(size_type n) {
 				if (n > max_size())
@@ -338,6 +338,8 @@ namespace ft {
 			void insert(iterator position, size_type n, const value_type& val) {
 				size_type pos = position - begin();
 
+				if (!n)
+					return;
 				if (_size + n > _capacity)
 					reserve(_size + std::max(_size, n));
 				for (int i = int(_size - 1); i >= int(pos); i--) {
@@ -353,6 +355,8 @@ namespace ft {
 				size_type pos = position - begin();
 				size_type n = ft::distance(first, last);
 
+				if (!n)
+					return;
 				if (_size + n > _capacity)
 					reserve(_size + std::max(_size, n));
 				for (int i = int(_size - 1); i >= int(pos); i--) {
@@ -389,6 +393,8 @@ namespace ft {
 				return (&_vector[f]);
 			};
 			void swap(vector& x) {
+				if (this == &x)
+					return;
 				std::swap(_alloc, x._alloc);
 				std::swap(_size, x._size);
 				std::swap(_capacity, x._capacity);

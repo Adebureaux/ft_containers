@@ -6,7 +6,7 @@
 /*   By: adeburea <adeburea@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/02 13:07:06 by hbaudet           #+#    #+#             */
-/*   Updated: 2022/08/02 18:11:57 by adeburea         ###   ########.fr       */
+/*   Updated: 2022/08/03 12:58:11 by adeburea         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -135,7 +135,7 @@ void	insert_tests()
 	test.insert(test.end(), 12, 50);
 	print_vector<T>(test);
 	test.insert(test.end() - 1, 0, 60);
-	print_vector<T>(test);
+	print_vector<T>(test);	//
 	test.insert(test.end() - 1, 1, 70);
 	print_vector<T>(test);
 	test.insert(test.begin() + 412, test2.begin(), test2.end());
@@ -281,6 +281,7 @@ void	awesome_tests(void)
 
 int main()
 {
+	/*
 	push_pop_back_tests<int>();
 	resize_tests<int>();
 	insert_tests<int>();
@@ -289,12 +290,18 @@ int main()
 	reverse_it_tests<int>();
 	erase_clear_tests<int>();
 	max_size_tests();
+
 	awesome_tests();
 	push_pop_back_tests<Awesome>();
 	resize_tests<Awesome>();
+			*/
+
 	insert_tests<Awesome>();
+	/*
 	reserve_tests<Awesome>();
+
 	copy_swap_tests<Awesome>();
 	reverse_it_tests<Awesome>();
 	erase_clear_tests<Awesome>();
+	*/
 }
