@@ -108,5 +108,48 @@ int main(void)
 	first = LOC::map<char, int>();
 	std::cout << "Size of first : " << first.size() << std::endl;
 	std::cout << "Size of second : " << second.size() << std::endl;
+	int i;
+	LOC::map<int, int> baz;
+	if (baz.max_size() > 1000)
+	{
+		for (i = 0; i < 1000; i++)
+			baz[i] = 0;
+		std::cout << "The map contains 1000 elements." << std::endl;
+	}
+	else
+		std::cout << "The map could not hold 1000 elements." << std::endl;
+	LOC::map<char, int> doo;
+	LOC::map<char, int> roo;
+	doo['x'] = 100;
+	doo['y'] = 200;
+	roo['a'] = 11;
+	roo['b'] = 22;
+	roo['c'] = 33;
+	doo.swap(roo);
+	verify(doo, "SWAP 1");
+	verify(roo, "SWAP 2");
+	LOC::map<char, int> zoo;
+	LOC::map<char, int>::key_compare cmp = zoo.key_comp();
+	zoo['a'] = 100;
+	zoo['b'] = 200;
+	zoo['c'] = 300;
+	std::cout << "mymap contains:" << std::endl;
+	char highest = zoo.rbegin()->first;
+	LOC::map<char, int>::iterator itzoo = zoo.begin();
+	do {
+		std::cout << itzoo->first << " => " << itzoo->second << std::endl;
+	} while (cmp((*itzoo++).first, highest));
+	LOC::map<char, int> woo;
+	LOC::pair<const char, int>* p;
+	p = woo.get_allocator().allocate(5);
+	size_t size = sizeof(LOC::map<char, int>::value_type) * 5;
+	std::cout << "The allocated array has a size of " << size << " bytes." << std::endl;
+	woo.get_allocator().deallocate(p, 5);
+	LOC::map<int, std::string> huge;
+	for (int i = 0; i < 10000; i++)
+		huge.insert(LOC::pair<int, std::string>(i, "HUGE!"));
+	LOC::map<char, int>::iterator find_itr;
+	find_itr = roo.find('x');
+	std::cout << find_itr->first << " " << find_itr->second << std::endl;
 	return (0);
 }
