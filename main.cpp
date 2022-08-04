@@ -8,13 +8,8 @@
 #include "vector.hpp"
 #include "map.hpp"
 
-#ifndef STD
-# define NAMESPACE std
-#else
-# define NAMESPACE std
-#endif
 
-using namespace NAMESPACE;
+using namespace ft;
 
 int main(void)
 {
@@ -60,14 +55,16 @@ int main(void)
 	}
 	tmp2--;
 
-	int i = 0;
+	std::cout << bar.begin()->first << std::endl;
+	std::cout << tmp->first << std::endl;
+
 	while(tmp != bar.begin())
 	{
 		std::cout << tmp->first << " => " << tmp->second << '\n';
 		tmp--;
-		if (i++ > 10)
-			break;
+		break;
 	}
 	std::cout << tmp->first << " => " << tmp->second << '\n';
 	(void)tmp3;
+	return (0);
 }
