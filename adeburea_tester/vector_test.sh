@@ -3,12 +3,12 @@
 cd adeburea_tester
 
 start=`date +%s%N`
-valgrind ./ft_stack > ft_stack.out 2> ft_stack_err.log
+valgrind ./ft_vector > ft_vector.out 2> ft_vector_err.log
 end=`date +%s%N`
 ft_execution=`expr $end - $start`
 
 start=`date +%s%N`
-valgrind ./std_stack > std_stack.out 2> std_stack_err.log
+valgrind ./std_vector > std_vector.out 2> std_vector_err.log
 end=`date +%s%N`
 std_execution=`expr $end - $start`
 
@@ -19,17 +19,17 @@ then
 	echo -e "\033[1;31mFailed ! The execution is more than $diff times slower.\033[m"
 elif (( $diff == 0 || $diff == 1 ))
 then
-	echo -e "\033[1;32mSuccess ! ft::stack and std::stack has the same execution time\033[m"
+	echo -e "\033[1;32mSuccess ! ft::vector and std::vector has the same execution time\033[m"
 else
 	echo -e "\033[1;32mSuccess ! The execution is $diff time slower.\033[m"
 fi
 
 echo -n "Checking outfile diff   : "
-diff ft_stack.out std_stack.out
+diff ft_vector.out std_vector.out
 
 if (( $? == 1 ))
 then
-	echo -e "\033[1;31mFailed ! ft_stack.out and std_stack.out are different.\033[m"
+	echo -e "\033[1;31mFailed ! ft_vector.out and std_vector.out are different.\033[m"
 else
 	echo -e "\033[1;32mSuccess !\033[m"
 fi
