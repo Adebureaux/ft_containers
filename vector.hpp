@@ -225,23 +225,12 @@ namespace ft {
 				return (_alloc.max_size());
 			};
 			void resize(size_type n, value_type val = value_type()) {
-				if (n > _size) {
-					if (n > _capacity) {
-						if (n > _capacity * 2)
-							reserve(n);
-						else if (_capacity)
-							reserve(_capacity * 2);
-						else
-							reserve(1);
-					}
-					for (size_type i = _size ; i < n ; i++)
-						_alloc.construct(&_vector[i], val);
+				if (n < _size) {
+					while (n < _size)
+						_alloc.destroy(&_vector[--_size]);
 				}
-				else {
-					for (size_type i = n ; i < _size ; i++)
-						_alloc.destroy(&_vector[i]);
-				}
-				_size = n;
+				else
+					insert(iterator(&_vector[_size]), n - _size, val);
 			};
 			size_type capacity() const {
 				return (_capacity);

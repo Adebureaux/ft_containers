@@ -13,25 +13,17 @@ using namespace ft;
 
 int main(void)
 {
-	map<char,int> foo,bar;
+	std::cout << std::endl << "RESIZE TESTS" << std::endl;
+	vector<int> test(12, 12);
 
-	foo['x']=100;
-	foo['y']=200;
-
-	bar['a']=11;
-	bar['b']=22;
-	bar['c']=33;
-
-	foo.swap(bar);
-
-	map<char,int>::const_iterator tmp = foo.begin();
-
-	std::cout << "foo contains:\n";
-	for (map<char,int>::iterator it=foo.begin(); it!=foo.end(); ++it)
-		std::cout << it->first << " => " << it->second << '\n';
-
-	std::cout << "bar contains:\n";
-	for (map<char,int>::iterator it=bar.begin(); it!=bar.end(); ++it)
-		std::cout << it->first << " => " << it->second << '\n';
-	return (0);
+	test.resize(72);
+	std::cout << "s: " << test.size() << ", c: " << test.capacity() << std::endl;
+	test.resize(100);
+	std::cout << "s: " << test.size() << ", c: " << test.capacity() << std::endl;
+	test.resize(200);
+	std::cout << "s: " << test.size() << ", c: " << test.capacity() << std::endl;
+	test.resize(171, 12);
+	std::cout << "s: " << test.size() << ", c: " << test.capacity() << std::endl;
+	test.resize(62);
+	std::cout << "s: " << test.size() << ", c: " << test.capacity() << std::endl;
 }
