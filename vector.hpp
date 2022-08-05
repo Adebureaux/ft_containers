@@ -7,6 +7,7 @@ namespace ft {
 	template <class T, class Alloc = std::allocator<T> >
 	class vector {
 		public:
+			/* Random access iterator */
 			template <bool Const>
 			class random_access_iterator : ft::iterator<ft::random_access_iterator_tag, T> {
 				public:
@@ -121,6 +122,8 @@ namespace ft {
 				private:
 					pointer _itr;
 			};
+			/* End Random access iterator */
+
 		public:
 			/* Typedefs */
 			typedef T												value_type;

@@ -29,6 +29,7 @@ clean:
 	${RM} adeburea_tester/ft_vector.out adeburea_tester/std_vector.out adeburea_tester/ft_vector_err.log adeburea_tester/std_vector_err.log
 	${RM} adeburea_tester/ft_map.out adeburea_tester/std_map.out adeburea_tester/ft_map_err.log adeburea_tester/std_map_err.log
 	${RM} adeburea_tester/ft_stack.out adeburea_tester/std_stack.out adeburea_tester/ft_stack_err.log adeburea_tester/std_stack_err.log
+	${RM} adeburea_tester/ft_set.out adeburea_tester/std_set.out adeburea_tester/ft_set_err.log adeburea_tester/std_set_err.log
 	${RM} adeburea_tester/ft_utility.out adeburea_tester/std_utility.out adeburea_tester/ft_utility_err.log adeburea_tester/std_utility_err.log
 	${RM} ${OBJS_DIR}
 
@@ -36,6 +37,7 @@ fclean: clean
 	${RM} adeburea_tester/ft_vector adeburea_tester/std_vector
 	${RM} adeburea_tester/ft_map adeburea_tester/std_map
 	${RM} adeburea_tester/ft_stack adeburea_tester/std_stack
+	${RM} adeburea_tester/ft_set adeburea_tester/std_set
 	${RM} adeburea_tester/ft_utility adeburea_tester/std_utility
 	${RM} ${NAME}
 
@@ -62,6 +64,13 @@ stack:
 	${COMPILER} -DLOC=std ${CFLAGS} adeburea_tester/stack.cpp -o adeburea_tester/std_stack
 	@bash adeburea_tester/stack_test.sh
 
+set:
+	@echo "Compiling test with ft::set"
+	${COMPILER} ${CFLAGS} adeburea_tester/set.cpp -o adeburea_tester/ft_set
+	@echo "Compiling test with std::set"
+	${COMPILER} -DLOC=std ${CFLAGS} adeburea_tester/set.cpp -o adeburea_tester/std_set
+	@bash adeburea_tester/set_test.sh
+
 utility:
 	@echo "Compiling test with ft::utility"
 	${COMPILER} ${CFLAGS} adeburea_tester/utility.cpp -o adeburea_tester/ft_utility
@@ -69,6 +78,6 @@ utility:
 	${COMPILER} -DLOC=std ${CFLAGS} adeburea_tester/utility.cpp -o adeburea_tester/std_utility
 	@bash adeburea_tester/utility_test.sh
 
-test: vector map stack utility
+test: vector map stack set utility
 
-.PHONY: all clean fclean re vector map stack utilty test
+.PHONY: all clean fclean re vector map stack set utility test

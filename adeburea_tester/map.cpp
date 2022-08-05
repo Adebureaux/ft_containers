@@ -110,8 +110,7 @@ int main(void)
 	std::cout << "Size of second : " << second.size() << std::endl;
 	int i;
 	LOC::map<int, int> baz;
-	if (baz.max_size() > 1000)
-	{
+	if (baz.max_size() > 1000) {
 		for (i = 0; i < 1000; i++)
 			baz[i] = 0;
 		std::cout << "The map contains 1000 elements." << std::endl;

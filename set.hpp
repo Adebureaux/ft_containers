@@ -1,5 +1,5 @@
-#ifndef MAP_HPP
-# define MAP_HPP
+#ifndef SET_HPP
+# define SET_HPP
 
 #define BLACK 0
 #define RED 1
@@ -11,18 +11,18 @@
 // Tutorial URL: https://algorithmtutor.com/Data-Structures/Tree/Red-Black-Trees/
 
 namespace ft {
-	template <class Key, class T, class Compare = std::less<Key>, class Alloc = std::allocator<ft::pair<const Key, T> > >
-	class map {
+	template <class T, class Compare = std::less<T>, class Alloc = std::allocator<T> >
+	class set {
 		private:
 			/* Node nested class */
 			class _node {
 				public:
-					_node() : data(pair<Key, T>()) {};
-					_node(ft::pair<const Key, T>& val) : data(val) {};
-					_node(const ft::pair<const Key, T>& val) : data(val) {};
+					_node() : data(T()) {};
+					_node(T& val) : data(val) {};
+					_node(const T& val) : data(val) {};
 
 				public:
-					ft::pair<const Key, T>	data;
+					const T					data;
 					_node					*parent;
 					_node					*left;
 					_node					*right;
@@ -32,16 +32,14 @@ namespace ft {
 		
 		public:
 			/* Bidirectional iterator */
-			template <bool Const>
 			class bidirectional_iterator : ft::iterator<ft::bidirectional_iterator_tag, T> {
-				friend class map;
+				friend class set;
 				private:
 					/* Typedefs */
-					typedef typename ft::conditional<Const, const _node, _node>::type			*nodeptr;
+					typedef _node																*nodeptr;
 				public:
 					typedef typename ft::iterator_traits<T*>::difference_type					difference_type;
-					typedef ft::pair<const Key, T>												pair_type;
-					typedef typename ft::conditional<Const, const pair_type, pair_type>::type	value_type;
+					typedef const T																value_type;
 					typedef value_type*															pointer;
 					typedef value_type&															reference;
 					typedef ft::bidirectional_iterator_tag										iterator_category;
@@ -50,8 +48,7 @@ namespace ft {
 					/* Constructors */
 					bidirectional_iterator() : _itr(0), _root(NULL), _null(NULL) {};
 					bidirectional_iterator(nodeptr itr, nodeptr root, nodeptr null) : _itr(itr), _root(root), _null(null) {};
-					template <bool B>
-					bidirectional_iterator(const bidirectional_iterator<B>& x, typename ft::enable_if<!B>::type* = 0) : _itr(x._itr), _root(x._root), _null(x._null) {};
+					bidirectional_iterator(const bidirectional_iterator& x) : _itr(x._itr), _root(x._root), _null(x._null) {};
 					/* End Constructors */
 
 					/* Destructor */
@@ -68,12 +65,10 @@ namespace ft {
 					/* End Operator= */
 
 					/* Operator overload */
-					template <bool B>
-					bool operator==(const bidirectional_iterator<B>& rhs) const {
+					bool operator==(const bidirectional_iterator& rhs) const {
 						return (_itr == rhs._itr);
 					};
-					template <bool B>
-					bool operator!=(const bidirectional_iterator<B>& rhs) const {
+					bool operator!=(const bidirectional_iterator& rhs) const {
 						return (_itr != rhs._itr);
 					};
 					reference operator*() const {
@@ -157,10 +152,6 @@ namespace ft {
 			};
 			/* End Bidirectional iterator */
 
-			/* Public declaration of value_comp class */
-			class value_comp;
-			/* End Public declaration of value_comp class */
-
 		private:
 			/* Private typedef */
 			typedef typename Alloc::template rebind<_node>::other	node_allocator_type;
@@ -169,43 +160,26 @@ namespace ft {
 
 		public:
 			/* Typedefs */
-			typedef Key												key_type;
-			typedef T												mapped_type;
-			typedef ft::pair<const key_type, mapped_type>			value_type;
+			typedef T												key_type;
+			typedef T												value_type;
 			typedef	Compare											key_compare;
-			typedef	value_comp										value_compare;
+			typedef	Compare											value_compare;
 			typedef Alloc											allocator_type;
 			typedef typename allocator_type::reference				reference;
 			typedef typename allocator_type::const_reference		const_reference;
 			typedef typename allocator_type::pointer				pointer;
 			typedef typename allocator_type::const_pointer			const_pointer;
-			typedef bidirectional_iterator<false>					iterator;
-			typedef bidirectional_iterator<true> 					const_iterator;
+			typedef bidirectional_iterator							iterator;
+			typedef bidirectional_iterator							const_iterator;
 			typedef ft::reverse_iterator<iterator>					reverse_iterator;
 			typedef ft::reverse_iterator<const_iterator>			const_reverse_iterator;
 			typedef std::ptrdiff_t									difference_type;
 			typedef	size_t											size_type;
 			/* End Typedefs */
 
-			/* Value_compare */
-			class value_comp : std::binary_function<value_type, value_type, bool> {
-				friend class map;
-				public:
-					typedef bool result_type;
-					typedef value_type first_argument_type;
-					typedef value_type second_argument_type;
-					bool operator()(const value_type& x, const value_type& y) const {
-						return (comp(x.first, y.first));
-					};
-				protected:
-					key_compare comp;
-					value_comp(key_compare c) : comp(c) {};
-			};
-			/* End Value_compare */
-
 		public:
 			/* Constructors */
-			explicit map(const key_compare& comp = key_compare(), const allocator_type& alloc = allocator_type())
+			explicit set(const key_compare& comp = key_compare(), const allocator_type& alloc = allocator_type())
 			: _alloc(alloc), _key_comp(comp), _size(0) {
 				_null = _alloc.allocate(1);
 				_alloc.construct(_null, _node());
@@ -215,7 +189,7 @@ namespace ft {
 				_root = _null;
 			};
 			template <class InputIterator>
-			map(InputIterator first, InputIterator last, const key_compare& comp = key_compare(), const allocator_type& alloc = allocator_type(), typename ft::enable_if<!ft::is_integral<InputIterator>::value, InputIterator>::type* = 0)
+			set(InputIterator first, InputIterator last, const key_compare& comp = key_compare(), const allocator_type& alloc = allocator_type(), typename ft::enable_if<!ft::is_integral<InputIterator>::value, InputIterator>::type* = 0)
 			: _alloc(alloc), _key_comp(comp), _size(0) {
 				_null = _alloc.allocate(1);
 				_alloc.construct(_null, _node());
@@ -225,7 +199,7 @@ namespace ft {
 				_root = _null;
 				insert(first, last);
 			};
-			map(const map& x) : _alloc(x._alloc), _key_comp(x._key_comp), _size(0) {
+			set(const set& x) : _alloc(x._alloc), _key_comp(x._key_comp), _size(0) {
 				_null = _alloc.allocate(1);
 				_alloc.construct(_null, _node());
 				_null->color = BLACK;
@@ -237,7 +211,7 @@ namespace ft {
 			/* End Constructors */
 
 			/* Destructor */
-			~map() {
+			~set() {
 				clear();
 				_alloc.destroy(_null);
 				_alloc.deallocate(_null, 1);
@@ -245,7 +219,7 @@ namespace ft {
 			/* End Destructor */
 
 			/* Operator= */
-			map& operator=(const map& x) {
+			set& operator=(const set& x) {
 				if (this == &x)
 					return (*this);
 				clear();
@@ -294,22 +268,16 @@ namespace ft {
 			};
 			/* End Capacity */
 
-			/* Element access */
-			mapped_type& operator[](const key_type& k) {
-				return ((*((insert(ft::make_pair(k, mapped_type()))).first)).second);
-			};
-			/* End Element access */
-
 			/* Modifiers */
 			ft::pair<iterator, bool> insert(const value_type& val) {
-				nodeptr node = _recursive_find(_root, val.first);
+				nodeptr node = _recursive_find(_root, val);
 
 				if (node != _null)
 					return (make_pair(iterator(node, _root, _null), false));
 				return (make_pair(iterator(_insert(val), _root, _null), true));
 			};
 			iterator insert(iterator position, const value_type& val) {
-				nodeptr node = _recursive_find(_root, val.first);
+				nodeptr node = _recursive_find(_root, val);
 
 				(void)position;
 				if (node == _null)
@@ -322,7 +290,7 @@ namespace ft {
 					insert(*(first++));
 			};
 			void erase(iterator position) {
-				_erase(position->first);
+				_erase(*position);
 			};
 			size_type erase(const key_type& k) {
 				return (_erase(k));
@@ -331,7 +299,7 @@ namespace ft {
 				while (first != last)
 					erase(first++);
 			};
-			void swap(map& x) {
+			void swap(set& x) {
 				if (this == &x)
 					return;
 				std::swap(_alloc, x._alloc);
@@ -379,7 +347,7 @@ namespace ft {
 				iterator itr = begin();
 
 				while (itr != end()) {
-					if (!_key_comp(itr->first, k))
+					if (!_key_comp(*itr, k))
 						break;
 					itr++;
 				}
@@ -389,7 +357,7 @@ namespace ft {
 				const_iterator itr = begin();
 
 				while (itr != end()) {
-					if (!_key_comp(itr->first, k))
+					if (!_key_comp(*itr, k))
 						break;
 					itr++;
 				}
@@ -399,11 +367,11 @@ namespace ft {
 				iterator itr = begin();
 
 				while (itr != end()) {
-					if (!_key_comp(itr->first, k))
+					if (!_key_comp(*itr, k))
 						break;
 					itr++;
 				}
-				if (itr != end() && _equal(itr->first, k))
+				if (itr != end() && _equal(*itr, k))
 					itr++;
 				return (itr);
 			};
@@ -411,11 +379,11 @@ namespace ft {
 				const_iterator itr = begin();
 
 				while (itr != end()) {
-					if (!_key_comp(itr->first, k))
+					if (!_key_comp(*itr, k))
 						break;
 					itr++;
 				}
-				if (itr != end() && _equal(itr->first, k))
+				if (itr != end() && _equal(*itr, k))
 					itr++;
 				return (itr);
 			};
@@ -436,9 +404,9 @@ namespace ft {
 		private:
 			/* Help functions */
 			nodeptr _recursive_find(nodeptr node, const key_type& key) const {
-				if (node == _null || _equal(key, node->data.first))
+				if (node == _null || _equal(key, node->data))
 					return (node);
-				if (!_key_comp(node->data.first, key))
+				if (!_key_comp(node->data, key))
 					return (_recursive_find(node->left, key));
 				return (_recursive_find(node->right, key));
 			};
@@ -467,7 +435,7 @@ namespace ft {
 				x = _root;
 				while (x != _null) {
 					y = x;
-					if (_key_comp(node->data.first, x->data.first))
+					if (_key_comp(node->data, x->data))
 						x = x->left;
 					else
 						x = x->right;
@@ -475,7 +443,7 @@ namespace ft {
 				node->parent = y;
 				if (!y)
 					_root = node;
-				else if (_key_comp(node->data.first, y->data.first))
+				else if (_key_comp(node->data, y->data))
 					y->left = node;
 				else
 					y->right = node;
@@ -541,9 +509,9 @@ namespace ft {
 				nodeptr y;
 	
 				while (node != _null) {
-					if (_equal(node->data.first, key))
+					if (_equal(node->data, key))
 						z = node;
-					if (_key_comp(node->data.first, key))
+					if (_key_comp(node->data, key))
 						node = node->right;
 					else
 						node = node->left;
@@ -705,34 +673,34 @@ namespace ft {
 	};
 
 	/* Non-member function overloads */
-	template <class Key, class T, class Compare, class Alloc>
-	bool operator==(const map<Key, T, Compare, Alloc>& lhs,const map<Key, T, Compare, Alloc>& rhs) {
+	template <class T, class Compare, class Alloc>
+	bool operator==(const set<T, Compare, Alloc>& lhs,const set<T, Compare, Alloc>& rhs) {
 		if (lhs.size() != rhs.size())
 			return (false);
 		return (ft::equal(lhs.begin(), lhs.end(), rhs.begin()));
 	};
-	template <class Key, class T, class Compare, class Alloc>
-	bool operator!=(const map<Key, T, Compare, Alloc>& lhs,const map<Key, T, Compare, Alloc>& rhs) {
+	template <class T, class Compare, class Alloc>
+	bool operator!=(const set<T, Compare, Alloc>& lhs,const set<T, Compare, Alloc>& rhs) {
 		return (!(lhs == rhs));
 	};
-	template <class Key, class T, class Compare, class Alloc>
-	bool operator<(const map<Key, T, Compare, Alloc>& lhs,const map<Key, T, Compare, Alloc>& rhs) {
+	template <class T, class Compare, class Alloc>
+	bool operator<(const set<T, Compare, Alloc>& lhs,const set<T, Compare, Alloc>& rhs) {
 		return (ft::lexicographical_compare(lhs.begin(), lhs.end(), rhs.begin(), rhs.end()));
 	};
-	template <class Key, class T, class Compare, class Alloc>
-	bool operator<=(const map<Key, T, Compare, Alloc>& lhs,const map<Key, T, Compare, Alloc>& rhs) {
+	template <class T, class Compare, class Alloc>
+	bool operator<=(const set<T, Compare, Alloc>& lhs,const set<T, Compare, Alloc>& rhs) {
 		return (lhs == rhs || lhs < rhs);
 	};
-	template <class Key, class T, class Compare, class Alloc>
-	bool operator>(const map<Key, T, Compare, Alloc>& lhs,const map<Key, T, Compare, Alloc>& rhs) {
+	template <class T, class Compare, class Alloc>
+	bool operator>(const set<T, Compare, Alloc>& lhs,const set<T, Compare, Alloc>& rhs) {
 		return (!(lhs <= rhs));
 	};
-	template <class Key, class T, class Compare, class Alloc>
-	bool operator>=(const map<Key, T, Compare, Alloc>& lhs,const map<Key, T, Compare, Alloc>& rhs) {
+	template <class T, class Compare, class Alloc>
+	bool operator>=(const set<T, Compare, Alloc>& lhs,const set<T, Compare, Alloc>& rhs) {
 		return (lhs == rhs || lhs > rhs);
 	};
-	template <class Key, class T, class Compare, class Alloc>
-	void swap(map<Key, T, Compare, Alloc>& x, map<Key, T, Compare, Alloc>& y) {
+	template <class T, class Compare, class Alloc>
+	void swap(set<T, Compare, Alloc>& x, set<T, Compare, Alloc>& y) {
 		x.swap(y);
 	};
   	/* End Non-member function overloads */
